@@ -15,20 +15,20 @@ public class TravelService {
     private TravelRepository travelRepository;
 
     public TravelResponse saveTravel(TravelRequest travel) {
-        Travel newTravel = new Travel(travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), 0, travel.getWrite_status(), 0, 0);
+        Travel newTravel = new Travel(travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), 0, travel.getWrite_status(), 0, 1);
         Travel saveTravel = travelRepository.save(newTravel);
         TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), saveTravel.getStart_date(), saveTravel.getEnd_date(), saveTravel.getCreated_at(), saveTravel.getTime_status(), saveTravel.getWrite_status(), saveTravel.getNote_status());
         return travelResponse;
     }
 
     public TravelResponse getTravel(int tId) {
-        Travel getTravel = travelRepository.findById(tId);
+        Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
         TravelResponse travelResponse = new TravelResponse(getTravel.getTId(), getTravel.getTitle(), getTravel.getDestination(), getTravel.getStart_date(), getTravel.getEnd_date(), getTravel.getCreated_at(), getTravel.getTime_status(), getTravel.getWrite_status(), getTravel.getNote_status());
         return travelResponse;
     }
 
     public List<TravelResponse> getAllTravel() {
-        List<Travel> allTravel = travelRepository.findAll();
+        List<Travel> allTravel = travelRepository.findAllByState(1);
         ArrayList<TravelResponse> allTravelResponse = new ArrayList<>();
         for (Travel travel : allTravel) {
             TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), travel.getCreated_at(), travel.getTime_status(), travel.getWrite_status(), travel.getNote_status());
@@ -38,7 +38,7 @@ public class TravelService {
     }
 
     public TravelResponse patchTravel(int tId, TravelRequest travelRequest) {
-        Travel getTravel = travelRepository.findById(tId);
+        Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
         getTravel.setTitle(travelRequest.getTitle());
         getTravel.setStart_date(travelRequest.getStart_date());
         getTravel.setEnd_date(travelRequest.getEnd_date());
@@ -48,9 +48,10 @@ public class TravelService {
     }
 
     public int deleteTravel(int tId) {
-        Travel getTravel = travelRepository.findById(tId);
+        Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
         try {
-            travelRepository.delete(getTravel);
+            getTravel.setState(0);
+            travelRepository.save(getTravel);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
