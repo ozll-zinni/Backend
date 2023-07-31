@@ -48,12 +48,17 @@ public class UserService {
     }
 
 
-    public void deleteUser(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-        } else {
-            throw new RuntimeException("해당하는 회원을 찾을 수 없습니다.");
+    public void deleteUser(Long id) throws BaseException {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent()) {
+                userRepository.delete(user.get());
+            } else {
+                throw new BaseException(INVALID_JWT);
+            }
+        } catch (Exception exception) {
+            // 예외가 발생한 경우에 대한 처리
+            throw new BaseException(EMPTY_JWT);
         }
     }
 
