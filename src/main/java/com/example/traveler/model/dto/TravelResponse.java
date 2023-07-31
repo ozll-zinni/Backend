@@ -22,4 +22,5 @@ public class TravelResponse {
     int time_status;
     int write_status;
     int note_status;
+    List<DayCourse> courses;
 }

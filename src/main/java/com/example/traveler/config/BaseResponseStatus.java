@@ -36,11 +36,10 @@ public enum BaseResponseStatus {
      * 3000 : Response 오류
      */
     // Common
-    RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
-
-    // [POST] /users
-    DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
-    FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
+    SAVE_TRAVEL_FAIL(false, 3001, "여행 생성에 실패했습니다."),
+    GET_TRAVEL_FAIL(false, 3002, "여행 조회에 실패했습니다."),
+    DELETE_TRAVEL_FAIL(false, 3003, "여행 삭제에 실패했습니다."),
+    PATCH_TRAVEL_FAIL(false, 3004, "여행 수정에 실패했습니다."),
 
 
     // Post

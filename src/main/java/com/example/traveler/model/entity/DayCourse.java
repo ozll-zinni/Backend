@@ -1,5 +1,6 @@
 package com.example.traveler.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ public class DayCourse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int dcId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="tId")
     Travel travel;

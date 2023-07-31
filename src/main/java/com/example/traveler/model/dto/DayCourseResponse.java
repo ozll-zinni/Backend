@@ -14,7 +14,8 @@ import java.util.Date;
 @Setter
 public class DayCourseResponse {
     int dcId;
-    Travel travel;
+    //Travel travel;
+    int tId;
     Spot spot1;
     Spot spot2;
     Spot spot3;
