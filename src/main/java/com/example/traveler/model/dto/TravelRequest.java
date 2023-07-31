@@ -16,5 +16,5 @@ public class TravelRequest {
     String destination;
     Date start_date;
     Date end_date;
-    int write_status;
+    int writeStatus;
 }
