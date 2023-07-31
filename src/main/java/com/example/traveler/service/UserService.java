@@ -1,10 +1,16 @@
 package com.example.traveler.service;
 
+import com.example.traveler.jwt.JwtTokenProvider;
 import com.example.traveler.repository.UserRepository;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.model.dto.UpdateNicknameDTO;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -12,7 +18,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final JwtTokenProvider jwtTokenProvider;
 
     public UserService(UserRepository userRepository) {
 
@@ -48,5 +54,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
     }
 
+    public User getUserByToken(String accessToken) {
+        Long Id = jwtTokenProvider.extractId(accessToken);
+        return getUser(Id);
+    }
 
 }
