@@ -1,8 +1,8 @@
-package com.example.traveler.Controller;
+package com.example.traveler.controller;
 
-import com.example.traveler.Model.Dto.ChecklistRequest;
-import com.example.traveler.Model.Entity.ChecklistEntity;
-import com.example.traveler.Service.ChecklistService;
+import com.example.traveler.model.dto.ChecklistRequest;
+import com.example.traveler.model.entity.ChecklistEntity;
+import com.example.traveler.service.ChecklistService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

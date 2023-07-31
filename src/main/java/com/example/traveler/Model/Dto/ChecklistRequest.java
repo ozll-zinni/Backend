@@ -1,4 +1,4 @@
-package com.example.traveler.Model.Dto;
+package com.example.traveler.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
