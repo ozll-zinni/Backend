@@ -20,9 +20,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
 
         this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
 
     }
 
