@@ -42,6 +42,9 @@ public enum BaseResponseStatus {
     SAVE_DAYCOURSE_FAIL(false, 3006, "코스 생성에 실패했습니다."),
     DAYCOURSE_IS_EMPTY(false, 3007, "코스가 존재하지 않습니다."),
     DAYCOURSE_EXISTS(false, 3008, "코스가 이미 존재합니다."),
+    SPOT_IS_FULL(false, 3009, "장소를 추가할 수 없습니다. 장소는 최대 4개까지 생성할 수 있습니다."),
+    SAVE_SPOT_FAIL(false, 3010, "장소 생성에 실패했습니다."),
+    DELETE_SPOT_FAIL(false, 3011, "장소 삭제에 실패했습니다."),
 
     // Post
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
