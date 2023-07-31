@@ -86,9 +86,9 @@ public class TravelController {
     }
 
     @PostMapping("/{tId}/course")
-    public BaseResponse<DayCourseResponse> saveCourse(@PathVariable("tId") int tId, @RequestBody DayCourseRequest dayCourseRequest) {
+    public BaseResponse<DayCourseResponse> saveCourse(@RequestHeader("Authorization") String accessToken, @PathVariable("tId") int tId, @RequestBody DayCourseRequest dayCourseRequest) {
         try {
-            DayCourseResponse dayCourseResponse = dayCourseService.saveCourse(dayCourseRequest, tId);
+            DayCourseResponse dayCourseResponse = dayCourseService.saveCourse(accessToken, dayCourseRequest, tId);
             return new BaseResponse<>(dayCourseResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

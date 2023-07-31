@@ -9,4 +9,5 @@ import java.util.List;
 public interface DayCourseRepository extends CrudRepository<DayCourse, Integer> {
     public DayCourse findBydcId(int id);
     public List<DayCourse> findAllByTravel(Travel travel);
+    public DayCourse findByTravelAndNumOfDay(Travel travel, int numOfDay);
 }
