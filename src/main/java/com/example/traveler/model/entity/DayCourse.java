@@ -32,14 +32,19 @@ public class DayCourse {
     @JoinColumn(name="sId4")
     Spot spot4;
 
-    @OneToOne
-    @JoinColumn(name="sId5")
-    Spot spot5;
+    //1과 2 사이 거리
+    Double first;
 
-    @OneToOne
-    @JoinColumn(name="sId6")
-    Spot spot6;
+    //2와 3 사이 거리
+    Double second;
+
+    //3과 4 사이 거리
+    Double third;
 
     int numOfDay;
 
+    public DayCourse(Travel travel, int numOfDay) {
+        this.travel = travel;
+        this.numOfDay = numOfDay;
+    }
 }

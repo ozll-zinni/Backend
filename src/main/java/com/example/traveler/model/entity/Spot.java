@@ -18,4 +18,9 @@ public class Spot {
 
     double longitude;
 
+    public Spot(String title, double latitude, double longitude) {
+        this.title = title;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }
