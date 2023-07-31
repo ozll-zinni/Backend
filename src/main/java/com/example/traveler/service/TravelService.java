@@ -47,6 +47,17 @@ public class TravelService {
         return travelResponse;
     }
 
+    public int deleteTravel(int tId) {
+        Travel getTravel = travelRepository.findById(tId);
+        try {
+            travelRepository.delete(getTravel);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return 1;
+    }
+
 //    public List<TravelResponse> getAllMyTravel(User user) {
 //        List<Travel> allMyTravel = travelRepository.findAllByUser(user);
 //        ArrayList<TravelResponse> allMyTravelResponse = new ArrayList<>();
