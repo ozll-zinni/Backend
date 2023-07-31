@@ -20,7 +20,7 @@ public class TravelResponse {
     Date end_date;
     Timestamp created_at;
     int time_status;
-    int write_status;
-    int note_status;
+    int writeStatus;
+    int noteStatus;
     List<DayCourse> courses;
 }
