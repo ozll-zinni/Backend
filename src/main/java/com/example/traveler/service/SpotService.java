@@ -24,7 +24,7 @@ public class SpotService {
     @Autowired
     private SpotRepository spotRepository;
     public DayCourseResponse saveSpot(SpotRequest spotRequest, int dcId) {
-        DayCourse dayCourse = dayCourseRepository.findById(dcId);
+        DayCourse dayCourse = dayCourseRepository.findBydcId(dcId);
         Spot spot = new Spot(spotRequest.getTitle(), spotRequest.getLatitude(), spotRequest.getLongitude());
         Spot saveSpot = spotRepository.save(spot);
         if (dayCourse.getSpot1() == null) {
@@ -45,7 +45,7 @@ public class SpotService {
     }
 
     public DayCourseResponse deleteSpot(int dcId, int num) {
-        DayCourse dayCourse = dayCourseRepository.findById(dcId);
+        DayCourse dayCourse = dayCourseRepository.findBydcId(dcId);
         if (num == 1) {
             dayCourse.setSpot1(dayCourse.getSpot2());
             dayCourse.setSpot2(dayCourse.getSpot3());
