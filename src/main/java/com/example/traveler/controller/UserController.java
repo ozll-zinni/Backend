@@ -74,11 +74,17 @@ public class UserController {
     }
 
     @DeleteMapping("/profile")
-    public ResponseEntity<String> deleteUserProfile(@RequestHeader("Authorization") String accessToken) {
+    public BaseResponse<String> deleteUserProfile(@RequestHeader("Authorization") String accessToken) {
+        try{
         Long userId = jwtTokenProvider.extractId(accessToken);
-
         userService.deleteUser(userId);
-        return ResponseEntity.ok("회원 탈퇴가 성공적으로 처리되었습니다.");
+        String result = "삭제되었습니다.";
+
+        return new BaseResponse<>(result);
+
+    } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
     @GetMapping("/profile")
