@@ -117,9 +117,9 @@ public class TravelController {
     }
 
     @PostMapping("/course/{dcId}/spot")
-    public BaseResponse<DayCourseResponse> saveSpot(@PathVariable("dcId") int dcId, @RequestBody SpotRequest spotRequest) {
+    public BaseResponse<DayCourseResponse> saveSpot(@RequestHeader("Authorization") String accessToken, @PathVariable("dcId") int dcId, @RequestBody SpotRequest spotRequest) {
         try {
-            DayCourseResponse dayCourseResponse =  spotService.saveSpot(spotRequest, dcId);
+            DayCourseResponse dayCourseResponse =  spotService.saveSpot(accessToken, spotRequest, dcId);
             return new BaseResponse<>(dayCourseResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -127,9 +127,9 @@ public class TravelController {
     }
 
     @DeleteMapping("/course/{dcId}/spot/{num}")
-    public BaseResponse<DayCourseResponse> deleteSpot(@PathVariable("dcId") int dcId, @PathVariable("num") int num) {
+    public BaseResponse<DayCourseResponse> deleteSpot(@RequestHeader("Authorization") String accessToken, @PathVariable("dcId") int dcId, @PathVariable("num") int num) {
         try {
-            DayCourseResponse dayCourseResponse =  spotService.deleteSpot(dcId, num);
+            DayCourseResponse dayCourseResponse =  spotService.deleteSpot(accessToken, dcId, num);
             return new BaseResponse<>(dayCourseResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

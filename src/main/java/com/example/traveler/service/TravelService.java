@@ -31,9 +31,7 @@ public class TravelService {
         } catch (Exception e) {
             throw new BaseException(SAVE_TRAVEL_FAIL);
         }
-        if (saveTravel == null) {
-            throw new BaseException(SAVE_TRAVEL_FAIL);
-        }
+
         TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), saveTravel.getStart_date(), saveTravel.getEnd_date(), saveTravel.getCreated_at(), saveTravel.getTime_status(), saveTravel.getWrite_status(), saveTravel.getNote_status(), saveTravel.getCourses());
         return travelResponse;
     }
