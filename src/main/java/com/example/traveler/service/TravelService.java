@@ -4,6 +4,7 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.TravelRequest;
 import com.example.traveler.model.dto.TravelResponse;
 import com.example.traveler.model.entity.Travel;
+import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,21 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 public class TravelService {
     @Autowired
     private TravelRepository travelRepository;
+    @Autowired
+    private UserService userService;
 
-    public TravelResponse saveTravel(TravelRequest travel) throws BaseException {
-        Travel newTravel = new Travel(travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), 0, travel.getWrite_status(), 0, 1);
-        Travel saveTravel = travelRepository.save(newTravel);
+    public TravelResponse saveTravel(String accessToken, TravelRequest travel) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
+        Travel saveTravel = null;
+        try {
+            Travel newTravel = new Travel(travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), 0, travel.getWrite_status(), 0, 1, user);
+            saveTravel = travelRepository.save(newTravel);
+        } catch (Exception e) {
+            throw new BaseException(SAVE_TRAVEL_FAIL);
+        }
         if (saveTravel == null) {
             throw new BaseException(SAVE_TRAVEL_FAIL);
         }
@@ -29,7 +41,7 @@ public class TravelService {
     public TravelResponse getTravel(int tId) throws BaseException {
         Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
         if (getTravel == null) {
-            throw new BaseException(GET_TRAVEL_FAIL);
+            throw new BaseException(TRAVEL_IS_EMPTY);
         }
         TravelResponse travelResponse = new TravelResponse(getTravel.getTId(), getTravel.getTitle(), getTravel.getDestination(), getTravel.getStart_date(), getTravel.getEnd_date(), getTravel.getCreated_at(), getTravel.getTime_status(), getTravel.getWrite_status(), getTravel.getNote_status(), getTravel.getCourses());
         return travelResponse;
@@ -45,24 +57,46 @@ public class TravelService {
         return allTravelResponse;
     }
 
-    public TravelResponse patchTravel(int tId, TravelRequest travelRequest) throws BaseException{
+    public TravelResponse patchTravel(String accessToken, int tId, TravelRequest travelRequest) throws BaseException{
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
         Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
-        getTravel.setTitle(travelRequest.getTitle());
-        getTravel.setStart_date(travelRequest.getStart_date());
-        getTravel.setEnd_date(travelRequest.getEnd_date());
-        Travel saveTravel = travelRepository.save(getTravel);
-        TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), saveTravel.getStart_date(), saveTravel.getEnd_date(), saveTravel.getCreated_at(), saveTravel.getTime_status(), saveTravel.getWrite_status(), saveTravel.getNote_status(), saveTravel.getCourses());
-        return travelResponse;
+        if (getTravel == null) {
+            throw new BaseException(TRAVEL_IS_EMPTY);
+        }
+        if (user == getTravel.getUser()) {
+            try {
+                getTravel.setTitle(travelRequest.getTitle());
+                getTravel.setStart_date(travelRequest.getStart_date());
+                getTravel.setEnd_date(travelRequest.getEnd_date());
+                Travel saveTravel = travelRepository.save(getTravel);
+                TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), saveTravel.getStart_date(), saveTravel.getEnd_date(), saveTravel.getCreated_at(), saveTravel.getTime_status(), saveTravel.getWrite_status(), saveTravel.getNote_status(), saveTravel.getCourses());
+                return travelResponse;
+            } catch (Exception e) {
+                throw new BaseException(PATCH_TRAVEL_FAIL);
+            }
+        }
+        else {
+            throw new BaseException(TRAVEL_USER_NOT_MATCH);
+        }
     }
 
-    public int deleteTravel(int tId) throws BaseException{
+    public int deleteTravel(String accessToken, int tId) throws BaseException{
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
         Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
+        if (getTravel == null) {
+            throw new BaseException(TRAVEL_IS_EMPTY);
+        }
         try {
             getTravel.setState(0);
             travelRepository.save(getTravel);
         } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
+            throw new BaseException(DELETE_TRAVEL_FAIL);
         }
         return 1;
     }

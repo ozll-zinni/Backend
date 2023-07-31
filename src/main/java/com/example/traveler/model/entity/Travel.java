@@ -41,14 +41,14 @@ public class Travel {
     int state;
 
     //사용자
-    //@ManyToOne
-    //@JoinColumn(name="uId")
-    //User user;
+    @ManyToOne
+    @JoinColumn(name="uId")
+    User user;
 
     @OneToMany(mappedBy = "travel")
     List<DayCourse> courses = new ArrayList<>();
 
-    public Travel(String title, String destination, Date startDate, Date endDate, int timeStatus, int writeStatus, int noteStatus, int state) {
+    public Travel(String title, String destination, Date startDate, Date endDate, int timeStatus, int writeStatus, int noteStatus, int state, User user) {
         this.title = title;
         this.destination = destination;
         this.start_date = startDate;
@@ -57,5 +57,6 @@ public class Travel {
         this.write_status = writeStatus;
         this.note_status = noteStatus;
         this.state = state;
+        this.user = user;
     }
 }

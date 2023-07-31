@@ -35,9 +35,10 @@ public enum BaseResponseStatus {
      */
     // Common
     SAVE_TRAVEL_FAIL(false, 3001, "여행 생성에 실패했습니다."),
-    GET_TRAVEL_FAIL(false, 3002, "여행 조회에 실패했습니다."),
+    TRAVEL_IS_EMPTY(false, 3002, "여행이 존재하지 않습니다."),
     DELETE_TRAVEL_FAIL(false, 3003, "여행 삭제에 실패했습니다."),
     PATCH_TRAVEL_FAIL(false, 3004, "여행 수정에 실패했습니다."),
+    TRAVEL_USER_NOT_MATCH(false, 3005, "여행의 유저 정보가 일치하지 않습니다."),
 
 
     // Post
@@ -46,7 +47,7 @@ public enum BaseResponseStatus {
     /**
      * 4000 : Database, Server 오류
      */
-    DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
+    DATABASE_ERROR(false, 9000, "데이터베이스 연결에 실패하였습니다."),
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
