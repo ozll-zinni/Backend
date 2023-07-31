@@ -1,9 +1,13 @@
 package com.example.traveler.oauth;
 
+import com.example.traveler.config.BaseException;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.example.traveler.config.BaseResponseStatus.EMPTY_JWT;
+import static com.example.traveler.config.BaseResponseStatus.INVALID_AUTHORIZATION_CODE;
 
 @Service
 @RequiredArgsConstructor
@@ -12,10 +16,14 @@ public class OAuthLoginService {
     private final AuthTokensGenerator authTokensGenerator;
     private final RequestOAuthInfoService requestOAuthInfoService;
 
-    public AuthTokens login(OAuthLoginParams params) {
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-        Long userId = findOrCreateUser(oAuthInfoResponse);
-        return authTokensGenerator.generate(userId);
+    public AuthTokens login(OAuthLoginParams params) throws BaseException {
+        try{
+            OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+            Long userId = findOrCreateUser(oAuthInfoResponse);
+            return authTokensGenerator.generate(userId);
+        } catch (Exception exception) {
+            throw new BaseException(INVALID_AUTHORIZATION_CODE);
+        }
     }
 
     private Long findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
