@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
+import static com.example.traveler.config.BaseResponseStatus.INVALID_JWT;
+import static com.example.traveler.config.BaseResponseStatus.PATCH_NULL_FILE;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -49,27 +52,31 @@ public class UserController {
     }
 
     @PatchMapping("/profile_image")
-    public ResponseEntity<String> uploadProfileImage(@RequestHeader("Authorization") String accessToken,
+    public BaseResponse<String> uploadProfileImage(@RequestHeader("Authorization") String accessToken,
                                                      @RequestParam("imageFile") MultipartFile imageFile) {
-        Long userId = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
+        try {
+            Long userId = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
 
-        // 이미지 업로드 서비스를 통해 이미지를 S3에 업로드하고 경로를 받아옴
-        String imageUrl = s3Uploader.uploadImage(imageFile);
+            // 이미지 업로드 서비스를 통해 이미지를 S3에 업로드하고 경로를 받아옴
+            String imageUrl = s3Uploader.uploadImage(imageFile);
 
-        if (imageUrl != null) {
-            // User 엔티티를 찾아서 이미지 경로를 저장
-            Optional<User> optionalUser = userRepository.findById(userId);
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                user.setProfile_image_url(imageUrl);
-                userRepository.save(user);
+            if (imageUrl != null) {
+                // User 엔티티를 찾아서 이미지 경로를 저장
+                Optional<User> optionalUser = userRepository.findById(userId);
+                if (optionalUser.isPresent()) {
+                    User user = optionalUser.get();
+                    user.setProfile_image_url(imageUrl);
+                    userRepository.save(user);
 
-                return ResponseEntity.ok("프로필 이미지가 업로드되었습니다.");
+                    String result = "프로필 이미지가 업로드 되었습니다.";
+                    return new BaseResponse<>(result);
+                } else {
+                    throw new BaseException(INVALID_JWT);                 }
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 사용자를 찾을 수 없습니다.");
+                throw new BaseException(PATCH_NULL_FILE);
             }
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드에 실패했습니다.");
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 
