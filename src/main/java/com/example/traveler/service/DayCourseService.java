@@ -21,7 +21,7 @@ public class DayCourseService {
     @Autowired
     private TravelRepository travelRepository;
     public DayCourseResponse saveCourse(DayCourseRequest course, int tId) {
-        Travel travel = travelRepository.findById(tId);
+        Travel travel = travelRepository.findBytIdAndState(tId, 1);
         DayCourse dayCourse = new DayCourse(travel, course.getNumOfDay());
         DayCourse newDayCourse = dayCourseRepository.save(dayCourse);
         DayCourseResponse dayCourseResponse = new DayCourseResponse(newDayCourse.getDcId(), newDayCourse.getTravel(), dayCourse.getSpot1(), dayCourse.getSpot2(), dayCourse.getSpot3(), dayCourse.getSpot4(), dayCourse.getFirst(), dayCourse.getSecond(), dayCourse.getThird(), newDayCourse.getNumOfDay());
@@ -29,13 +29,13 @@ public class DayCourseService {
     }
 
     public DayCourseResponse getCourse(int dcId) {
-        DayCourse dayCourse = dayCourseRepository.findById(dcId);
+        DayCourse dayCourse = dayCourseRepository.findBydcId(dcId);
         DayCourseResponse dayCourseResponse = new DayCourseResponse(dayCourse.getDcId(), dayCourse.getTravel(), dayCourse.getSpot1(), dayCourse.getSpot2(), dayCourse.getSpot3(), dayCourse.getSpot4(), dayCourse.getFirst(), dayCourse.getSecond(), dayCourse.getThird(), dayCourse.getNumOfDay());
         return dayCourseResponse;
     }
 
     public List<DayCourseResponse> getAllDayCourseByTravel(int tId) {
-        Travel travel = travelRepository.findById(tId);
+        Travel travel = travelRepository.findBytIdAndState(tId, 1);
         List<DayCourse> allDayCourse = dayCourseRepository.findAllByTravel(travel);
         ArrayList<DayCourseResponse> allDayCourseResponse = new ArrayList<>();
         for (DayCourse dayCourse : allDayCourse) {
