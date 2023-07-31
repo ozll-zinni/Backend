@@ -26,9 +26,9 @@ public class TravelController {
     @Autowired
     private SpotService spotService;
     @PostMapping("")
-    public BaseResponse<TravelResponse> saveTravel(@RequestBody TravelRequest travelRequest) {
+    public BaseResponse<TravelResponse> saveTravel(@RequestHeader("Authorization") String accessToken, @RequestBody TravelRequest travelRequest) {
         try {
-            TravelResponse travelResponse = travelService.saveTravel(travelRequest);
+            TravelResponse travelResponse = travelService.saveTravel(accessToken, travelRequest);
             return new BaseResponse<>(travelResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -62,9 +62,9 @@ public class TravelController {
 
     //test 안함
     @PatchMapping("/{tId}")
-    public BaseResponse<TravelResponse> patchTravel(@PathVariable("tId") int tId, @RequestBody TravelRequest travelRequest) {
+    public BaseResponse<TravelResponse> patchTravel(@RequestHeader("Authorization") String accessToken, @PathVariable("tId") int tId, @RequestBody TravelRequest travelRequest) {
         try {
-            TravelResponse travelResponse = travelService.patchTravel(tId, travelRequest);
+            TravelResponse travelResponse = travelService.patchTravel(accessToken, tId, travelRequest);
             return new BaseResponse<>(travelResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -72,10 +72,10 @@ public class TravelController {
     }
 
     @DeleteMapping("/{tId}")
-    public BaseResponse<String> deleteTravel(@PathVariable("tId") int tId){
+    public BaseResponse<String> deleteTravel(@RequestHeader("Authorization") String accessToken, @PathVariable("tId") int tId){
         try {
-            int result = travelService.deleteTravel(tId);
-            if (result == 0) {
+            int result = travelService.deleteTravel(accessToken, tId);
+            if (result != 1) {
                 throw new BaseException(DELETE_TRAVEL_FAIL);
             } else {
                 return new BaseResponse<>("여행 삭제에 성공했습니다.");
