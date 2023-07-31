@@ -1,5 +1,7 @@
 package com.example.traveler.controller;
 
+import com.example.traveler.config.BaseException;
+import com.example.traveler.config.BaseResponse;
 import com.example.traveler.jwt.JwtTokenProvider;
 import com.example.traveler.model.dto.UpdateNicknameDTO;
 import com.example.traveler.model.entity.User;
@@ -35,12 +37,15 @@ public class UserController {
     }
 
     @PatchMapping("/nickname")
-    public ResponseEntity<User> updateNickname(@RequestHeader("Authorization") String accessToken,
+    public BaseResponse<User> updateNickname(@RequestHeader("Authorization") String accessToken,
                                                @RequestBody UpdateNicknameDTO updateNicknameDTO) {
-        Long id = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
-        User updatedUser = userService.updateNicknameById(id, updateNicknameDTO);
+        try {
+            Long id = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
+            User updatedUser = userService.updateNicknameById(id, updateNicknameDTO);
 
-        return ResponseEntity.ok(updatedUser);
+            return new BaseResponse<>(updatedUser);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));        }
     }
 
     @PatchMapping("/profile_image")

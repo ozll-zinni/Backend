@@ -1,5 +1,7 @@
 package com.example.traveler.service;
 
+import com.example.traveler.config.BaseException;
+import com.example.traveler.config.BaseResponseStatus;
 import com.example.traveler.jwt.JwtTokenProvider;
 import com.example.traveler.repository.UserRepository;
 import com.example.traveler.model.entity.User;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 public class UserService {
@@ -25,16 +29,21 @@ public class UserService {
 
     }
 
-    public User updateNicknameById(Long id, UpdateNicknameDTO updateNicknameDTO) {
-        Optional<User> userOptional = userRepository.findById(id);
+    public User updateNicknameById(Long id, UpdateNicknameDTO updateNicknameDTO) throws BaseException {
+        try {
+            Optional<User> userOptional = userRepository.findById(id);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setNickname(updateNicknameDTO.getNickname());
-            return userRepository.save(user);
-        } else {
-            // 사용자를 찾지 못한 경우에 대한 처리
-            throw new NoSuchElementException("User not found for id: " + id);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                user.setNickname(updateNicknameDTO.getNickname());
+                return userRepository.save(user);
+            } else {
+                // 사용자를 찾지 못한 경우에 대한 처리
+                throw new BaseException(INVALID_JWT);
+            }
+        } catch (Exception exception) {
+            // 예외가 발생한 경우에 대한 처리
+            throw new BaseException(EMPTY_JWT);
         }
     }
 
