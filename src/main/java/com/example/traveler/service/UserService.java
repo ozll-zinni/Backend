@@ -5,11 +5,9 @@ import com.example.traveler.repository.UserRepository;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.model.dto.UpdateNicknameDTO;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,9 +18,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
 
         this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
 
     }
 
@@ -40,8 +39,8 @@ public class UserService {
     }
 
 
-    public void deleteUser(Long kakao) {
-        Optional<User> user = userRepository.findByKakao(kakao);
+    public void deleteUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             userRepository.delete(user.get());
         } else {
