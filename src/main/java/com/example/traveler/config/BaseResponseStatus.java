@@ -21,16 +21,11 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false,2001,"JWT를 입력하세요"),
 
     //login
-    INVALID_AUTHORIZATION_CODE(false, 2000, "유효하지 않은 Authorization code입니다."),
+    INVALID_AUTHORIZATION_CODE(false, 2010, "유효하지 않은 Authorization code입니다."),
 
-    // users
-    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
-
-    // [POST] /users
-    POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
-    POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
-
+    // [Patch] /users/profile_image
+    PATCH_NULL_FILE(false, 2021, "파일을 선택해주세요."),
+    PATCH_FAIL_UPLOAD_S3(false, 2022, "이메일을 입력해주세요."),
 
 
     /**

@@ -1,7 +1,6 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
-import com.example.traveler.config.BaseResponseStatus;
 import com.example.traveler.jwt.JwtTokenProvider;
 import com.example.traveler.repository.UserRepository;
 import com.example.traveler.model.entity.User;
@@ -11,7 +10,6 @@ import com.example.traveler.model.dto.UpdateNicknameDTO;
 import org.springframework.stereotype.Service;
 
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.example.traveler.config.BaseResponseStatus.*;
