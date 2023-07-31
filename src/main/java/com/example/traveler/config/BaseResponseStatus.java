@@ -17,10 +17,11 @@ public enum BaseResponseStatus {
      * 2000 : Request 오류
      */
     // Common
-    REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
-    EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
-    INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
-    INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
+    INVALID_JWT(false, 2000, "유효하지 않은 JWT입니다."),
+    EMPTY_JWT(false,2001,"JWT를 입력하세요"),
+
+    //login
+    INVALID_AUTHORIZATION_CODE(false, 2000, "유효하지 않은 Authorization code입니다."),
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
@@ -36,12 +37,17 @@ public enum BaseResponseStatus {
      * 3000 : Response 오류
      */
     // Common
-    RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
-
-    // [POST] /users
-    DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
-    FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
-
+    SAVE_TRAVEL_FAIL(false, 3001, "여행 생성에 실패했습니다."),
+    TRAVEL_IS_EMPTY(false, 3002, "여행이 존재하지 않습니다."),
+    DELETE_TRAVEL_FAIL(false, 3003, "여행 삭제에 실패했습니다."),
+    PATCH_TRAVEL_FAIL(false, 3004, "여행 수정에 실패했습니다."),
+    TRAVEL_USER_NOT_MATCH(false, 3005, "여행의 유저 정보가 일치하지 않습니다."),
+    SAVE_DAYCOURSE_FAIL(false, 3006, "코스 생성에 실패했습니다."),
+    DAYCOURSE_IS_EMPTY(false, 3007, "코스가 존재하지 않습니다."),
+    DAYCOURSE_EXISTS(false, 3008, "코스가 이미 존재합니다."),
+    SPOT_IS_FULL(false, 3009, "장소를 추가할 수 없습니다. 장소는 최대 4개까지 생성할 수 있습니다."),
+    SAVE_SPOT_FAIL(false, 3010, "장소 생성에 실패했습니다."),
+    DELETE_SPOT_FAIL(false, 3011, "장소 삭제에 실패했습니다."),
 
     // Post
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
@@ -49,7 +55,11 @@ public enum BaseResponseStatus {
     /**
      * 4000 : Database, Server 오류
      */
+
 //    DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
+
+    DATABASE_ERROR(false, 9000, "데이터베이스 연결에 실패하였습니다."),
+
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
@@ -62,9 +72,12 @@ public enum BaseResponseStatus {
     /**
      * 6000 : Checklist 오류
      */
-    UPDATE_FAIL_CATEGORYNAME( false, 6000, "카테고리명 수정 실패하였습니다."),
-    DELETE_FAIL_CATEGORY(false, 6010, "카테고리 삭제 실패하였습니다"),
-    DATABASE_ERROR(false, 6090, "데이터베이스 연결에 실패하였습니다.");
+    SAVE_CATEGORY_FAIL(false, 6001, "카테고리 생성 실패했습니다"),
+    UPDATE_CATEGORYNAME_FAIL( false, 6002, "카테고리명 수정 실패하였습니다."),
+    DELETE_CATEGORY_FAIL(false, 6003, "카테고리 삭제 실패하였습니다"),
+    SAVE_ITEM_FAIL(false, 6011, "준비물 생성에 실패했습니다."),
+    UPDATE_ITEM_FAIL(false, 6012, "준비물 수정에 실패했습니다."),
+    DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다.");
 
 
     private final boolean isSuccess;

@@ -1,5 +1,10 @@
 package com.example.traveler.controller;
 
+<<<<<<< HEAD
+=======
+import com.example.traveler.config.BaseException;
+import com.example.traveler.config.BaseResponse;
+>>>>>>> 0f903cca70b820824c4409422dd89978138f38d2
 import com.example.traveler.jwt.JwtTokenProvider;
 import com.example.traveler.model.dto.UpdateNicknameDTO;
 import com.example.traveler.model.entity.User;
@@ -35,12 +40,24 @@ public class UserController {
     }
 
     @PatchMapping("/nickname")
+<<<<<<< HEAD
     public ResponseEntity<User> updateNickname(@RequestHeader("Authorization") String accessToken,
                                                @RequestBody UpdateNicknameDTO updateNicknameDTO) {
         Long id = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
         User updatedUser = userService.updateNicknameById(id, updateNicknameDTO);
 
         return ResponseEntity.ok(updatedUser);
+=======
+    public BaseResponse<User> updateNickname(@RequestHeader("Authorization") String accessToken,
+                                               @RequestBody UpdateNicknameDTO updateNicknameDTO) {
+        try {
+            Long id = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
+            User updatedUser = userService.updateNicknameById(id, updateNicknameDTO);
+
+            return new BaseResponse<>(updatedUser);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));        }
+>>>>>>> 0f903cca70b820824c4409422dd89978138f38d2
     }
 
     @PatchMapping("/profile_image")
@@ -69,11 +86,25 @@ public class UserController {
     }
 
     @DeleteMapping("/profile")
+<<<<<<< HEAD
     public ResponseEntity<String> deleteUserProfile(@RequestHeader("Authorization") String accessToken) {
         Long userId = jwtTokenProvider.extractId(accessToken);
 
         userService.deleteUser(userId);
         return ResponseEntity.ok("회원 탈퇴가 성공적으로 처리되었습니다.");
+=======
+    public BaseResponse<String> deleteUserProfile(@RequestHeader("Authorization") String accessToken) {
+        try{
+        Long userId = jwtTokenProvider.extractId(accessToken);
+        userService.deleteUser(userId);
+        String result = "삭제되었습니다.";
+
+        return new BaseResponse<>(result);
+
+    } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+>>>>>>> 0f903cca70b820824c4409422dd89978138f38d2
     }
 
     @GetMapping("/profile")

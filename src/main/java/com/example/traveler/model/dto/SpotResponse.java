@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class SpotResponse {
     int sId;
+    int tId;
+    int dcId;
     String title;
     Double latitude;
     Double longitude;
