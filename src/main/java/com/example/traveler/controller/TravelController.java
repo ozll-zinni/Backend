@@ -44,11 +44,20 @@ public class TravelController {
         return travelService.patchTravel(tId, travelRequest);
     }
 
+    @DeleteMapping("/{tId}")
+    public String deleteTravel(@PathVariable("tId") int tId) throws Exception {
+        int result = travelService.deleteTravel(tId);
+        if (result == 0) {
+            throw new Exception("여행 삭제에 실패했습니다.");
+        } else {
+            return "여행 삭제에 성공했습니다.";
+        }
+    }
+
     @PostMapping("/{tId}/course")
     public DayCourseResponse saveCourse(@PathVariable("tId") int tId, @RequestBody DayCourseRequest dayCourseRequest) {
         return dayCourseService.saveCourse(dayCourseRequest, tId);
     }
-
 
 
     @GetMapping("/course/{dcId}")
