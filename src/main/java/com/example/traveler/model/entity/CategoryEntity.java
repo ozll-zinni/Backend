@@ -1,5 +1,6 @@
 package com.example.traveler.model.entity;
 
+import com.example.traveler.model.dto.CategoryResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
+public class CategoryEntity extends CategoryResponse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

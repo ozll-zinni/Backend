@@ -21,16 +21,11 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false,2001,"JWT를 입력하세요"),
 
     //login
-    INVALID_AUTHORIZATION_CODE(false, 2000, "유효하지 않은 Authorization code입니다."),
+    INVALID_AUTHORIZATION_CODE(false, 2010, "유효하지 않은 Authorization code입니다."),
 
-    // users
-    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
-
-    // [POST] /users
-    POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
-    POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
-
+    // [Patch] /users/profile_image
+    PATCH_NULL_FILE(false, 2021, "파일을 선택해주세요."),
+    PATCH_FAIL_UPLOAD_S3(false, 2022, "이메일을 입력해주세요."),
 
 
     /**
@@ -75,9 +70,11 @@ public enum BaseResponseStatus {
     SAVE_CATEGORY_FAIL(false, 6001, "카테고리 생성 실패했습니다"),
     UPDATE_CATEGORYNAME_FAIL( false, 6002, "카테고리명 수정 실패하였습니다."),
     DELETE_CATEGORY_FAIL(false, 6003, "카테고리 삭제 실패하였습니다"),
+    CATEGORY_NOT_FOUND(false, 6004, "카테고리 조회 실패했습니다."),
     SAVE_ITEM_FAIL(false, 6011, "준비물 생성에 실패했습니다."),
     UPDATE_ITEM_FAIL(false, 6012, "준비물 수정에 실패했습니다."),
-    DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다.");
+    DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다."),
+    ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다.");
 
 
     private final boolean isSuccess;

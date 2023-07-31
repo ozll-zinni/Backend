@@ -7,4 +7,8 @@ import lombok.Setter;
 @Setter
 public class CategoryResponse {
     private String name;
+    private int categoryId;
+
+    public void categoryId(int i) {
+    }
 }

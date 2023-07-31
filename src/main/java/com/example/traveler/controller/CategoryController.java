@@ -3,64 +3,80 @@ package com.example.traveler.controller;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.CategoryRequest;
+import com.example.traveler.model.dto.CategoryResponse;
 import lombok.AllArgsConstructor;
-import com.example.traveler.model.entity.CategoryEntity;
 import com.example.traveler.service.CategoryService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.example.traveler.config.BaseResponseStatus.DELETE_CATEGORY_FAIL;
 
 @CrossOrigin
 @AllArgsConstructor
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
-    private final CategoryService service;
+    @Autowired
+    private CategoryService categoryService;
 
     // 카테고리 생성 API
-    @PostMapping
-    public ResponseEntity<BaseResponse<CategoryEntity>> createCategory(@RequestBody CategoryRequest request) {
+    @PostMapping("")
+    public BaseResponse<CategoryResponse> createCategory(@RequestBody CategoryRequest request) {
         try {
-            CategoryEntity result = service.add(request);
-            return ResponseEntity.ok(new BaseResponse<>(result));
+            CategoryResponse categoryResponse = categoryService.add(request);
+            return new BaseResponse<>(categoryResponse);
         } catch (BaseException exception) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(exception.getStatus()));
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
     // 카테고리명 수정 API
-    @PatchMapping("/{id}")
-    public ResponseEntity<BaseResponse<CategoryEntity>> updateCategoryName(
-            @PathVariable("id") Long categoryId,
+    @PatchMapping("/{categoryId}")
+    public BaseResponse<CategoryResponse> updateCategoryName(
+            @PathVariable("categoryId") Long categoryId,
             @RequestBody CategoryRequest request) {
         try {
-            CategoryEntity result = service.updateCategoryName(categoryId, request.getName());
-            return ResponseEntity.ok(new BaseResponse<>(result));
+            CategoryResponse categoryResponse = categoryService.updateCategoryName(categoryId, request.getName());
+            return new BaseResponse<>(categoryResponse);
         } catch (BaseException exception) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(exception.getStatus()));
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
     // 카테고리 삭제 API
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse<?>> deleteCategory(@PathVariable("id") Long categoryId) {
+    @DeleteMapping("/{categoryId}")
+    public BaseResponse<String> deleteCategory(
+            @PathVariable("categoryId") Long categoryId) {
         try {
-            service.deleteCategory(categoryId);
-            return ResponseEntity.ok(new BaseResponse<>("카테고리 삭제에 성공했습니다."));
+            int result = categoryService.deleteCategory(categoryId);
+            if (result != 1) {
+                throw new BaseException(DELETE_CATEGORY_FAIL);
+            } else {
+                return new BaseResponse<>("카테고리 삭제에 성공했습니다.");
+            }
         } catch (BaseException exception) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(exception.getStatus()));
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
     // 모든 카테고리 조회 API
-    @GetMapping
-    public ResponseEntity<BaseResponse<List<CategoryEntity>>> getAllCategories() {
-        try {
-            List<CategoryEntity> categories = service.getAllCategories();
-            return ResponseEntity.ok(new BaseResponse<>(categories));
-        } catch (BaseException exception) {
-            return ResponseEntity.badRequest().body(new BaseResponse<>(exception.getStatus()));
-        }
+    @GetMapping("/category")
+    public BaseResponse<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categoryResponses = categoryService.getAllCategories();
+        return new BaseResponse<>(categoryResponses);
     }
+
+//    // 모든 카테고리 조회 API
+//    @GetMapping("")
+//    public BaseResponse<List<CategoryResponse>> getAllCategories() {
+//        try {
+//            List<CategoryResponse> categoryResponses = categoryService.getAllCategories();
+//            return new BaseResponse<>(categoryResponses);
+//        } catch (BaseException exception) {
+//            return new BaseResponse<>(exception.getStatus());
+//        }
+//    }
 }

@@ -1,16 +1,19 @@
 package com.example.traveler.service;
 
-import com.example.traveler.model.entity.CategoryEntity;
-import com.example.traveler.repository.CategoryRepository;
-import lombok.AllArgsConstructor;
-import com.example.traveler.model.entity.ChecklistEntity;
+import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.ChecklistRequest;
+import com.example.traveler.model.dto.ChecklistResponse;
+import com.example.traveler.model.entity.CategoryEntity;
+import com.example.traveler.model.entity.ChecklistEntity;
+import com.example.traveler.repository.CategoryRepository;
 import com.example.traveler.repository.ChecklistRepository;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 @AllArgsConstructor
@@ -20,69 +23,78 @@ public class ChecklistService {
     private final CategoryRepository categoryRepository;
 
     // 특정 카테고리에 새로운 항목 추가
-    public ChecklistEntity addItemToCategory(Long categoryId, ChecklistRequest request) {
+    public ChecklistResponse addItemToCategory(Long categoryId, ChecklistRequest request) throws BaseException {
         CategoryEntity category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(CATEGORY_NOT_FOUND));
 
         ChecklistEntity checklistEntity = new ChecklistEntity();
         checklistEntity.setTitle(request.getTitle());
         checklistEntity.setOrder(request.getOrder());
-        checklistEntity.setCompleted(request.getCompleted());
+        checklistEntity.setCompleted(request.isCompleted());
         checklistEntity.setCategory(category);
 
-        return this.checklistRepository.save(checklistEntity);
+        ChecklistEntity savedChecklistEntity = checklistRepository.save(checklistEntity);
+        return mapChecklistEntityToResponse(savedChecklistEntity);
     }
 
     // 특정 카테고리 내의 특정 항목 이름 수정
-    public ChecklistEntity updateItemNameInCategory(Long categoryId, Long itemId, String newItemName) {
-        ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
+    public ChecklistResponse updateItemNameInCategory(Long categoryId, Long itemId, String newItemName) throws BaseException {
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BaseException(CATEGORY_NOT_FOUND));
 
-        // 특정 항목의 이름을 업데이트합니다.
+        ChecklistEntity checklistEntity = (ChecklistEntity) checklistRepository.findByCategoryAndId(category, itemId)
+                .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+
         checklistEntity.setTitle(newItemName);
 
-        // 변경된 체크리스트를 저장하고 반환합니다.
-        return this.checklistRepository.save(checklistEntity);
+        ChecklistEntity updatedChecklistEntity = checklistRepository.save(checklistEntity);
+        return mapChecklistEntityToResponse(updatedChecklistEntity);
     }
 
     // 특정 카테고리 내의 특정 항목 삭제
-    public void deleteItemFromCategory(Long categoryId, Long itemId) {
-        // 해당 카테고리와 관련된 체크리스트 항목을 삭제합니다.
-        ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
-        if (!checklistEntity.getCategory().getId().equals(categoryId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 카테고리에 속한 항목이 아닙니다.");
-        }
+    public int deleteItemFromCategory(Long categoryId, Long itemId) throws BaseException {
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BaseException(CATEGORY_NOT_FOUND));
 
-        this.checklistRepository.deleteById(itemId);
+        ChecklistEntity checklistEntity = (ChecklistEntity) checklistRepository.findByCategoryAndId(category, itemId)
+                .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+
+        checklistRepository.delete(checklistEntity);
+        return 0;
     }
 
     // 특정 카테고리 내의 모든 항목 조회
-    public List<ChecklistEntity> getAllItemsInCategory(Long categoryId) {
+    public List<ChecklistResponse> getAllItemsInCategory(Long categoryId) throws BaseException {
         CategoryEntity category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(CATEGORY_NOT_FOUND));
 
-        return category.getChecklistItems();
+        List<ChecklistEntity> checklistEntities = checklistRepository.findByCategoryOrderByOrderAsc(category);
+        return checklistEntities.stream()
+                .map(this::mapChecklistEntityToResponse)
+                .collect(Collectors.toList());
     }
 
     // 특정 카테고리 내의 항목 상태 변경
-    public ChecklistEntity changeItemStatusInCategory(Long categoryId, Long itemId, boolean completed) {
-        // 해당 카테고리와 관련된 체크리스트 항목을 조회합니다.
-        ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
+    public ChecklistResponse changeItemStatusInCategory(Long categoryId, Long itemId, boolean completed) throws BaseException {
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BaseException(CATEGORY_NOT_FOUND));
 
-        // 항목이 해당 카테고리에 속하는지 확인합니다.
-        if (!checklistEntity.getCategory().getId().equals(categoryId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 카테고리에 속한 항목이 아닙니다.");
-        }
+        ChecklistEntity checklistEntity = (ChecklistEntity) checklistRepository.findByCategoryAndId(category, itemId)
+                .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
-        // 항목의 상태를 변경합니다.
         checklistEntity.setCompleted(completed);
 
-        // 변경된 체크리스트를 저장하고 반환합니다.
-        return this.checklistRepository.save(checklistEntity);
+        ChecklistEntity updatedChecklistEntity = checklistRepository.save(checklistEntity);
+        return mapChecklistEntityToResponse(updatedChecklistEntity);
+    }
+
+    // ChecklistEntity를 ChecklistResponse로 변환하는 도우미 메서드
+    private ChecklistResponse mapChecklistEntityToResponse(ChecklistEntity checklistEntity) {
+        ChecklistResponse response = new ChecklistResponse();
+        response.setId(checklistEntity.getId());
+        response.setTitle(checklistEntity.getTitle());
+        response.setOrder(checklistEntity.getOrder());
+        response.setCompleted(checklistEntity.isCompleted());
+        return response;
     }
 }
-
-
-

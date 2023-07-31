@@ -19,11 +19,22 @@ public class ChecklistEntity {
     private String title;
 
     @Column(nullable = false)
-    private Long order; // Change the type to Long
+    private Long orderNumber; // Changed the name to orderNumber and type to Long
 
     @Column(nullable = false)
     private Boolean completed;
 
     @ManyToOne
     private CategoryEntity category;
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public Long getOrder() {
+        return orderNumber;
+    }
+
+    public void setOrder(Long order) {
+    }
 }
