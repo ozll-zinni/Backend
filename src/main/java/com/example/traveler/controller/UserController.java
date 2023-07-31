@@ -87,5 +87,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/profile2")
+    public User getUserProfile2(@RequestHeader("Authorization") String accessToken) {
+        Long Id = jwtTokenProvider.extractId(accessToken);
+        User user = userService.getUser(Id);
+        return user;
+    }
 }
 
