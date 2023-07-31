@@ -1,5 +1,6 @@
 package com.example.traveler.service;
 
+import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.DayCourseRequest;
 import com.example.traveler.model.dto.DayCourseResponse;
 import com.example.traveler.model.dto.SpotRequest;
@@ -23,7 +24,7 @@ public class SpotService {
     private TravelRepository travelRepository;
     @Autowired
     private SpotRepository spotRepository;
-    public DayCourseResponse saveSpot(SpotRequest spotRequest, int dcId) {
+    public DayCourseResponse saveSpot(SpotRequest spotRequest, int dcId) throws BaseException {
         DayCourse dayCourse = dayCourseRepository.findBydcId(dcId);
         Spot spot = new Spot(spotRequest.getTitle(), spotRequest.getLatitude(), spotRequest.getLongitude());
         Spot saveSpot = spotRepository.save(spot);
@@ -40,11 +41,11 @@ public class SpotService {
             dayCourse.setSpot4(saveSpot);
         }
         DayCourse newDayCourse = dayCourseRepository.save(dayCourse);
-        DayCourseResponse dayCourseResponse = new DayCourseResponse(newDayCourse.getDcId(), newDayCourse.getTravel(), dayCourse.getSpot1(), dayCourse.getSpot2(), dayCourse.getSpot3(), dayCourse.getSpot4(), dayCourse.getFirst(), dayCourse.getSecond(), dayCourse.getThird(), newDayCourse.getNumOfDay());
+        DayCourseResponse dayCourseResponse = new DayCourseResponse(newDayCourse.getDcId(), newDayCourse.getTravel().getTId(), dayCourse.getSpot1(), dayCourse.getSpot2(), dayCourse.getSpot3(), dayCourse.getSpot4(), dayCourse.getFirst(), dayCourse.getSecond(), dayCourse.getThird(), newDayCourse.getNumOfDay());
         return dayCourseResponse;
     }
 
-    public DayCourseResponse deleteSpot(int dcId, int num) {
+    public DayCourseResponse deleteSpot(int dcId, int num) throws BaseException{
         DayCourse dayCourse = dayCourseRepository.findBydcId(dcId);
         if (num == 1) {
             dayCourse.setSpot1(dayCourse.getSpot2());
@@ -62,7 +63,7 @@ public class SpotService {
             dayCourse.setSpot4(null);
         }
         DayCourse newDayCourse = dayCourseRepository.save(dayCourse);
-        DayCourseResponse dayCourseResponse = new DayCourseResponse(newDayCourse.getDcId(), newDayCourse.getTravel(), dayCourse.getSpot1(), dayCourse.getSpot2(), dayCourse.getSpot3(), dayCourse.getSpot4(), dayCourse.getFirst(), dayCourse.getSecond(), dayCourse.getThird(), newDayCourse.getNumOfDay());
+        DayCourseResponse dayCourseResponse = new DayCourseResponse(newDayCourse.getDcId(), newDayCourse.getTravel().getTId(), newDayCourse.getSpot1(), newDayCourse.getSpot2(), newDayCourse.getSpot3(), newDayCourse.getSpot4(), newDayCourse.getFirst(), newDayCourse.getSecond(), newDayCourse.getThird(), newDayCourse.getNumOfDay());
         return dayCourseResponse;
     }
 
