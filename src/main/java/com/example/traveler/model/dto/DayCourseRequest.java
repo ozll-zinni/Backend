@@ -9,10 +9,6 @@ import java.util.Date;
 @Setter
 @Getter
 @AllArgsConstructor
-public class TravelRequest {
-    String title;
-    String destination;
-    Date start_date;
-    Date end_date;
-    int write_status;
+public class DayCourseRequest {
+    int numOfDay;
 }

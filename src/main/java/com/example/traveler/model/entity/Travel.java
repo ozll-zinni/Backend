@@ -29,7 +29,7 @@ public class Travel {
     @CreationTimestamp
     Timestamp created_at;
 
-    //지난건지 예정된건지
+    //시작 날짜 기준으로 지난건지 예정된건지
     int time_status;
 
     //추천받은건지 직접쓴건지
@@ -37,6 +37,8 @@ public class Travel {
 
     //아무것도 없는지, 가계부만 있는지, 체크리스트만 있는지, 둘 다 있는지
     int note_status;
+
+    int state;
 
     //사용자
     //@ManyToOne
@@ -46,11 +48,14 @@ public class Travel {
     @OneToMany(mappedBy = "travel")
     List<DayCourse> courses = new ArrayList<>();
 
-    public Travel(String title, String destination, Date startDate, Date endDate, int writeStatus) {
+    public Travel(String title, String destination, Date startDate, Date endDate, int timeStatus, int writeStatus, int noteStatus, int state) {
         this.title = title;
         this.destination = destination;
         this.start_date = startDate;
         this.end_date = endDate;
+        this.time_status = timeStatus;
         this.write_status = writeStatus;
+        this.note_status = noteStatus;
+        this.state = state;
     }
 }
