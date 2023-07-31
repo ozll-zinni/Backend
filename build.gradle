@@ -23,7 +23,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     runtimeOnly 'com.h2database:h2'
     implementation 'commons-logging:commons-logging:1.2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
