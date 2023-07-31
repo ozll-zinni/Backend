@@ -18,9 +18,12 @@ public class ChecklistEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "ChecklistOrder", nullable = false)
-    private Long order;
+    @Column(nullable = false)
+    private Long order; // Change the type to Long
 
     @Column(nullable = false)
     private Boolean completed;
+
+    @ManyToOne
+    private CategoryEntity category;
 }
