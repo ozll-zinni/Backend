@@ -1,6 +1,6 @@
-package com.example.traveler.Model.Dto;
+package com.example.traveler.model.dto;
 
-import com.example.traveler.Model.Entity.ChecklistEntity;
+import com.example.traveler.model.entity.ChecklistEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

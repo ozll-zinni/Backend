@@ -1,9 +1,9 @@
-package com.example.traveler.Controller;
+package com.example.traveler.controller;
 
-import com.example.traveler.Model.Dto.CategoryRequest;
+import com.example.traveler.model.dto.CategoryRequest;
 import lombok.AllArgsConstructor;
-import com.example.traveler.Model.Entity.CategoryEntity;
-import com.example.traveler.Service.CategoryService;
+import com.example.traveler.model.entity.CategoryEntity;
+import com.example.traveler.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.example.traveler.Model.Entity;
+package com.example.traveler.model.entity;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;

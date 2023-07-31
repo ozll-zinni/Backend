@@ -1,4 +1,4 @@
-package com.example.traveler.Model.Entity;
+package com.example.traveler.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
