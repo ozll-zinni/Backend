@@ -20,6 +20,9 @@ public enum BaseResponseStatus {
     INVALID_JWT(false, 2000, "유효하지 않은 JWT입니다."),
     EMPTY_JWT(false,2001,"JWT를 입력하세요"),
 
+    //login
+    INVALID_AUTHORIZATION_CODE(false, 2000, "유효하지 않은 Authorization code입니다."),
+
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
 
