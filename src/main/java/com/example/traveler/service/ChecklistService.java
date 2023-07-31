@@ -1,11 +1,11 @@
-package com.example.traveler.Service;
+package com.example.traveler.service;
 
-import com.example.traveler.Model.Entity.CategoryEntity;
-import com.example.traveler.Repository.CategoryRepository;
+import com.example.traveler.model.entity.CategoryEntity;
+import com.example.traveler.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
-import com.example.traveler.Model.Entity.ChecklistEntity;
-import com.example.traveler.Model.Dto.ChecklistRequest;
-import com.example.traveler.Repository.ChecklistRepository;
+import com.example.traveler.model.entity.ChecklistEntity;
+import com.example.traveler.model.dto.ChecklistRequest;
+import com.example.traveler.repository.ChecklistRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

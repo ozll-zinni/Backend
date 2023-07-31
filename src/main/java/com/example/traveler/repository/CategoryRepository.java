@@ -1,6 +1,6 @@
-package com.example.traveler.Repository;
+package com.example.traveler.repository;
 
-import com.example.traveler.Model.Entity.CategoryEntity;
+import com.example.traveler.model.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
