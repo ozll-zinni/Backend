@@ -11,16 +11,11 @@ import com.example.traveler.service.S3Uploader;
 import com.example.traveler.service.TravelService;
 import com.example.traveler.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.example.traveler.config.BaseResponseStatus.INVALID_JWT;
-import static com.example.traveler.config.BaseResponseStatus.PATCH_NULL_FILE;
 
 @RestController
 @RequestMapping("/users")
@@ -49,8 +44,8 @@ public class UserController {
     public BaseResponse<User> updateNickname(@RequestHeader("Authorization") String accessToken,
                                                @RequestBody UpdateNicknameDTO updateNicknameDTO) {
         try {
-            Long id = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
-            User updatedUser = userService.updateNicknameById(id, updateNicknameDTO);
+            Long Id = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
+            User updatedUser = userService.updateNicknameById(Id, updateNicknameDTO);
 
             return new BaseResponse<>(updatedUser);
         } catch (BaseException exception) {
@@ -59,38 +54,37 @@ public class UserController {
 
     @PatchMapping("/profile_image")
     public BaseResponse<String> uploadProfileImage(@RequestHeader("Authorization") String accessToken,
-                                                     @RequestParam("imageFile") MultipartFile imageFile) {
+                                                   @RequestParam("imageFile") MultipartFile imageFile) {
         try {
-            Long userId = jwtTokenProvider.extractId(accessToken); // User 아이디 추출
+            // 유저 정보를 통해 해당 사용자의 ID를 가져옴
+            Long Id = jwtTokenProvider.extractId(accessToken);
 
             // 이미지 업로드 서비스를 통해 이미지를 S3에 업로드하고 경로를 받아옴
             String imageUrl = s3Uploader.uploadImage(imageFile);
 
-            if (imageUrl != null) {
-                // User 엔티티를 찾아서 이미지 경로를 저장
-                Optional<User> optionalUser = userRepository.findById(userId);
-                if (optionalUser.isPresent()) {
-                    User user = optionalUser.get();
-                    user.setProfile_image_url(imageUrl);
-                    userRepository.save(user);
+            // 사용자 정보 업데이트
+            Optional<User> optionalUser = userRepository.findById(Id);
 
-                    String result = "프로필 이미지가 업로드 되었습니다.";
-                    return new BaseResponse<>(result);
-                } else {
-                    throw new BaseException(INVALID_JWT);                 }
-            } else {
-                throw new BaseException(PATCH_NULL_FILE);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setProfile_image_url(imageUrl);
+                userRepository.save(user);
             }
+
+            return new BaseResponse<>(imageUrl);
+
         } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
+            // 예외가 발생한 경우에 대한 처리
+            return new BaseResponse<>(exception.getStatus());
         }
     }
+
 
     @DeleteMapping("/profile")
     public BaseResponse<String> deleteUserProfile(@RequestHeader("Authorization") String accessToken) {
         try{
-        Long userId = jwtTokenProvider.extractId(accessToken);
-        userService.deleteUser(userId);
+        Long Id = jwtTokenProvider.extractId(accessToken);
+        userService.deleteUser(Id);
         String result = "삭제되었습니다.";
 
         return new BaseResponse<>(result);
@@ -101,34 +95,30 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String accessToken) {
+    public BaseResponse<User> getUserProfile(@RequestHeader("Authorization") String accessToken) {
         Long Id = jwtTokenProvider.extractId(accessToken);
-
         User user = userService.getUser(Id);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        return new BaseResponse<>(user);
     }
 
+
     @GetMapping("/my_travels")
-    public ResponseEntity<List<TravelResponse>> getAllMyTravel(@RequestHeader("Authorization") String accessToken) {
+    public BaseResponse<List<TravelResponse>> getAllMyTravel(@RequestHeader("Authorization") String accessToken) {
             // 유저 정보를 통해 해당 사용자의 여행 정보를 가져옴
             Long Id = jwtTokenProvider.extractId(accessToken);
             User user = userService.getUser(Id); // User 객체를 생성하거나 UserRepository를 이용하여 사용자 정보를 가져올 수 있습니다.
             List<TravelResponse> allMyTravelResponse = travelService.getAllMyTravel(user);
-            return ResponseEntity.ok(allMyTravelResponse);
+            return new BaseResponse<>(allMyTravelResponse);
 
     }
 
     @GetMapping("/my_past_travels")
-    public ResponseEntity<List<TravelResponse>> allMyPastTravel(@RequestHeader("Authorization") String accessToken) {
+    public BaseResponse<List<TravelResponse>> allMyPastTravel(@RequestHeader("Authorization") String accessToken) {
         // 유저 정보를 통해 해당 사용자의 여행 정보를 가져옴
         Long Id = jwtTokenProvider.extractId(accessToken);
         User user = userService.getUser(Id); // User 객체를 생성하거나 UserRepository를 이용하여 사용자 정보를 가져올 수 있습니다.
         List<TravelResponse> allMyTravelResponse = travelService.allMyPastTravel(user);
-        return ResponseEntity.ok(allMyTravelResponse);
+        return new BaseResponse<>(allMyTravelResponse);
 
     }
 }
