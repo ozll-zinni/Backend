@@ -1,5 +1,6 @@
 package com.example.traveler.model.entity;
 
+import com.example.traveler.model.dto.ChecklistResponse;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import jakarta.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChecklistEntity {
+public class ChecklistEntity extends ChecklistResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,11 +20,22 @@ public class ChecklistEntity {
     private String title;
 
     @Column(nullable = false)
-    private Long order; // Change the type to Long
+    private Long orderNumber; // Changed the name to orderNumber and type to Long
 
     @Column(nullable = false)
     private Boolean completed;
 
     @ManyToOne
     private CategoryEntity category;
+
+//    public boolean isCompleted() {
+//        return completed;
+//    }
+
+    public Long getOrder() {
+        return orderNumber;
+    }
+
+    public void setOrder(Long order) {
+    }
 }

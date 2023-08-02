@@ -50,18 +50,31 @@ public enum BaseResponseStatus {
     /**
      * 4000 : Database, Server 오류
      */
+
+//    DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
+
     DATABASE_ERROR(false, 9000, "데이터베이스 연결에 실패하였습니다."),
+
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
     MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
-    PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");
+    PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
 
 
-    // 5000 : 필요시 만들어서 쓰세요
-    // 6000 : 필요시 만들어서 쓰세요
+    /**
+     * 6000 : Checklist 오류
+     */
+    SAVE_CATEGORY_FAIL(false, 6001, "카테고리 생성 실패했습니다"),
+    UPDATE_CATEGORYNAME_FAIL( false, 6002, "카테고리명 수정 실패하였습니다."),
+    DELETE_CATEGORY_FAIL(false, 6003, "카테고리 삭제 실패하였습니다"),
+    CATEGORY_NOT_FOUND(false, 6004, "카테고리 조회 실패했습니다."),
+    SAVE_ITEM_FAIL(false, 6011, "준비물 생성에 실패했습니다."),
+    UPDATE_ITEM_FAIL(false, 6012, "준비물 수정에 실패했습니다."),
+    DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다."),
+    ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다.");
 
 
     private final boolean isSuccess;

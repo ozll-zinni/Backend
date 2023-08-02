@@ -26,6 +26,6 @@ public class ChecklistResponse {
         this.categoryId = checklistEntity.getCategory().getId();
         this.categoryName = checklistEntity.getCategory().getName();
 
-        this.url = "http://localhost:8080/"+this.id;
+        this.url = "http://localhost:9000/"+this.id;
     }
 }

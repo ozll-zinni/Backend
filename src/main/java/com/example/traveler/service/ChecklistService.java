@@ -46,7 +46,7 @@ public class ChecklistService {
     }
 
     // 특정 카테고리 내의 특정 항목 삭제
-    public void deleteItemFromCategory(Long categoryId, Long itemId) {
+    public int deleteItemFromCategory(Long categoryId, Long itemId) {
         // 해당 카테고리와 관련된 체크리스트 항목을 삭제합니다.
         ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
@@ -55,6 +55,7 @@ public class ChecklistService {
         }
 
         this.checklistRepository.deleteById(itemId);
+        return 0;
     }
 
     // 특정 카테고리 내의 모든 항목 조회
