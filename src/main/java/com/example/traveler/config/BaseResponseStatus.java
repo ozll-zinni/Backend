@@ -25,7 +25,8 @@ public enum BaseResponseStatus {
 
     // [Patch] /users/profile_image
     PATCH_NULL_FILE(false, 2021, "파일을 선택해주세요."),
-    PATCH_FAIL_UPLOAD_S3(false, 2022, "이메일을 입력해주세요."),
+    PATCH_FAIL_UPLOAD_S3(false, 2022, "업로드에 실패하였습니다."),
+    PATCH_INVALID_FILE_TYPE(false, 2023, "지원하지 않는 파일 형식입니다."),
 
 
     /**
