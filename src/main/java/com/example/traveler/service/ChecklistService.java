@@ -1,89 +1,155 @@
 package com.example.traveler.service;
 
-import com.example.traveler.model.entity.CategoryEntity;
-import com.example.traveler.repository.CategoryRepository;
-import lombok.AllArgsConstructor;
+import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.ChecklistResponse;
 import com.example.traveler.model.entity.ChecklistEntity;
-import com.example.traveler.model.dto.ChecklistRequest;
+import com.example.traveler.model.entity.Travel;
 import com.example.traveler.repository.ChecklistRepository;
-import org.springframework.http.HttpStatus;
+import com.example.traveler.repository.TravelRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
+import java.util.ArrayList;
+
+import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 @AllArgsConstructor
 public class ChecklistService {
-
+    
+    @Autowired
+    private TravelRepository travelRepository;
+    @Autowired
     private final ChecklistRepository checklistRepository;
-    private final CategoryRepository categoryRepository;
 
-    // 특정 카테고리에 새로운 항목 추가
-    public ChecklistEntity addItemToCategory(Long categoryId, ChecklistRequest request) {
-        CategoryEntity category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."));
+    // 여행정보를 담은 tId를 받아서 해당 여행에 대한 checklist를 조회하고, 없으면 생성하는 메서드
+    public ChecklistResponse saveChecklist(Integer tId) throws BaseException {
+        // 데이터베이스 연결 여부 확인
+//        if (!isDatabaseConnected()) {
+//            throw new BaseException(DATABASE_ERROR);
+//        }
 
-        ChecklistEntity checklistEntity = new ChecklistEntity();
-        checklistEntity.setTitle(request.getTitle());
-        checklistEntity.setOrder(request.getOrder());
-        checklistEntity.setCompleted(request.getCompleted());
-        checklistEntity.setCategory(category);
+        // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회
+        Travel travel = travelRepository.findById(tId)
+                .orElseThrow(() -> new BaseException(TRAVEL_IS_EMPTY));
 
-        return this.checklistRepository.save(checklistEntity);
-    }
+        // 해당 여행에 대한 체크리스트를 데이터베이스에서 조회
+        ChecklistEntity savedChecklist = checklistRepository.findByTravel(travel);
 
-    // 특정 카테고리 내의 특정 항목 이름 수정
-    public ChecklistEntity updateItemNameInCategory(Long categoryId, Long itemId, String newItemName) {
-        ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
+        // 만약 해당 여행에 대한 체크리스트가 없으면 새로운 체크리스트를 생성하여 저장
+        if (savedChecklist == null) {
+            ChecklistEntity newChecklist = new ChecklistEntity();
+            newChecklist.setTitle("새로운 체크리스트");
+            newChecklist.setTravel(travel);
 
-        // 특정 항목의 이름을 업데이트합니다.
-        checklistEntity.setTitle(newItemName);
-
-        // 변경된 체크리스트를 저장하고 반환합니다.
-        return this.checklistRepository.save(checklistEntity);
-    }
-
-    // 특정 카테고리 내의 특정 항목 삭제
-    public int deleteItemFromCategory(Long categoryId, Long itemId) {
-        // 해당 카테고리와 관련된 체크리스트 항목을 삭제합니다.
-        ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
-        if (!checklistEntity.getCategory().getId().equals(categoryId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 카테고리에 속한 항목이 아닙니다.");
+            // 새로운 체크리스트 데이터베이스에 저장
+            try {
+                savedChecklist = checklistRepository.save(newChecklist);
+            } catch (Exception e) {
+                throw new BaseException(SAVE_CATEGORY_FAIL);
+            }
         }
 
-        this.checklistRepository.deleteById(itemId);
-        return 0;
+        // 저장된 체크리스트 정보를 ChecklistResponse 형태로 반환
+        ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
+        return checklistResponse;
     }
 
-    // 특정 카테고리 내의 모든 항목 조회
-    public List<ChecklistEntity> getAllItemsInCategory(Long categoryId) {
-        CategoryEntity category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."));
+    public ChecklistResponse getChecklist(int cId) throws BaseException {
+        ChecklistEntity getChecklist = checklistRepository.findBycIdAndState(cId, 1);
+        if (getChecklist == null) {
+            throw new BaseException(CHECKLIST_IS_EMPTY);
+        }
+        ChecklistResponse checklistResponse = new ChecklistResponse(getChecklist.getTitle(), getChecklist.getCId());
+        return checklistResponse;
+    }
+    // 체크리스트명 변경
+    public ChecklistResponse patchChecklist(int cId, String newName) throws BaseException {
+        // 데이터베이스 연결 여부를 확인
+//        if (!isDatabaseConnected()) {
+//            throw new BaseException(DATABASE_ERROR);
+//        }
 
-        return category.getChecklistItems();
+        // 기존 체크리스트를 데이터베이스에서 조회
+        ChecklistEntity checklist = checklistRepository.findById(cId)
+                .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
+
+        // 체크리스트명 변경
+        checklist.setTitle(newName);
+
+        // 변경사항을 임시로 저장
+//        saveToPendingChanges(cId, checklist);
+
+        // 변경된 체크리스트 정보를 ChecklistResponse 형태로 반환
+        ChecklistResponse response = new ChecklistResponse();
+        response.setCId(checklist.getCId());
+        response.setTitle(checklist.getTitle());
+        return response;
     }
 
-    // 특정 카테고리 내의 항목 상태 변경
-    public ChecklistEntity changeItemStatusInCategory(Long categoryId, Long itemId, boolean completed) {
-        // 해당 카테고리와 관련된 체크리스트 항목을 조회합니다.
-        ChecklistEntity checklistEntity = this.checklistRepository.findById(itemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 항목을 찾을 수 없습니다."));
+//    private void saveToPendingChanges(int cId, ChecklistEntity checklist) {
+//
+//    }
 
-        // 항목이 해당 카테고리에 속하는지 확인합니다.
-        if (!checklistEntity.getCategory().getId().equals(categoryId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 카테고리에 속한 항목이 아닙니다.");
+//    private boolean isDatabaseConnected() {
+//    }
+
+    // 체크리스트 삭제
+    public int deleteChecklist(int cId) throws BaseException {
+        // 데이터베이스 연결 여부를 확인
+//        if (!isDatabaseConnected()) {
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+
+        // 체크리스트를 데이터베이스에서 조회
+        ChecklistEntity checklist = checklistRepository.findById(cId)
+                .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
+
+        // 변경사항을 임시로 저장
+//        removeFromPendingChanges(cId);
+
+        try {
+            // 체크리스트 삭제 (필요하다면 데이터베이스에서도 삭제)
+            checklistRepository.delete(checklist);
+        } catch (Exception e) {
+            // If the deletion fails, throw an exception indicating the failure
+            throw new BaseException(DELETE_CATEGORY_FAIL);
         }
 
-        // 항목의 상태를 변경합니다.
-        checklistEntity.setCompleted(completed);
-
-        // 변경된 체크리스트를 저장하고 반환합니다.
-        return this.checklistRepository.save(checklistEntity);
+        // 성공적으로 삭제되면 1 반환
+        return 1;
     }
+
+//    private void removeFromPendingChanges(int cId) {
+//        pendingChangesMap.remove(cId);
+//    }
+
+    // 특정 여행에 대한 모든 체크리스트를 조회하는 메서드
+    public List<ChecklistResponse> getAllChecklistsByTravel(int tId) throws BaseException {
+        // 데이터베이스 연결 여부 확인
+//        if (!isDatabaseConnected()) {
+//            throw new BaseException(DATABASE_ERROR);
+//        }
+
+        // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회
+        Travel travel = travelRepository.findById(tId)
+                .orElseThrow(() -> new BaseException(TRAVEL_IS_EMPTY));
+
+        // 해당 여행에 대한 모든 체크리스트를 데이터베이스에서 조회
+        List<ChecklistEntity> checklists = checklistRepository.findAllByTravel(travel);
+
+        // 조회된 체크리스트들을 ChecklistResponse 형태로 변환하여 리스트로 반환
+        List<ChecklistResponse> checklistResponses = new ArrayList<>();
+        for (ChecklistEntity checklist : checklists) {
+            ChecklistResponse response = new ChecklistResponse(checklist.getTitle(), checklist.getCId());
+            checklistResponses.add(response);
+        }
+
+        return checklistResponses;
+    }
+
+
 }
-
-
-

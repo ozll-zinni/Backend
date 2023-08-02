@@ -1,31 +1,23 @@
 package com.example.traveler.model.dto;
 
-import com.example.traveler.model.entity.ChecklistEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
+// ChecklistResponse 클래스에 인자가 있는 생성자 추가
 public class ChecklistResponse {
-    private Long id;
     private String title;
-    private Long order;
-    private Boolean completed;
-    private Long categoryId;
-    private String categoryName;
-    private String url;
+    private int cId;
 
-    public ChecklistResponse(ChecklistEntity checklistEntity){
-        this.id = checklistEntity.getId();
-        this.title = checklistEntity.getTitle();
-        this.order = checklistEntity.getOrder();
-        this.completed = checklistEntity.getCompleted();
+    public ChecklistResponse() {
+        // 기본 생성자
+    }
 
-        this.categoryId = checklistEntity.getCategory().getId();
-        this.categoryName = checklistEntity.getCategory().getName();
-
-        this.url = "http://localhost:9000/"+this.id;
+    public ChecklistResponse(String title, int cId) {
+        this.title = title;
+        this.cId = cId;
     }
 }

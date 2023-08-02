@@ -1,41 +1,32 @@
 package com.example.traveler.model.entity;
 
-import com.example.traveler.model.dto.ChecklistResponse;
-import lombok.Data;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChecklistEntity extends ChecklistResponse {
+public class ChecklistEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    int cId;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private Long orderNumber; // Changed the name to orderNumber and type to Long
-
-    @Column(nullable = false)
-    private Boolean completed;
-
+    // TravelEntity와의 다대일 관계 설정
     @ManyToOne
-    private CategoryEntity category;
+    @JoinColumn(name = "tId") // tId는 TravelEntity의 PK (여행 ID)
+    private Travel travel;
 
-//    public boolean isCompleted() {
-//        return completed;
-//    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "checklist")
+    private List<ItemEntity> checklistItems = new ArrayList<>();
 
-    public Long getOrder() {
-        return orderNumber;
-    }
-
-    public void setOrder(Long order) {
-    }
 }
