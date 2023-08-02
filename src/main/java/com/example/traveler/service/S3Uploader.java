@@ -11,8 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.example.traveler.config.BaseResponseStatus.PATCH_FAIL_UPLOAD_S3;
-import static com.example.traveler.config.BaseResponseStatus.PATCH_NULL_FILE;
+import static com.example.traveler.config.BaseResponseStatus.*;
 
 
 @Service
@@ -30,6 +29,12 @@ public class S3Uploader {
         try {
             if (imageFile.isEmpty()) {
                 throw new BaseException(PATCH_NULL_FILE);
+            }
+
+            // 파일 확장자 확인 jpg, jpeg, png만 가능
+            String originalFilename = imageFile.getOriginalFilename();
+            if (!originalFilename.endsWith(".png") && !originalFilename.endsWith(".jpg") && !originalFilename.endsWith(".jpeg")) {
+                throw new BaseException(PATCH_INVALID_FILE_TYPE);
             }
 
             // S3에 업로드할 파일명 생성 (유니크한 이름으로 저장하거나, 원본 파일명을 그대로 사용할 수도 있습니다.)
