@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChecklistResponse {
-    private long id;
+    private Long id;
     private String title;
     private Long order;
     private Boolean completed;
