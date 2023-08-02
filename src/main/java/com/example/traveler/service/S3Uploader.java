@@ -28,7 +28,7 @@ public class S3Uploader {
 
     public String uploadImage(MultipartFile imageFile) throws BaseException {
         try {
-            if (imageFile == null) {
+            if (imageFile.isEmpty()) {
                 throw new BaseException(PATCH_NULL_FILE);
             }
 
