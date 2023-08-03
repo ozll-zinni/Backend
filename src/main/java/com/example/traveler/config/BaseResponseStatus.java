@@ -68,10 +68,11 @@ public enum BaseResponseStatus {
     /**
      * 6000 : Checklist 오류
      */
-    SAVE_CATEGORY_FAIL(false, 6001, "카테고리 생성 실패했습니다"),
-    UPDATE_CATEGORYNAME_FAIL( false, 6002, "카테고리명 수정 실패하였습니다."),
-    DELETE_CATEGORY_FAIL(false, 6003, "카테고리 삭제 실패하였습니다"),
-    CATEGORY_NOT_FOUND(false, 6004, "카테고리 조회 실패했습니다."),
+    SAVE_CATEGORY_FAIL(false, 6001, "체크리스트 생성 실패했습니다"),
+    UPDATE_CATEGORYNAME_FAIL( false, 6002, "체크리스트 수정 실패하였습니다."),
+    CHECKLIST_IS_EMPTY(false,6003, "체크리스트가 존재하지 않습니다."),
+    DELETE_CATEGORY_FAIL(false, 6004, "체크리스트 삭제 실패하였습니다"),
+    CATEGORY_NOT_FOUND(false, 6005, "체크리스트 조회 실패했습니다."),
     SAVE_ITEM_FAIL(false, 6011, "준비물 생성에 실패했습니다."),
     UPDATE_ITEM_FAIL(false, 6012, "준비물 수정에 실패했습니다."),
     DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다."),
