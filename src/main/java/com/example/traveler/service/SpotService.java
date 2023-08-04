@@ -5,7 +5,7 @@ import com.example.traveler.model.dto.DayCourseRequest;
 import com.example.traveler.model.dto.DayCourseResponse;
 import com.example.traveler.model.dto.SpotRequest;
 import com.example.traveler.model.entity.DayCourse;
-import com.example.traveler.model.entity.Spot;
+import com.example.traveler.    model.entity.Spot;
 import com.example.traveler.model.entity.Travel;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.DayCourseRepository;
