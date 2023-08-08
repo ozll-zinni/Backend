@@ -34,5 +34,7 @@ public class RecommendTravel {
     private int code1;
     private int code2;
 
+    //
+
 
 }
