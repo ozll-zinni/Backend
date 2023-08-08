@@ -8,6 +8,7 @@ import com.example.traveler.model.dto.UpdateNicknameDTO;
 
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -17,8 +18,9 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 public class UserService {
-
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final JwtTokenProvider jwtTokenProvider;
 
     public UserService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {

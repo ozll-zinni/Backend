@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.example.traveler.config.BaseResponseStatus.DELETE_CATEGORY_FAIL;
 
+@CrossOrigin(originPatterns = "http://localhost:3000")
 @RestController
 @RequestMapping("/checklsit")
 public class ChecklistController {
