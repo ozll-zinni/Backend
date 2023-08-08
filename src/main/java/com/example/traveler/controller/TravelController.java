@@ -16,6 +16,7 @@ import java.util.List;
 import static com.example.traveler.config.BaseResponseStatus.DELETE_TRAVEL_FAIL;
 import static com.example.traveler.config.BaseResponseStatus.SAVE_TRAVEL_FAIL;
 
+@CrossOrigin(originPatterns = "http://localhost:3000")
 @RestController
 @RequestMapping("/travel")
 public class TravelController {

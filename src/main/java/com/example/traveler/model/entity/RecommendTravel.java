@@ -3,36 +3,36 @@ package com.example.traveler.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 public class RecommendTravel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int rtId;
+    private int rtId;
 
-    //1박 2일이면 2 저장
-    int period;
+    private String title;
 
-    String title;
+    private double latitude;
 
-    //무엇을
-    //1. 경치관람, 2. 먹방, 3. 액티비티, 4. 체험, 5. 카페
-    int what;
+    private double longitude;
 
-    //강도
-    //1. 빡빡하게, 2. 보통, 3. 느긋하게
-    int intensity;
+    /***
 
-    int people;
+     code1 - countryId, what, hard, with, period 순으로 조합
+     code2 - countryId, what, hard 순으로 조합
 
-    //1. 친구와, 2. 가족과, 3. 연인과, 4. 혼자서
-    int with;
+     what - 1. 경치관람, 2. 먹방, 3. 액티비티, 4. 체험, 5. 카페
+     hard - 1. 빡빡하게, 2. 보통, 3. 느긋하게
+     with - 1. 친구와, 2. 가족과, 3. 연인과, 4. 혼자서
+     period - 1박 2일이면 2 저장
+
+     ***/
+
+    private int code1;
+    private int code2;
+
+
 }
