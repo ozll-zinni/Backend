@@ -13,7 +13,7 @@ public class RecommendTravel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rtId;
 
-    private String title;
+    private String Destination;
 
     private double latitude;
 

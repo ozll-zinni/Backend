@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,13 +20,24 @@ public class RecommendTravelService {
 
     public List<RecommendTravel> getMatchingTravels(RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
-        int code1 = request.getCountryId() * 10000 + request.getWhat() * 1000 + request.getHard() * 100 + request.getWith() * 10 + period;
-        int code2 = request.getCountryId() * 10000 + request.getWhat() * 1000 + request.getHard() * 100;
+        int code1 = request.getCountryId() * 10000 + request.getWhat() * 1000 + request.getHard() * 100 + request.getWith() * 10;
+        int code2 = request.getCountryId() * 100 + request.getWhat() * 10 + request.getHard() * 1;
 
-        List<RecommendTravel> matchingTravels = recommendTravelRepository.findByCode1(code1);
+        List<RecommendTravel> matchingTravels = new ArrayList<>();
 
-        if (matchingTravels.isEmpty()) {
-            matchingTravels = recommendTravelRepository.findByCode2(code2);
+        for (int i = 1; i <= period; i++) {
+            int code = code1 + i;
+
+            List<RecommendTravel> travelcode1 = recommendTravelRepository.findByCode1(code);
+
+            if(!travelcode1.isEmpty()){
+                matchingTravels.addAll(travelcode1);
+            }
+
+            else if (travelcode1.isEmpty()) {
+                List<RecommendTravel> travelcode2 = recommendTravelRepository.findByCode2(code2);
+                matchingTravels.addAll(travelcode2);
+            }
         }
 
         return matchingTravels;
