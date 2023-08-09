@@ -18,9 +18,9 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 public class UserService {
-    @Autowired
+
     private final UserRepository userRepository;
-    @Autowired
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public UserService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
