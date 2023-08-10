@@ -8,7 +8,6 @@ import java.util.List;
 public interface RecommendTravelRepository extends JpaRepository<RecommendTravel, Integer> {
 
     List<RecommendTravel> findByCode1(int code1);
-    List<RecommendTravel> findByCode2(int code2);
 
 
 }

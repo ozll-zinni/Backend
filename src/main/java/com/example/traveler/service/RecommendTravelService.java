@@ -11,12 +11,14 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class RecommendTravelService {
 
     @Autowired
     private RecommendTravelRepository recommendTravelRepository;
+
 
     public List<RecommendTravel> getMatchingTravels(RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
@@ -35,7 +37,9 @@ public class RecommendTravelService {
             }
 
             else if (travelcode1.isEmpty()) {
-                List<RecommendTravel> travelcode2 = recommendTravelRepository.findByCode2(code2);
+                Random random = new Random();
+                code1 = code2*100 + random.nextInt(5) + i;
+                List<RecommendTravel> travelcode2 = recommendTravelRepository.findByCode1(code1);
                 matchingTravels.addAll(travelcode2);
             }
         }

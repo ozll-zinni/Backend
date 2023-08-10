@@ -1,8 +1,12 @@
 package com.example.traveler.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -13,7 +17,7 @@ public class RecommendTravel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rtId;
 
-    private String Destination;
+    private String destination;
 
     private double latitude;
 
@@ -32,6 +36,14 @@ public class RecommendTravel {
      ***/
 
     private int code1;
-    private int code2;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name = "sId")
+    private List<Spot> spots = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recommendTravel")
+    private List<DayCourse> dayCourses = new ArrayList<>();
 
 }

@@ -19,10 +19,10 @@ public class DayCourse {
     @JoinColumn(name="tId")
     Travel travel;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name="rtId", nullable = true)
-//    RecommendTravel recommendTravel;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="rtId", nullable = true)
+    RecommendTravel recommendTravel;
 
     @OneToOne
     @JoinColumn(name="sId1")
