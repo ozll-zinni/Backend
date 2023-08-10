@@ -20,6 +20,13 @@ public class DayCourse {
     Travel travel;
 
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="rtId", nullable = true)
+    RecommendTravel recommendTravel;
+
+
+
     @OneToOne
     @JoinColumn(name="sId1")
     Spot spot1;

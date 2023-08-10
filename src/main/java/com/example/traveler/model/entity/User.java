@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -31,6 +34,9 @@ public class User {
 
     @Column(name = "profile_image_url ")
     private String profile_image_url;
+
+    @OneToMany(mappedBy = "user")
+    private List<Travel> travels = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String nickname, Long kakao, String profile_image_url) {
