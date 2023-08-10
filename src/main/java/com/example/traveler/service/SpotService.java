@@ -52,12 +52,15 @@ public class SpotService {
         } else if (dayCourse.getSpot2() == null) {
             //거리계산
             dayCourse.setSpot2(saveSpot);
+            dayCourse.setFirst(distance(dayCourse.getSpot1().getLatitude(), dayCourse.getSpot1().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
         } else if (dayCourse.getSpot3() == null) {
             //거리계산
             dayCourse.setSpot3(saveSpot);
+            dayCourse.setSecond(distance(dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude(), dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude()));
         } else if (dayCourse.getSpot4() == null) {
             //거리계산
             dayCourse.setSpot4(saveSpot);
+            dayCourse.setThird(distance(dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
         } else {
             throw new BaseException(SPOT_IS_FULL);
         }
@@ -97,6 +100,25 @@ public class SpotService {
         } else {
             throw new BaseException(DELETE_SPOT_FAIL);
         }
+        if (dayCourse.getSpot1() != null && dayCourse.getSpot2() != null) {
+            dayCourse.setFirst(distance(dayCourse.getSpot1().getLatitude(), dayCourse.getSpot1().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+        }
+        else {
+            dayCourse.setFirst(null);
+        }
+        if (dayCourse.getSpot2() != null && dayCourse.getSpot3() != null) {
+            dayCourse.setSecond(distance(dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude(), dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude()));
+        }
+        else {
+            dayCourse.setSecond(null);
+        }
+        if (dayCourse.getSpot3() != null && dayCourse.getSpot4() != null) {
+            dayCourse.setThird(distance(dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+        }
+        else {
+            dayCourse.setThird(null);
+        }
+
         DayCourse newDayCourse = null;
         try {
             newDayCourse = dayCourseRepository.save(dayCourse);
@@ -105,6 +127,26 @@ public class SpotService {
         }
         DayCourseResponse dayCourseResponse = new DayCourseResponse(newDayCourse.getDcId(), newDayCourse.getTravel().getTId(), newDayCourse.getSpot1(), newDayCourse.getSpot2(), newDayCourse.getSpot3(), newDayCourse.getSpot4(), newDayCourse.getFirst(), newDayCourse.getSecond(), newDayCourse.getThird(), newDayCourse.getNumOfDay());
         return dayCourseResponse;
+    }
+
+    //경도, 위도를 이용한 거리 계산
+    private static double distance(double lat1, double lon1, double lat2, double lon2){
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1))* Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1))*Math.cos(deg2rad(lat2))*Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60*1.1515*1609.344;
+
+        return dist; //단위 meter
+    }
+
+    //10진수를 radian(라디안)으로 변환
+    private static double deg2rad(double deg){
+        return (deg * Math.PI/180.0);
+    }
+    //radian(라디안)을 10진수로 변환
+    private static double rad2deg(double rad){
+        return (rad * 180 / Math.PI);
     }
 
 }
