@@ -7,6 +7,8 @@ import com.example.traveler.model.entity.User;
 import com.example.traveler.model.dto.UpdateNicknameDTO;
 
 
+import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -18,6 +20,7 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public UserService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
@@ -36,12 +39,12 @@ public class UserService {
                 user.setNickname(updateNicknameDTO.getNickname());
                 return userRepository.save(user);
             } else {
-                // 사용자를 찾지 못한 경우에 대한 처리
-                throw new BaseException(INVALID_JWT);
+                throw new BaseException(EMPTY_JWT);
             }
-        } catch (Exception exception) {
+
+        } catch (ExpiredJwtException exception) {
             // 예외가 발생한 경우에 대한 처리
-            throw new BaseException(EMPTY_JWT);
+            throw new BaseException(INVALID_JWT);
         }
     }
 
@@ -52,17 +55,17 @@ public class UserService {
             if (user.isPresent()) {
                 userRepository.delete(user.get());
             } else {
-                throw new BaseException(INVALID_JWT);
+                throw new BaseException(EMPTY_JWT);
             }
-        } catch (Exception exception) {
+        } catch (ExpiredJwtException exception) {
             // 예외가 발생한 경우에 대한 처리
-            throw new BaseException(EMPTY_JWT);
+            throw new BaseException(INVALID_JWT);
         }
     }
 
     public User getUser(Long Id) {
-        return userRepository.findById(Id)
-                .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        Optional<User> user = userRepository.findById(Id);
+        return user.get();
     }
 
     public User getUserByToken(String accessToken) {
