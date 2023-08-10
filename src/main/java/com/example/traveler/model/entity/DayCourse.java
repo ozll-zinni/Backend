@@ -19,10 +19,13 @@ public class DayCourse {
     @JoinColumn(name="tId")
     Travel travel;
 
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="rtId", nullable = true)
     RecommendTravel recommendTravel;
+
+
 
     @OneToOne
     @JoinColumn(name="sId1")
@@ -55,8 +58,4 @@ public class DayCourse {
         this.travel = travel;
         this.numOfDay = numOfDay;
     }
-//    public DayCourse(RecommendTravel travel, int numOfDay) {
-//        this.recommendTravel = travel;
-//        this.numOfDay = numOfDay;
-//    }
 }
