@@ -22,8 +22,8 @@ public class RecommendTravelService {
 
     public List<RecommendTravel> getMatchingTravels(RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
-        int code1 = request.getCountryId() * 10000 + request.getWhat() * 1000 + request.getHard() * 100 + request.getWith() * 10;
-        int code2 = request.getCountryId() * 100 + request.getWhat() * 10 + request.getHard() * 1;
+        int code1 = request.getCountryId() * 1000 + request.getWhat() * 100 + request.getHard() * 10 ;
+
 
         List<RecommendTravel> matchingTravels = new ArrayList<>();
 
@@ -32,16 +32,8 @@ public class RecommendTravelService {
 
             List<RecommendTravel> travelcode1 = recommendTravelRepository.findByCode1(code);
 
-            if(!travelcode1.isEmpty()){
-                matchingTravels.addAll(travelcode1);
-            }
+            matchingTravels.addAll(travelcode1);
 
-            else if (travelcode1.isEmpty()) {
-                Random random = new Random();
-                code1 = code2*100 + random.nextInt(5) + i;
-                List<RecommendTravel> travelcode2 = recommendTravelRepository.findByCode1(code1);
-                matchingTravels.addAll(travelcode2);
-            }
         }
 
         return matchingTravels;
