@@ -48,4 +48,6 @@ public class RecommendTravelService {
         return (int) period + 1;
     }
 
+
+
 }
