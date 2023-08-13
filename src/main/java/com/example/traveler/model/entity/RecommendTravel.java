@@ -23,6 +23,8 @@ public class RecommendTravel {
 
     private double longitude;
 
+    private int with;
+
     /***
 
      code1 - countryId, what, hard, with, period 순으로 조합
