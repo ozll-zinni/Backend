@@ -3,8 +3,6 @@ package com.example.traveler.service;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.DayCourseRequest;
 import com.example.traveler.model.dto.DayCourseResponse;
-import com.example.traveler.model.dto.TravelRequest;
-import com.example.traveler.model.dto.TravelResponse;
 import com.example.traveler.model.entity.DayCourse;
 import com.example.traveler.model.entity.Travel;
 import com.example.traveler.model.entity.User;
@@ -65,7 +63,7 @@ public class DayCourseService {
 
     public List<DayCourseResponse> getAllDayCourseByTravel(int tId) throws BaseException{
         Travel travel = travelRepository.findBytIdAndState(tId, 1);
-        List<DayCourse> allDayCourse = dayCourseRepository.findAllByTravel(travel);
+        List<DayCourse> allDayCourse = dayCourseRepository.findAllByTravelOrderByNumOfDay(travel);
         ArrayList<DayCourseResponse> allDayCourseResponse = new ArrayList<>();
         for (DayCourse dayCourse : allDayCourse) {
             DayCourseResponse dayCourseResponse = new DayCourseResponse(dayCourse.getDcId(), dayCourse.getTravel().getTId(), dayCourse.getSpot1(), dayCourse.getSpot2(), dayCourse.getSpot3(), dayCourse.getSpot4(), dayCourse.getFirst(), dayCourse.getSecond(), dayCourse.getThird(), dayCourse.getNumOfDay());
