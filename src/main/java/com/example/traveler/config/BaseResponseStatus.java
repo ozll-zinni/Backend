@@ -65,6 +65,7 @@ public enum BaseResponseStatus {
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
 
     POST_IS_EMPTY(false,5003, "게시물이 존재하지 않습니다."),
+    POST_SEARCH_FAIL(false, 5004, "게시물 검색에 실패했습니다."),
     SAVE_COMMENT_FAIL(false, 5500, "댓글 생성 실패했습니다."),
 
     /**

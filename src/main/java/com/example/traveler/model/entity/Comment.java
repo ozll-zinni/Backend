@@ -3,6 +3,9 @@ package com.example.traveler.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -21,6 +24,9 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name="uId")
     private User user;
+
+    @CreationTimestamp
+    Timestamp created_at;
 
 
     public Comment(Post post, String content, User user) {

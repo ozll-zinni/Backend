@@ -13,7 +13,6 @@ import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -122,7 +121,7 @@ public class RecommendTravelService {
         Travel travel = new Travel();
         travel.setCourses(daycourses);
         travel.setCode(code1);
-        travel.setWith(with);
+        travel.setWithWho(with);
         travelRepository.save(travel);
 
         return finalTravels;
