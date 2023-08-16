@@ -15,5 +15,5 @@ public interface ScrapRepository extends CrudRepository<Scrap, Long> {
 
     public List<Scrap> findAllByUser(User user);
     //public List<Travel> findAllByUser()
-
+    public long countByPost(Post post);
 }

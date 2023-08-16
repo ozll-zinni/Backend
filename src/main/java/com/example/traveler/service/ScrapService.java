@@ -46,5 +46,11 @@ public class ScrapService {
         return 1;
     }
 
-
+    public int countScrap(Post post) throws BaseException {
+        try {
+            return (int) scrapRepository.countByPost(post);
+        } catch (Exception e) {
+            throw new BaseException(POST_SCRAP_COUNT_FAIL);
+        }
+    }
 }
