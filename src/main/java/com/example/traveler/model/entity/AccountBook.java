@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +22,10 @@ public class AccountBook {
     @ManyToOne
     @JoinColumn(name = "tId") // tId는 TravelEntity의 PK (여행 ID)
     private Travel travel;
+
+    @OneToMany(mappedBy = "accountBook", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DateEntity> dateEntities = new ArrayList<>();
+
 
     @Column(nullable = false)
     private String accountName;
@@ -70,5 +78,17 @@ public class AccountBook {
         this.otherExpensePercentage = otherExpensePercentage;
     }
 
+    // Travel의 시작과 끝 날짜, 몇일차인지 계산하여 DateEntity 추가
+    public void addDateEntities() {
+        Date startDate = travel.getStart_date();
+        Date endDate = travel.getEnd_date();
+        int dayCount = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+        for (int day = 1; day <= dayCount; day++) {
+            Date currentDate = new Date(startDate.getTime() + (day - 1) * (1000 * 60 * 60 * 24));
+            DateEntity dateEntity = new DateEntity(currentDate, travel, null); // dayCourse는 null로 설정
+            dateEntities.add(dateEntity);
+        }
+    }
 }
 

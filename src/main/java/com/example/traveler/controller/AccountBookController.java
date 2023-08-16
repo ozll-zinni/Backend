@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -44,9 +45,18 @@ public class AccountBookController {
 
     // 새로운 가계부 정보 저장
     @PostMapping("/{tId}")
-    public BaseResponse<AccountBookResponse> saveAccountBook(@PathVariable Travel tId) {
+    public BaseResponse<AccountBookResponse> saveAccountBook(
+            @PathVariable Travel tId,
+            @RequestParam double totalBudget,
+            @RequestParam double foodExpense,
+            @RequestParam double transportationExpense,
+            @RequestParam double sightseeingExpense,
+            @RequestParam double shoppingExpense,
+            @RequestParam double otherExpense) {
         try {
-            AccountBookResponse accountBookResponse = accountBookService.saveAccountBook(tId);
+            AccountBookResponse accountBookResponse = accountBookService.saveAccountBook(
+                    tId, totalBudget, foodExpense, transportationExpense,
+                    sightseeingExpense, shoppingExpense, otherExpense);
             return new BaseResponse<>(accountBookResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -66,9 +76,9 @@ public class AccountBookController {
 
     // 가계부 수정
     @PatchMapping("/{accountId}")
-    public BaseResponse<AccountBookResponse> patchAccountBook(@PathVariable("accountId") Long accountId, @RequestBody AccountBookRequest accountBookRequest) {
+    public BaseResponse<AccountBookResponse> patchAccountBook(@RequestHeader("Authorization") String accessToken, @PathVariable("accountId") Long accountId, @RequestBody AccountBookRequest accountBookRequest) {
         try {
-            AccountBookResponse accountBookResponse = accountBookService.patchAccountBook(accountId, accountBookRequest.getAccountName());
+            AccountBookResponse accountBookResponse = accountBookService.patchAccountBook(accessToken, accountId, accountBookRequest.getAccountName());
             return new BaseResponse<>(accountBookResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -78,9 +88,9 @@ public class AccountBookController {
     // 가계부 삭제
     @DeleteMapping("/{accountId}")
     public BaseResponse<String> deleteAccountBook(
-            @PathVariable("accountId") Long accountId) {
+            @RequestHeader("Authorization") String accessToken, @PathVariable("accountId") Long accountId) {
         try {
-            int result = accountBookService.deleteAccountBook(accountId);
+            int result = accountBookService.deleteAccountBook(accessToken, accountId);
             if (result != 1) {
                 throw new BaseException(DELETE_ACCOUNTBOOK_FAIL);
             } else {
@@ -94,9 +104,9 @@ public class AccountBookController {
 
     // Transaction(내역) 관련 기능
     @PostMapping("/{accountId}/transaction")
-    public BaseResponse<TransactionResponse> saveTransaction(@PathVariable("accountId") int accountId, @RequestBody TransactionRequest transactionRequest) {
+    public BaseResponse<TransactionResponse> saveTransaction(@RequestHeader("Authorization") String accessToken, @PathVariable("accountId") int accountId, @RequestBody TransactionRequest transactionRequest) {
         try {
-            TransactionResponse transactionResponse = transactionService.saveTransaction(accountId, transactionRequest);
+            TransactionResponse transactionResponse = transactionService.saveTransaction(accessToken, accountId, transactionRequest);
             return new BaseResponse<>(transactionResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -129,9 +139,9 @@ public class AccountBookController {
 
 
     @PatchMapping("/transactions/{transactionId}")
-    public BaseResponse<TransactionResponse> patchTransaction(@PathVariable("transactionId") int transactionId, @RequestBody TransactionRequest transactionRequest) {
+    public BaseResponse<TransactionResponse> patchTransaction(@RequestHeader("Authorization") String accessToken, @PathVariable("transactionId") int transactionId, @RequestBody TransactionRequest transactionRequest) {
         try {
-            TransactionResponse transactionResponse = transactionService.patchTransaction(transactionId, transactionRequest);
+            TransactionResponse transactionResponse = transactionService.patchTransaction(accessToken, transactionId, transactionRequest);
             return new BaseResponse<>(transactionResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -140,9 +150,9 @@ public class AccountBookController {
 
 
     @DeleteMapping("/transactions/{transactionId}/{num}")
-    public BaseResponse<String> deleteTransaction(@PathVariable("transactionId") int transactionId, @PathVariable("num") int num) {
+    public BaseResponse<String> deleteTransaction(@RequestHeader("Authorization") String accessToken, @PathVariable("transactionId") int transactionId, @PathVariable("num") int num) {
         try {
-            int result = transactionService.deleteTransaction(transactionId, num);
+            int result = transactionService.deleteTransaction(accessToken, transactionId, num);
             if (result != 1) {
                 throw new BaseException(DELETE_TRANSACTION_FAIL);
             } else {
@@ -154,34 +164,15 @@ public class AccountBookController {
     }
 
 
-// // DateEntity(날자) 관련 기능
-// @PostMapping("/date-entities")
-// public BaseResponse<DateResponse> createDate(@PathVariable("accountId") int accountId, @RequestBody DateRequest dateRequest) {
-// try {
-// DateResponse dateResponse = dateService.createDate(accountId, dateRequest);
-// return new BaseResponse<>(dateResponse);
-// } catch (BaseException exception) {
-// return new BaseResponse<>(exception.getStatus());
-// }
-// }
-//
-// @GetMapping("/date-entities/{dateId}")
-// public BaseResponse<DateResponse> getDate(@PathVariable("dateId") int dateId) {
-// try {
-// DateResponse dateResponse = dateService.getDate(dateId);
-// return new BaseResponse<>(dateResponse);
-// } catch (BaseException exception) {
-// return new BaseResponse<>(exception.getStatus());
-// }
-// }
-//
-// @GetMapping("/{accountId}/date-entities")
-// public BaseResponse<List<DateResponse>> getAllDateByAccountBook(@PathVariable("accountId") int accountId) {
-// try {
-// List<DateResponse> dateResponse = dateService.getAllDateByAccountBook(accountId);
-// return new BaseResponse<>(dateResponse);
-// } catch (BaseException exception) {
-// return new BaseResponse<>(exception.getStatus());
-// }
-// }
+     // DateEntity(날짜) 관련 기능
+     @GetMapping("/{accountId}/dates")
+     public BaseResponse<List<Date>> getDatesForAccountBook(@PathVariable("accountId") Long accountId) {
+         try {
+             List<Date> dates = accountBookService.getDatesForAccountBook(accountId);
+             return new BaseResponse<>(dates);
+         } catch (BaseException exception) {
+             return new BaseResponse<>(exception.getStatus());
+         }
+ }
+
 }

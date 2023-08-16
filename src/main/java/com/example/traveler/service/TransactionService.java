@@ -27,7 +27,7 @@ public class TransactionService {
     }
 
     // 내역 추가 기능
-    public TransactionResponse saveTransaction(int accountId, TransactionRequest transactionRequest) throws BaseException {
+    public TransactionResponse saveTransaction(String accessToken, int accountId, TransactionRequest transactionRequest) throws BaseException {
         AccountBook accountBook = accountBookRepository.findById((long) accountId)
                 .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
 
@@ -68,7 +68,7 @@ public class TransactionService {
     }
 
     // 내역 수정 기능
-    public TransactionResponse patchTransaction(int transactionId, TransactionRequest transactionRequest) throws BaseException {
+    public TransactionResponse patchTransaction(String accessToken, int transactionId, TransactionRequest transactionRequest) throws BaseException {
         Transaction transaction = transactionRepository.findById((long) transactionId)
                 .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
 
@@ -88,7 +88,7 @@ public class TransactionService {
     }
 
     // 내역 삭제 기능
-    public int deleteTransaction(int transactionId, int num) throws BaseException {
+    public int deleteTransaction(String accessToken, int transactionId, int num) throws BaseException {
         Transaction transaction = transactionRepository.findById((long) transactionId)
                 .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
 
