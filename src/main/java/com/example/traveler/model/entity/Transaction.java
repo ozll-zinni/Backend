@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,7 +20,9 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "accountId")
     private AccountBook accountBook;
-//    private Long dateId;
+
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
     @Getter
     private String expenseItem;

@@ -2,20 +2,25 @@ package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.AccountBookResponse;
+import com.example.traveler.model.dto.DailyExpensesResponse;
+import com.example.traveler.model.dto.MonthlyExpensesResponse;
 import com.example.traveler.model.entity.AccountBook;
 import com.example.traveler.model.entity.DateEntity;
+import com.example.traveler.model.entity.Transaction;
 import com.example.traveler.model.entity.Travel;
 import com.example.traveler.repository.AccountBookRepository;
 import com.example.traveler.repository.ChecklistRepository;
+import com.example.traveler.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static com.example.traveler.config.BaseResponseStatus.*;
 
@@ -25,6 +30,7 @@ public class AccountBookService {
     @Autowired
     private ChecklistRepository travelRepository;
     private AccountBookRepository accountBookRepository;
+    private TransactionRepository transactionRepository;
 
     @Transactional
     public AccountBookResponse saveAccountBook(
@@ -145,6 +151,74 @@ public class AccountBookService {
         }
 
         return dates;
+    }
+
+    // 월별 지출 계산 메서드
+    public MonthlyExpensesResponse getMonthlyExpenses(Long accountId) throws BaseException {
+        try {
+            AccountBook accountBook = accountBookRepository.findById(accountId)
+                    .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
+
+            List<Transaction> transactions = transactionRepository.findAllByAccountBook(accountBook);
+
+            Map<YearMonth, Double> monthlyExpenses = new HashMap<>();
+            for (Transaction transaction : transactions) {
+                YearMonth yearMonth = YearMonth.from(transaction.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                monthlyExpenses.put(yearMonth, monthlyExpenses.getOrDefault(yearMonth, 0.0) + transaction.getAmount());
+            }
+
+            // MonthlyExpensesResponse를 생성하여 반환
+            Map<String, Double> formattedMonthlyExpenses = convertYearMonthToString(monthlyExpenses);
+            return new MonthlyExpensesResponse(formattedMonthlyExpenses);
+        } catch (Exception e) {
+            throw new BaseException(ACCOUNTBOOK_IS_EMPTY); // 가계부가 없는 경우 예외 처리
+        }
+    }
+
+    private Map<String, Double> convertYearMonthToString(Map<YearMonth, Double> monthlyExpenses) {
+        Map<String, Double> formattedExpenses = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+
+        for (Map.Entry<YearMonth, Double> entry : monthlyExpenses.entrySet()) {
+            String formattedDate = entry.getKey().format(formatter);
+            formattedExpenses.put(formattedDate, entry.getValue());
+        }
+
+        return formattedExpenses;
+    }
+
+    // 날짜별 지출 계산 메서드
+    public DailyExpensesResponse getDailyExpenses(Long accountId) throws BaseException {
+        try {
+            AccountBook accountBook = accountBookRepository.findById(accountId)
+                    .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
+
+            List<Transaction> transactions = transactionRepository.findAllByAccountBook(accountBook);
+
+            Map<Date, Double> dailyExpenses = new HashMap<>();
+            for (Transaction transaction : transactions) {
+                Date date = transaction.getDate();
+                dailyExpenses.put(date, dailyExpenses.getOrDefault(date, 0.0) + transaction.getAmount());
+            }
+
+            // DailyExpensesResponse를 생성하여 반환
+            Map<String, Double> formattedDailyExpenses = convertDateToString(dailyExpenses);
+            return new DailyExpensesResponse(formattedDailyExpenses);
+        } catch (BaseException e) {
+            throw new BaseException(ACCOUNTBOOK_NOT_FOUND);
+        }
+    }
+
+    private Map<String, Double> convertDateToString(Map<Date, Double> dailyExpenses) {
+        Map<String, Double> formattedExpenses = new HashMap<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Map.Entry<Date, Double> entry : dailyExpenses.entrySet()) {
+            String formattedDate = formatter.format(entry.getKey());
+            formattedExpenses.put(formattedDate, entry.getValue());
+        }
+
+        return formattedExpenses;
     }
 
 }
