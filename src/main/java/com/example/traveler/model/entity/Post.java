@@ -1,6 +1,8 @@
 package com.example.traveler.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Post {
 
@@ -69,5 +73,8 @@ public class Post {
     @OneToMany(mappedBy="post")
     private List<Comment> comments = new ArrayList<>();
 
+
+    @OneToOne(mappedBy = "travel")
+    private Travel travel;
 
 }
