@@ -35,7 +35,7 @@ public class CommentController {
     @GetMapping("/{pId}/comment")
     public BaseResponse<List<CommentResponse>> getAllComment(@PathVariable("pId") long pId) {
         try {
-            List<CommentResponse> commentResponses = commentService.getAllComment();
+            List<CommentResponse> commentResponses = commentService.getAllComment(pId);
             return new BaseResponse<>(commentResponses);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

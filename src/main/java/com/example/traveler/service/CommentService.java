@@ -25,18 +25,19 @@ public class CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private UserService userService;
-//    @Autowired
-//    private PostService postService;
+    @Autowired
+    private PostService postService;
     public CommentResponse saveComment(String accessToken, long pId, CommentRequest comment) throws BaseException {
         User user = userService.getUserByToken(accessToken);
+        Post post;
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
         Comment saveComment = null;
         try {
-            Post post = postService.getPost(pId).get(0);
+            post = postService.getPost(pId);
         } catch (Exception e) {
-            throw new BaseException();
+            throw new BaseException(POST_IS_EMPTY);
         }
         try {
             Comment newComment = new Comment(post, comment.getContent(), user);
@@ -53,81 +54,37 @@ public class CommentService {
     public List<CommentResponse> getAllComment(long pId) throws BaseException {
         Post post = null;
         try {
-            post = postService.getPost(pId).get(0);
+            post = postService.getPost(pId);
         } catch (Exception e) {
-            throw new BaseException();
+            throw new BaseException(POST_IS_EMPTY);
         }
         List<Comment> allComment = commentRepository.findAllByPostOrderByCoId(post);
         ArrayList<CommentResponse> allCommentResponse = new ArrayList<>();
         for (Comment comment : allComment) {
-            CommentResponse commentResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), travel.getCreated_at(), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses());
-            allTravelResponse.add(travelResponse);
+            CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser().getId());
+            allCommentResponse.add(commentResponse);
         }
-        return allTravelResponse;
+        return allCommentResponse;
     }
 
-    public TravelResponse patchTravel(String accessToken, int tId, TravelRequest travelRequest) throws BaseException{
+
+
+
+
+    public List<CommentResponse> getMyComment(String accessToken) throws BaseException{
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
-        Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
-        if (getTravel == null) {
-            throw new BaseException(TRAVEL_IS_EMPTY);
+
+        List<Comment> allMyComment = commentRepository.findAllByUserOrderByCoId(user);
+        ArrayList<CommentResponse> allMyCommentResponse = new ArrayList<>();
+        for (Comment comment : allMyComment) {
+            CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser().getId());
+            allMyCommentResponse.add(commentResponse);
         }
-        if (user == getTravel.getUser()) {
-            try {
-                getTravel.setTitle(travelRequest.getTitle());
-                getTravel.setStart_date(travelRequest.getStart_date());
-                getTravel.setEnd_date(travelRequest.getEnd_date());
-                Travel saveTravel = travelRepository.save(getTravel);
-                TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), saveTravel.getStart_date(), saveTravel.getEnd_date(), saveTravel.getCreated_at(), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses());
-                return travelResponse;
-            } catch (Exception e) {
-                throw new BaseException(PATCH_TRAVEL_FAIL);
-            }
-        }
-        else {
-            throw new BaseException(TRAVEL_USER_NOT_MATCH);
-        }
+        return allMyCommentResponse;
     }
 
-    public int deleteTravel(String accessToken, int tId) throws BaseException{
-        User user = userService.getUserByToken(accessToken);
-        if (user == null) {
-            throw new BaseException(INVALID_JWT);
-        }
-        Travel getTravel = travelRepository.findBytIdAndState(tId, 1);
-        if (getTravel == null) {
-            throw new BaseException(TRAVEL_IS_EMPTY);
-        }
-        try {
-            getTravel.setState(0);
-            travelRepository.save(getTravel);
-        } catch (Exception e) {
-            throw new BaseException(DELETE_TRAVEL_FAIL);
-        }
-        return 1;
-    }
-
-    public List<TravelResponse> getAllMyTravel(User user) {
-        List<Travel> allMyTravel = travelRepository.findAllByUserAndState(user, 1);
-        ArrayList<TravelResponse> allMyTravelResponse = new ArrayList<>();
-        for (Travel travel : allMyTravel) {
-            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), travel.getCreated_at(), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses());
-            allMyTravelResponse.add(travelResponse);
-        }
-        return allMyTravelResponse;
-    }
-
-    public List<TravelResponse> allMyPastTravel(User user) {
-        List<Travel> allMyPastTravel = travelRepository.findAllByUserAndStateAndTimeStatus(user, 1, 1);
-        ArrayList<TravelResponse> allMyPastTravelResponse = new ArrayList<>();
-        for (Travel travel : allMyPastTravel) {
-            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), travel.getCreated_at(), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses());
-            allMyPastTravelResponse.add(travelResponse);
-        }
-        return allMyPastTravelResponse;
-    }
 
 }
