@@ -30,9 +30,9 @@ public class ChecklistController {
     }
     // 새로운 체크리스트 정보 저장
     @PostMapping("/checklist")
-    public BaseResponse<ChecklistResponse> saveChecklist(@RequestBody Integer checklistRequest) {
+    public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @RequestBody Integer checklistRequest) {
         try {
-            ChecklistResponse checklistResponse = checklistService.saveChecklist(checklistRequest);
+            ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, checklistRequest);
             return new BaseResponse<>(checklistResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -53,10 +53,11 @@ public class ChecklistController {
     // 카테고리명 수정 API
     @PatchMapping("/{cId}")
     public BaseResponse<ChecklistResponse> patchChecklist(
+            @RequestHeader("Authorization") String accessToken,
             @PathVariable("cId") int cId,
             @RequestBody ChecklistRequest request) {
         try {
-            ChecklistResponse checklistResponse = checklistService.patchChecklist(cId, request.getTitle());
+            ChecklistResponse checklistResponse = checklistService.patchChecklist(accessToken, cId, request.getTitle());
             return new BaseResponse<>(checklistResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -66,9 +67,10 @@ public class ChecklistController {
     // 카테고리 삭제 API
     @DeleteMapping("/{cId}")
     public BaseResponse<String> deleteChecklist(
+            @RequestHeader("Authorization") String accessToken,
             @PathVariable("cId") int cId) {
         try {
-            int result = checklistService.deleteChecklist(cId);
+            int result = checklistService.deleteChecklist(accessToken, cId);
             if (result != 1) {
                 throw new BaseException(DELETE_CATEGORY_FAIL);
             } else {
@@ -79,11 +81,5 @@ public class ChecklistController {
         }
     }
 
-//    // 모든 카테고리 조회 API
-//    @GetMapping("/checklist")
-//    public BaseResponse<List<ChecklistResponse>> getAllChecklist() {
-//        List<ChecklistResponse> checklistResponses = checklistService.getAllChecklist();
-//        return new BaseResponse<>(checklistResponses);
-//    }
 
 }

@@ -22,9 +22,9 @@ public class ItemController {
 
     // 새로운 item을 특정 checklist에 저장
     @PostMapping("/{cId}/item")
-    public BaseResponse<ItemResponse> saveItem( @PathVariable("cId") Long cId, @RequestBody ItemRequest itemRequest) {
+    public BaseResponse<ItemResponse> saveItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") Long cId, @RequestBody ItemRequest itemRequest) {
         try {
-            ItemResponse itemResponse = itemService.saveItem(cId, itemRequest);
+            ItemResponse itemResponse = itemService.saveItem(accessToken, cId, itemRequest);
             return new BaseResponse<>(itemResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -73,9 +73,9 @@ public class ItemController {
 
     // 특정 checklist에 포함된 item 삭제
     @DeleteMapping("/{cId}/item/{iId}")
-    public BaseResponse<String> deleteitem(@PathVariable("cid") int cId, @PathVariable("iId") int iId) {
+    public BaseResponse<String> deleteitem(@RequestHeader("Authorization") String accessToken, @PathVariable("cid") int cId, @PathVariable("iId") int iId) {
         try {
-            int result = itemService.deleteItem(cId, iId);
+            int result = itemService.deleteItem(accessToken, cId, iId);
             if (result != 1) {
                 throw new BaseException(DELETE_ITEM_FAIL);
             } else {
