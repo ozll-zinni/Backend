@@ -164,8 +164,9 @@ public class PostService {
                 result = 1000;
             }
         }
+        post.setLikes(heartService.countHeart(post));
+        postRepository.save(post);
         return result;
-
     }
 
     public int scrapPost(String accessToken, long pId) throws BaseException {
@@ -190,7 +191,8 @@ public class PostService {
                 result = 1000;
             }
         }
+        post.setScraps(scrapService.countScrap(post));
+        postRepository.save(post);
         return result;
-
     }
 }

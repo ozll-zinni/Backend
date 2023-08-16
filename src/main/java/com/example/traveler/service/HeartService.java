@@ -53,5 +53,13 @@ public class HeartService {
         return 1;
     }
 
+    public int countHeart(Post post) throws BaseException {
+        try {
+            return (int) heartRepository.countByPost(post);
+        } catch (Exception e) {
+            throw new BaseException(POST_LIKE_COUNT_FAIL);
+        }
+    }
+
 
 }

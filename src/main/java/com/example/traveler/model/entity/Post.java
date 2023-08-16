@@ -67,6 +67,8 @@ public class Post {
 
     private int likes = 0;
 
+    private int scraps = 0;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
