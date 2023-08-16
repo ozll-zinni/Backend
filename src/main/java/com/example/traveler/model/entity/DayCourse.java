@@ -26,7 +26,6 @@ public class DayCourse {
     RecommendTravel recommendTravel;
 
 
-
     @OneToOne
     @JoinColumn(name="sId1")
     Spot spot1;
