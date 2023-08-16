@@ -4,6 +4,7 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.ChecklistResponse;
 import com.example.traveler.model.entity.ChecklistEntity;
 import com.example.traveler.model.entity.Travel;
+import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.ChecklistRepository;
 import com.example.traveler.repository.TravelRepository;
 import lombok.AllArgsConstructor;
@@ -25,14 +26,15 @@ public class ChecklistService {
     private TravelRepository travelRepository;
     @Autowired
     private final ChecklistRepository checklistRepository;
+    @Autowired
+    private UserService userService;
 
     // 여행정보를 담은 tId를 받아서 해당 여행에 대한 checklist를 조회하고, 없으면 생성하는 메서드
-    public ChecklistResponse saveChecklist(Integer tId) throws BaseException {
-        // 데이터베이스 연결 여부 확인
-//        if (!isDatabaseConnected()) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
-
+    public ChecklistResponse saveChecklist(String accessToken, Integer tId) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
         // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회
         Travel travel = travelRepository.findById(tId)
                 .orElseThrow(() -> new BaseException(TRAVEL_IS_EMPTY));
@@ -68,10 +70,13 @@ public class ChecklistService {
         return checklistResponse;
     }
     // 체크리스트명 변경
-    public ChecklistResponse patchChecklist(int cId, String newName) throws BaseException {
-
+    public ChecklistResponse patchChecklist(String accessToken, int cId, String newName) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
         // 기존 체크리스트를 데이터베이스에서 조회
-        ChecklistEntity checklist = checklistRepository.findById((long) cId)
+        ChecklistEntity checklist = (ChecklistEntity) checklistRepository.findById((long) cId)
                 .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
 
         // 체크리스트명 변경
@@ -88,11 +93,11 @@ public class ChecklistService {
     }
 
     // 체크리스트 삭제
-    public int deleteChecklist(int cId) throws BaseException {
-        // 데이터베이스 연결 여부를 확인
-//        if (!isDatabaseConnected()) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
+    public int deleteChecklist(String accessToken, int cId) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
 
         // 체크리스트를 데이터베이스에서 조회
         ChecklistEntity checklist = checklistRepository.findById((long) cId)

@@ -15,5 +15,5 @@ public interface ChecklistRepository extends JpaRepository<ChecklistEntity, Long
 
     public List<ChecklistEntity> findAllByTravel(Travel travel);
 
-    public Optional<ChecklistEntity> findById(Long id);
+    Optional<ChecklistEntity> findById(Long id);
 }

@@ -27,8 +27,6 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 @Service
 @AllArgsConstructor
 public class AccountBookService {
-    @Autowired
-    private ChecklistRepository travelRepository;
     private AccountBookRepository accountBookRepository;
     private TransactionRepository transactionRepository;
 
