@@ -46,6 +46,7 @@ public class AccountBookController {
     // 새로운 가계부 정보 저장
     @PostMapping("/{tId}")
     public BaseResponse<AccountBookResponse> saveAccountBook(
+            @RequestHeader("Authorization") String accessToken,
             @PathVariable Travel tId,
             @RequestParam double totalBudget,
             @RequestParam double foodExpense,
@@ -55,7 +56,7 @@ public class AccountBookController {
             @RequestParam double otherExpense) {
         try {
             AccountBookResponse accountBookResponse = accountBookService.saveAccountBook(
-                    tId, totalBudget, foodExpense, transportationExpense,
+                    accessToken, tId, totalBudget, foodExpense, transportationExpense,
                     sightseeingExpense, shoppingExpense, otherExpense);
             return new BaseResponse<>(accountBookResponse);
         } catch (BaseException exception) {

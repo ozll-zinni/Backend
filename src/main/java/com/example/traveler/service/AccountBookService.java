@@ -28,7 +28,7 @@ public class AccountBookService {
 
     @Transactional
     public AccountBookResponse saveAccountBook(
-            Travel travel,
+            String accessToken, Travel travel,
             double totalBudget,
             double foodExpense,
             double transportationExpense,
