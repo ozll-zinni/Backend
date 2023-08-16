@@ -1,5 +1,6 @@
 package com.example.traveler.service;
 
+import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.RecommendTravelRequest;
 import com.example.traveler.model.entity.DayCourse;
 import com.example.traveler.model.entity.RecommendTravel;
