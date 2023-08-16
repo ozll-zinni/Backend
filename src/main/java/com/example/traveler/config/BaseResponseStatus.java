@@ -76,7 +76,29 @@ public enum BaseResponseStatus {
     SAVE_ITEM_FAIL(false, 6011, "준비물 생성에 실패했습니다."),
     UPDATE_ITEM_FAIL(false, 6012, "준비물 수정에 실패했습니다."),
     DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다."),
-    ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다.");
+    ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다."),
+
+
+    /**
+     * 7000 : 가계부 오류
+     */
+    REQUEST_IS_EMPTY(false, 7001, "요청을 찾을 수 없습니다."),
+    REQUEST_IS_INVALID(false, 7002, "요청을 찾을 수 없습니다."),
+    SAVE_DATE_FAIL(false, 7003, "날짜 생성 실패했습니다."),
+    DATE_NOT_FOUND(false, 7004, "날짜를 찾을 수 없습니다."),
+    UPDATE_DATE_FAIL(false, 7005, "날자 수정 실패했습니다."),
+    DELETE_DATE_FAIL(false, 7006, "널짜 삭제 실패했습니다."),
+    SAVE_ACCOUNTBOOK_FAIL(false, 7011, "가계부 생성 실패했습니다."),
+    ACCOUNTBOOK_NOT_FOUND(false, 7012, "가계부를 찾을 수 없습니다."),
+    ACCOUNTBOOK_USER_NOT_MATCH(false, 7013,"가계부 사용자가 맞지 않습니다."),
+    UPDATE_ACCOUNTBOOK_FAIL(false, 7014, "가계부 수정에 실패했습니다."),
+    DELETE_ACCOUNTBOOK_FAIL(false, 7015, "가계부 삭제에 실패했습니다."),
+    ACCOUNTBOOK_IS_EMPTY(false, 7016, "가계부가 존재하지 않습니다."),
+    SAVE_TRANSACTION_FAIL(false, 7021, "내역 생성에 실패했습니다."),
+    TRANSACTION_NOT_FOUND(false, 7022, "내역을 찾을 수 없습니다."),
+    UPDATE_TRANSACTION_FAIL(false, 7023, "내역 수정에 실패했습니다."),
+    DELETE_TRANSACTION_FAIL(false, 7025, "내역 삭제에 실패했습니다.");
+
 
 
     private final boolean isSuccess;

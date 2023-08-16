@@ -69,10 +69,6 @@ public class ChecklistService {
     }
     // 체크리스트명 변경
     public ChecklistResponse patchChecklist(int cId, String newName) throws BaseException {
-        // 데이터베이스 연결 여부를 확인
-//        if (!isDatabaseConnected()) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
 
         // 기존 체크리스트를 데이터베이스에서 조회
         ChecklistEntity checklist = checklistRepository.findById((long) cId)
@@ -90,13 +86,6 @@ public class ChecklistService {
         response.setTitle(checklist.getTitle());
         return response;
     }
-
-//    private void saveToPendingChanges(int cId, ChecklistEntity checklist) {
-//
-//    }
-
-//    private boolean isDatabaseConnected() {
-//    }
 
     // 체크리스트 삭제
     public int deleteChecklist(int cId) throws BaseException {
@@ -124,16 +113,8 @@ public class ChecklistService {
         return 1;
     }
 
-//    private void removeFromPendingChanges(int cId) {
-//        pendingChangesMap.remove(cId);
-//    }
-
     // 특정 여행에 대한 모든 체크리스트를 조회하는 메서드
     public List<ChecklistResponse> getAllChecklistsByTravel(int tId) throws BaseException {
-        // 데이터베이스 연결 여부 확인
-//        if (!isDatabaseConnected()) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
 
         // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회
         Travel travel = travelRepository.findById(tId)
