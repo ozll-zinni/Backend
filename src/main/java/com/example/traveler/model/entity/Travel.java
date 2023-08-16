@@ -1,5 +1,6 @@
 package com.example.traveler.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,11 @@ public class Travel {
 
     int state;
 
+    // RecommendTravel을 통해 작성되면 그 코드 값을, 아니면 0
+    int code = 0;
+
+    int with;
+
     //사용자
     @ManyToOne
     @JoinColumn(name="uId")
@@ -47,6 +53,11 @@ public class Travel {
 
     @OneToMany(mappedBy = "travel")
     List<DayCourse> courses = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name="pId")
+    Post post;
 
     public Travel(String title, String destination, Date startDate, Date endDate, int timeStatus, int writeStatus, int noteStatus, int state, User user) {
         this.title = title;

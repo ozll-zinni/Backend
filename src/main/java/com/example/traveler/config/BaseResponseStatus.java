@@ -64,11 +64,13 @@ public enum BaseResponseStatus {
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
 
+    POST_IS_EMPTY(false,5003, "게시물이 존재하지 않습니다."),
+    SAVE_COMMENT_FAIL(false, 5500, "댓글 생성 실패했습니다."),
 
     /**
      * 6000 : Checklist 오류
      */
-    SAVE_CATEGORY_FAIL(false, 6001, "체크리스트 생성 실패했습니다"),
+    SAVE_CATEGORY_FAIL(false, 6001, "체크리스트 생성 실패했습니다."),
     UPDATE_CATEGORYNAME_FAIL( false, 6002, "체크리스트 수정 실패하였습니다."),
     CHECKLIST_IS_EMPTY(false,6003, "체크리스트가 존재하지 않습니다."),
     DELETE_CATEGORY_FAIL(false, 6004, "체크리스트 삭제 실패하였습니다"),
