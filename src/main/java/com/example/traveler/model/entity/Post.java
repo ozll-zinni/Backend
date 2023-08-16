@@ -70,7 +70,11 @@ public class Post {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "travel")
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
+
+
+    @OneToOne(mappedBy = "post")
     private Travel travel;
 
 }
