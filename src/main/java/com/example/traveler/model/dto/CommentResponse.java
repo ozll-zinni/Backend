@@ -4,6 +4,7 @@ import com.example.traveler.model.entity.DayCourse;
 import com.example.traveler.model.entity.Travel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
@@ -13,9 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 public class CommentResponse {
     long coId;
     String content;
     long pId;
     long uId;
+    String createAt;
 }
