@@ -44,11 +44,11 @@ public class Travel {
     // RecommendTravel을 통해 작성되면 그 코드 값을, 아니면 0
     int code = 0;
 
-    int with;
+    int withWho;
 
     //사용자
     @ManyToOne
-    @JoinColumn(name="uId")
+    @JoinColumn(name="id")
     User user;
 
     @OneToMany(mappedBy = "travel")

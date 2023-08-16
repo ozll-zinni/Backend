@@ -28,6 +28,11 @@ public class TravelController {
     @PostMapping("")
     public BaseResponse<TravelResponse> saveTravel(@RequestHeader("Authorization") String accessToken, @RequestBody TravelRequest travelRequest) {
         try {
+            System.out.println(travelRequest.getTitle());
+            System.out.println(travelRequest.getDestination());
+            System.out.println(travelRequest.getStart_date());
+            System.out.println(travelRequest.getEnd_date());
+            System.out.println(travelRequest.getWriteStatus());
             TravelResponse travelResponse = travelService.saveTravel(accessToken, travelRequest);
             return new BaseResponse<>(travelResponse);
         } catch (BaseException exception) {

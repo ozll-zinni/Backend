@@ -11,4 +11,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     public Post findBypId(Long pId);
 
+    public List<Post> findAll();
+
+    public List<Post> findAllByTitleContaining(String keyword);
+
+    public List<Post> findAllByHashtagsContaining(String hashtag);
+
 }
