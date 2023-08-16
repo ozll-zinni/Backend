@@ -48,7 +48,7 @@ public class Travel {
 
     //사용자
     @ManyToOne
-    @JoinColumn(name="uId")
+    @JoinColumn(name="id")
     User user;
 
     @OneToMany(mappedBy = "travel")

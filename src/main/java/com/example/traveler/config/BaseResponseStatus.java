@@ -66,7 +66,14 @@ public enum BaseResponseStatus {
 
     POST_IS_EMPTY(false,5003, "게시물이 존재하지 않습니다."),
     POST_SEARCH_FAIL(false, 5004, "게시물 검색에 실패했습니다."),
-    SAVE_COMMENT_FAIL(false, 5500, "댓글 생성 실패했습니다."),
+    POST_GET_FAIL(false, 5005, "게시물 조회 실패했습니다."),
+    POST_LIKE_FAIL(false, 5006, "게시물 좋아요에 실패했습니다."),
+    POST_LIKE_CANCEL_FAIL(false, 5007, "게시물 좋아요 취소에 실패했습니다."),
+    POST_LIKE_GET_FAIL(false, 5008, "게시물 좋아요 상태 조회에 실패했습니다."),
+    POST_SCRAP_FAIL(false, 5009, "게시물 찜에 실패했습니다."),
+    POST_SCRAP_CANCEL_FAIL(false, 5010, "게시물 찜에 실패했습니다."),
+    POST_SCRAP_GET_FAIL(false, 5011, "게시물 찜에 실패했습니다."),
+    SAVE_COMMENT_FAIL(false, 5500, "댓글 생성에 실패했습니다."),
 
     /**
      * 6000 : Checklist 오류
