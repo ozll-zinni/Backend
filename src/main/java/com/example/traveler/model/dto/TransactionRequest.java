@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransactionRequest {
-    private Long dateId;
+//    private Long dateId;
     private String expenseItem;
     private String description;
     private double amount;

@@ -42,11 +42,14 @@ public class AccountBookService {
         }
 
         // 계산된 지출 퍼센트를 설정
-        createdAccountBook.setFoodExpensePercentage(createdAccountBook.getFoodExpense() / createdAccountBook.getTotalExpense() * 100);
-        createdAccountBook.setTransportExpensePercentage(createdAccountBook.getTransportationExpense() / createdAccountBook.getTotalExpense() * 100);
-        createdAccountBook.setSightseeingExpensePercentage(createdAccountBook.getSightseeingExpense() / createdAccountBook.getTotalExpense() * 100);
-        createdAccountBook.setShoppingExpensePercentage(createdAccountBook.getShoppingExpense() / createdAccountBook.getTotalExpense() * 100);
-        createdAccountBook.setOtherExpensePercentage(createdAccountBook.getOtherExpense() / createdAccountBook.getTotalExpense() * 100);
+        double totalExpense = createdAccountBook.getTotalExpense();
+        if (totalExpense > 0) {
+            createdAccountBook.setFoodExpensePercentage(createdAccountBook.getFoodExpense() / createdAccountBook.getTotalExpense() * 100);
+            createdAccountBook.setTransportExpensePercentage(createdAccountBook.getTransportationExpense() / createdAccountBook.getTotalExpense() * 100);
+            createdAccountBook.setSightseeingExpensePercentage(createdAccountBook.getSightseeingExpense() / createdAccountBook.getTotalExpense() * 100);
+            createdAccountBook.setShoppingExpensePercentage(createdAccountBook.getShoppingExpense() / createdAccountBook.getTotalExpense() * 100);
+            createdAccountBook.setOtherExpensePercentage(createdAccountBook.getOtherExpense() / createdAccountBook.getTotalExpense() * 100);
+        }
         // 저장된 가계부 정보를 AccountBookResponse 형태로 반환
         AccountBookResponse accountBookResponse = new AccountBookResponse();
         return accountBookResponse;

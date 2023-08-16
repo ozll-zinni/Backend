@@ -30,7 +30,7 @@ public class ChecklistController {
     }
     // 새로운 체크리스트 정보 저장
     @PostMapping("/checklist")
-    public BaseResponse<ChecklistResponse> saveChecklist(@RequestBody Integer checklistRequest) {
+    public BaseResponse<ChecklistResponse> saveChecklist(@PathVariable Integer checklistRequest) {
         try {
             ChecklistResponse checklistResponse = checklistService.saveChecklist(checklistRequest);
             return new BaseResponse<>(checklistResponse);
@@ -65,8 +65,7 @@ public class ChecklistController {
 
     // 카테고리 삭제 API
     @DeleteMapping("/{cId}")
-    public BaseResponse<String> deleteChecklist(
-            @PathVariable("cId") int cId) {
+    public BaseResponse<String> deleteChecklist(@PathVariable("cId") int cId) {
         try {
             int result = checklistService.deleteChecklist(cId);
             if (result != 1) {
@@ -78,12 +77,5 @@ public class ChecklistController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-//    // 모든 카테고리 조회 API
-//    @GetMapping("/checklist")
-//    public BaseResponse<List<ChecklistResponse>> getAllChecklist() {
-//        List<ChecklistResponse> checklistResponses = checklistService.getAllChecklist();
-//        return new BaseResponse<>(checklistResponses);
-//    }
 
 }
