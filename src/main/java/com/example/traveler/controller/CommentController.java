@@ -41,4 +41,22 @@ public class CommentController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+//    @GetMapping("")
+//    public BaseResponse<List<PostResponse>> getAllPost(@RequestParam(value = "keyword", required = false) String keyword) {
+//        if (keyword.startsWith("#")) {
+//            try {
+//
+//            } catch (BaseException exception) {
+//                return new BaseResponse<>(exception.getStatus());
+//            }
+//        } else {
+//            try {
+//                List<PostResponse> postResponses = postService.
+//            } catch (BaseException exception) {
+//                return new BaseResponse<>(exception.getStatus());
+//            }
+//        }
+//
+//    }
 }

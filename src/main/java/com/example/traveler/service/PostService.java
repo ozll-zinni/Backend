@@ -1,5 +1,6 @@
 package com.example.traveler.service;
 
+import com.example.traveler.config.BaseException;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.model.entity.Travel;
 import com.example.traveler.repository.PostRepository;
@@ -8,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -99,5 +103,18 @@ public class PostService {
         return deletepost;
     }
 
-
+//    public List<PostResponse>  searchByTitle(String keyword) throws BaseException{
+//        List<Post> posts;
+//        try {
+//            posts = postRepository.findAllByTitleContaining(keyword);
+//        } catch (Exception exception) {
+//            throw new BaseException(POST_SEARCH_FAIL);
+//        }
+//        ArrayList<PostResponse> allSearchPost = new ArrayList<PostResponse>();
+//        for (Post post : posts) {
+//            PostResponse postResponse = new PostResponse();
+//            allSearchPost.add(postResponse);
+//        }
+//        return allSearchPost;
+//    }
 }
