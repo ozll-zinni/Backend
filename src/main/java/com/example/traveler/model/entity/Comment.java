@@ -22,7 +22,7 @@ public class Comment {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="uId")
+    @JoinColumn(name="id")
     private User user;
 
     @CreationTimestamp
