@@ -3,6 +3,7 @@ package com.example.traveler.service;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.CommentRequest;
 import com.example.traveler.model.dto.CommentResponse;
+import com.example.traveler.model.dto.HeartResponse;
 import com.example.traveler.model.entity.Comment;
 import com.example.traveler.model.entity.Heart;
 import com.example.traveler.model.entity.Post;
@@ -23,6 +24,8 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 public class HeartService {
     @Autowired
     private HeartRepository heartRepository;
+    @Autowired
+    private UserService userService;
 
     public Heart saveHeart(User user, Post post) throws BaseException {
 
@@ -58,6 +61,24 @@ public class HeartService {
             return (int) heartRepository.countByPost(post);
         } catch (Exception e) {
             throw new BaseException(POST_LIKE_COUNT_FAIL);
+        }
+    }
+
+    public List<HeartResponse> allMyHeart(String accessToken) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
+        try {
+            List<Heart> hearts = heartRepository.findAllByUser(user);
+            ArrayList<HeartResponse> responses = new ArrayList<>();
+            for (Heart heart : hearts) {
+                HeartResponse response = new HeartResponse(heart.getHId(), heart.getPost().getPId(), heart.getUser().getId());
+                responses.add(response);
+            }
+            return responses;
+        } catch (Exception e) {
+            throw new BaseException(MY_LIKE_GET_FAIL);
         }
     }
 

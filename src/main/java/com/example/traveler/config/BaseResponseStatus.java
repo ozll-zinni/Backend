@@ -75,7 +75,10 @@ public enum BaseResponseStatus {
     POST_SCRAP_GET_FAIL(false, 5011, "게시물 찜에 실패했습니다."),
     POST_LIKE_COUNT_FAIL(false, 5012, "게시물 좋아요 개수 조회에 실패했습니다."),
     POST_SCRAP_COUNT_FAIL(false, 5013, "게시물 찜 개수 조회에 실패했습니다."),
+    MY_LIKE_GET_FAIL(false, 5014, "게시물 좋아요 조회에 실패했습니다."),
+    MY_SCRAP_GET_FAIL(false, 5015, "게시물 찜 조회에 실패했습니다."),
     SAVE_COMMENT_FAIL(false, 5500, "댓글 생성에 실패했습니다."),
+    MY_COMMENT_GET_FAIL(false, 5501, "댓글 조회에 실패했습니다."),
 
     /**
      * 6000 : Checklist 오류

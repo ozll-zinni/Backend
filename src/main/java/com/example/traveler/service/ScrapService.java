@@ -1,6 +1,9 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.CommentResponse;
+import com.example.traveler.model.dto.HeartResponse;
+import com.example.traveler.model.dto.ScrapResponse;
 import com.example.traveler.model.entity.Heart;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.model.entity.Scrap;
@@ -10,12 +13,18 @@ import com.example.traveler.repository.ScrapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 public class ScrapService {
     @Autowired
     private ScrapRepository scrapRepository;
+
+    @Autowired
+    private UserService userService;
 
     public Scrap saveScrap(User user, Post post) throws BaseException {
 
@@ -53,4 +62,23 @@ public class ScrapService {
             throw new BaseException(POST_SCRAP_COUNT_FAIL);
         }
     }
+
+    public List<ScrapResponse> allMyScrap(String accessToken) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
+        try {
+            List<Scrap> scraps =  scrapRepository.findAllByUser(user);
+            ArrayList<ScrapResponse> responses = new ArrayList<>();
+            for (Scrap scrap : scraps) {
+                ScrapResponse response = new ScrapResponse(scrap.getScId(), scrap.getPost().getPId(), scrap.getUser().getId());
+                responses.add(response);
+            }
+            return responses;
+        } catch (Exception e) {
+            throw new BaseException(MY_SCRAP_GET_FAIL);
+        }
+    }
+
 }
