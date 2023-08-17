@@ -1,8 +1,12 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.ChecklistRequest;
 import com.example.traveler.model.dto.ChecklistResponse;
+import com.example.traveler.model.dto.ItemRequest;
+import com.example.traveler.model.dto.ItemResponse;
 import com.example.traveler.model.entity.ChecklistEntity;
+import com.example.traveler.model.entity.ItemEntity;
 import com.example.traveler.model.entity.Travel;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.ChecklistRepository;
@@ -30,7 +34,7 @@ public class ChecklistService {
     private UserService userService;
 
     // 여행정보를 담은 tId를 받아서 해당 여행에 대한 checklist를 조회하고, 없으면 생성하는 메서드
-    public ChecklistResponse saveChecklist(String accessToken, Integer tId) throws BaseException {
+    public ChecklistResponse saveChecklist(String accessToken, Integer tId, ChecklistRequest checklistRequest) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
@@ -45,16 +49,29 @@ public class ChecklistService {
         // 만약 해당 여행에 대한 체크리스트가 없으면 새로운 체크리스트를 생성하여 저장
         if (savedChecklist == null) {
             ChecklistEntity newChecklist = new ChecklistEntity();
-            newChecklist.setTitle("새로운 체크리스트");
+            newChecklist.setTitle(checklistRequest.getTitle());
             newChecklist.setTravel(travel);
 
-            // 새로운 체크리스트 데이터베이스에 저장
+            // 아이템 생성 및 체크리스트에 추가
+            List<ItemEntity> newItems = new ArrayList<>();
+            for (ItemRequest itemRequest : checklistRequest.getItems()) {
+                ItemEntity newItem = new ItemEntity();
+                newItem.setName(itemRequest.getName());
+                newItem.setIschecked(itemRequest.isChecked());
+                newItem.setChecklist(newChecklist);
+                newItems.add(newItem);
+            }
+
+            newChecklist.setChecklistItems(newItems);
+
+            // 새로운 체크리스트와 아이템 저장
             try {
                 savedChecklist = checklistRepository.save(newChecklist);
             } catch (Exception e) {
                 throw new BaseException(SAVE_CATEGORY_FAIL);
             }
         }
+
 
         // 저장된 체크리스트 정보를 ChecklistResponse 형태로 반환
         ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
@@ -69,28 +86,51 @@ public class ChecklistService {
         ChecklistResponse checklistResponse = new ChecklistResponse(getChecklist.get(), getChecklist.get());
         return checklistResponse;
     }
+
     // 체크리스트명 변경
-    public ChecklistResponse patchChecklist(String accessToken, int cId, String newName) throws BaseException {
+    public ChecklistResponse patchChecklist(String accessToken, int cId, String newTitle) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
         // 기존 체크리스트를 데이터베이스에서 조회
-        ChecklistEntity checklist = (ChecklistEntity) checklistRepository.findById((long) cId)
+        ChecklistEntity checklist = checklistRepository.findById((long) cId)
                 .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
 
         // 체크리스트명 변경
-        checklist.setTitle(newName);
+        checklist.setTitle(newTitle);
 
         // 변경사항을 임시로 저장
-//        saveToPendingChanges(cId, checklist);
+        try {
+            checklist = checklistRepository.save(checklist);
+        } catch (Exception e) {
+            throw new BaseException(SAVE_CATEGORY_FAIL);
+        }
 
         // 변경된 체크리스트 정보를 ChecklistResponse 형태로 반환
         ChecklistResponse response = new ChecklistResponse();
         response.setCId(checklist.getCId());
         response.setTitle(checklist.getTitle());
+
+        // tId 정보 추가
+        response.setTId(checklist.getTravel().getTId());
+
+        // ItemResponse 리스트 생성 및 추가
+        List<ItemResponse> itemResponses = new ArrayList<>();
+        for (ItemEntity item : checklist.getChecklistItems()) {
+            ItemResponse itemResponse = new ItemResponse();
+            itemResponse.setIId(item.getId());
+            itemResponse.setName(item.getName());
+            itemResponse.setOrder(item.getOrder()); // 추가된 부분
+            itemResponse.setChecked(item.isIschecked()); // 수정된 부분
+            itemResponse.setCId(checklist.getCId());
+            itemResponses.add(itemResponse);
+        }
+        response.setItems(itemResponses);
+
         return response;
     }
+
 
     // 체크리스트 삭제
     public int deleteChecklist(String accessToken, int cId) throws BaseException {

@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 @AllArgsConstructor
 public class ItemEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
     private Long id;
 
     @JoinColumn(nullable = false)
@@ -26,4 +26,8 @@ public class ItemEntity {
 
     @ManyToOne
     private ChecklistEntity checklist;
+
+    public boolean isIschecked() {
+        return ischecked;
+    }
 }
