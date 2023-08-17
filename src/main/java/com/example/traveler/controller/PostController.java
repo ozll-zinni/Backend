@@ -3,11 +3,10 @@ package com.example.traveler.controller;
 
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
+import com.example.traveler.model.dto.*;
+import com.example.traveler.model.entity.Comment;
 import com.example.traveler.model.dto.CommentRequest;
 import com.example.traveler.model.dto.CommentResponse;
-import com.example.traveler.model.dto.TravelRequest;
-import com.example.traveler.model.dto.TravelResponse;
-import com.example.traveler.model.entity.Comment;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.service.CommentService;
 import com.example.traveler.service.PostService;
@@ -18,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/post")
-public class CommentController {
+public class PostController {
     @Autowired
     private PostService postService;
     @Autowired
@@ -102,4 +101,47 @@ public class CommentController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @PostMapping("/create")
+    public BaseResponse<Post> createPost(@RequestHeader("Authorization") String accessToken, @RequestBody PostRequest postRequest) {
+        try{
+            Post post = postService.createPost(accessToken, postRequest);
+            return new BaseResponse<>(post);
+        }catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+
+    }
+
+    @GetMapping("{pId}/getOne")
+    public BaseResponse<Post> getOnePost(@PathVariable("pId") long pId) {
+        try {
+            Post readpost = postService.getPost(pId);
+            return new BaseResponse<>(readpost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+
+    }
+
+    @PatchMapping("{pId}/update")
+    public BaseResponse<Post> updatePost(@RequestHeader("Authorization") String accessToken, @RequestBody PostUpdateRequest postUpdateRequest, @PathVariable("pId") long pId) {
+        try {
+            Post updatepost = postService.update(accessToken, postUpdateRequest, pId);
+            return new BaseResponse<>(updatepost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @DeleteMapping("{pId}/delete")
+    public BaseResponse<Post> deletePost(@RequestHeader("Authorization") String accessToken, @PathVariable("pId") long pId) {
+        try {
+            Post deletepost = postService.delete(accessToken, pId);
+            return new BaseResponse<>(deletepost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
 }

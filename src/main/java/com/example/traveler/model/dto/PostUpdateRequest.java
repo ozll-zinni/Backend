@@ -4,35 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-
 @Getter
 @Setter
-public class PostRequest {
-
-    int tId;
-
+public class PostUpdateRequest {
     String title;
-
     List<String> hashtags;
-
     String oneLineReview;
-
     String location;
-
-    int what;
-
-    int hard;
-
-    int withwho;
-
     double whatrating;
-
     double hardrating;
-
     double totalrating;
-
     String goodPoints;
-
     String badPoints;
-
 }
