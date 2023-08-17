@@ -41,23 +41,15 @@ public class PostService {
     public Post createPost(String accessToken, PostRequest request) throws BaseException {
 
         User user = userService.getUserByToken(accessToken);
-        log.info("iser={}",user.getId());
 
 
         try {
-            log.info("tId1 = {}", request.getTId());
-            Travel travel = travelRepository.findBytIdAndState(request.getTId(), 1);
-            log.info("hasg = {}", request.getHashtags());
-            log.info("tite = {}", request.getTitle());
-            log.info("gggg = {}", request.getGoodPoints());
-            log.info("w = {}", request.getWhat());
-            log.info("ww = {}", request.getWhatrating());
+            Travel travel = travelRepository.findBytIdAndState(request.getTId(), 0);
 
 
 
             int code = travel.getCode();
-            log.info("code = {}", code);
-            //
+
 
 
             if (code == 0) {
@@ -76,7 +68,6 @@ public class PostService {
                         .goodPoints(request.getGoodPoints())
                         .badPoints(request.getBadPoints())
                         .build();
-                log.info("post = {}", post);
 
 
                 return postRepository.save(post);
@@ -86,12 +77,12 @@ public class PostService {
             else {
 
                 int withwho = travel.getWithWho();
-                log.info("withwho = {}", withwho);
 
                 Post post = Post.builder()
                         .user(user)
                         .title(request.getTitle())
                         .hashtags(request.getHashtags())
+                        .location(request.getLocation())
                         .oneLineReview(request.getOneLineReview())
                         .what((code/100)%10)
                         .hard((code/10)%10)
@@ -102,11 +93,11 @@ public class PostService {
                         .goodPoints(request.getGoodPoints())
                         .badPoints(request.getBadPoints())
                         .build();
-                log.info("info = {}", post);
 
                 return postRepository.save(post);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(INVALID_AUTHORIZATION_CODE);
         }
 

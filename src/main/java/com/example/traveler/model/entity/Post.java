@@ -1,5 +1,6 @@
 package com.example.traveler.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -72,9 +73,9 @@ public class Post {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
-
 
     @OneToOne(mappedBy = "post")
     private Travel travel;
