@@ -47,7 +47,12 @@ public class PostService {
         try {
             log.info("tId1 = {}", request.getTId());
             Travel travel = travelRepository.findBytIdAndState(request.getTId(), 1);
-            log.info("tId2 = {}", request.getTId());
+            log.info("hasg = {}", request.getHashtags());
+            log.info("tite = {}", request.getTitle());
+            log.info("gggg = {}", request.getGoodPoints());
+            log.info("w = {}", request.getWhat());
+            log.info("ww = {}", request.getWhatrating());
+
 
 
             int code = travel.getCode();
