@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface TravelRepository extends CrudRepository<Travel, Integer> {
     public Travel findBytIdAndState(int id, int state);
+
     //public List<Travel> findAllByUser()
+    public List<Travel> findAllByStateAndTimeStatus(int state, int timestatus);
     public List<Travel> findAllByState(int state);
 
     public List<Travel> findAllByUserAndState(User user, int state);

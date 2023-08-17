@@ -16,7 +16,7 @@ public class SchedulerService {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduleTaskingForPastTravel() {
-        List<Travel> allTravels = travelRepository.findAllByState(1);
+        List<Travel> allTravels = travelRepository.findAllByStateAndTimeStatus(1, 0);
         Date date = new Date();
         for (Travel travel : allTravels) {
             if (travel.getStart_date().before(date)) {
