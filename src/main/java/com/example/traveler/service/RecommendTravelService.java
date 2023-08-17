@@ -1,14 +1,8 @@
 package com.example.traveler.service;
 
 import com.example.traveler.model.dto.RecommendTravelRequest;
-import com.example.traveler.model.entity.DayCourse;
-import com.example.traveler.model.entity.RecommendTravel;
-import com.example.traveler.model.entity.Spot;
-import com.example.traveler.model.entity.Travel;
-import com.example.traveler.repository.DayCourseRepository;
-import com.example.traveler.repository.RecommendTravelRepository;
-import com.example.traveler.repository.SpotRepository;
-import com.example.traveler.repository.TravelRepository;
+import com.example.traveler.model.entity.*;
+import com.example.traveler.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +25,13 @@ public class RecommendTravelService {
     @Autowired
     private TravelRepository travelRepository;
 
+    @Autowired
+    private DestinationRepository destinationRepository;
 
-    public List<RecommendTravel> getMatchingTravels(RecommendTravelRequest request) {
+    @Autowired
+    private UserService userService;
+
+    public List<RecommendTravel> getMatchingTravels(String accessToken, RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
         int code1 = request.getCountryId() * 1000 + request.getWhat() * 100 + request.getHard() * 10 ;
         int choose = request.getHard();
@@ -117,7 +116,19 @@ public class RecommendTravelService {
 
         }
 
+        Destination t = destinationRepository.findBydId(request.getCountryId());
+
+        Date s = new Date(request.getStartDate());
+        Date d = new Date(request.getFinishDate());
+
+        User user = userService.getUserByToken(accessToken);
+
         Travel travel = new Travel();
+
+        travel.setUser(user);
+        travel.setStart_date(s);
+        travel.setEnd_date(d);
+        travel.setTitle(t.getCity());
         travel.setCourses(daycourses);
         travel.setCode(code1);
         travel.setWithWho(withwho);
@@ -134,6 +145,14 @@ public class RecommendTravelService {
         long period = ChronoUnit.DAYS.between(s,f);
 
         return (int) period + 1;
+    }
+
+    public List<Destination> getAllregieon(){
+        return destinationRepository.findAll();
+    }
+
+    public List<RecommendTravel> getAllrecommendTravel() {
+        return recommendTravelRepository.findAll();
     }
 
 
