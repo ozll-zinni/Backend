@@ -3,9 +3,12 @@ package com.example.traveler.service;
 import com.example.traveler.model.dto.RecommendTravelRequest;
 import com.example.traveler.model.entity.*;
 import com.example.traveler.repository.*;
+import org.hibernate.procedure.ParameterStrategyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -118,17 +121,23 @@ public class RecommendTravelService {
 
         Destination t = destinationRepository.findBydId(request.getCountryId());
 
-        Date s = new Date(request.getStartDate());
-        Date d = new Date(request.getFinishDate());
-
         User user = userService.getUserByToken(accessToken);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Travel travel = new Travel();
 
+        try {
+            Date s = dateFormat.parse(request.getStartDate());
+            travel.setStart_date(s);
+            Date f = dateFormat.parse(request.getFinishDate());
+            travel.setEnd_date(f);
+        } catch (ParseException e) {
+            System.out.println("");
+        }
+
         travel.setUser(user);
-        travel.setStart_date(s);
-        travel.setEnd_date(d);
-        travel.setTitle(t.getCity());
+        travel.setWriteStatus(0);
+        travel.setDestination(t.getCity());
         travel.setCourses(daycourses);
         travel.setCode(code1);
         travel.setWithWho(withwho);
