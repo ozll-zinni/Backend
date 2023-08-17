@@ -1,11 +1,14 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.PostRequest;
+import com.example.traveler.model.dto.PostUpdateRequest;
 import com.example.traveler.model.entity.*;
 import com.example.traveler.repository.HeartRepository;
 import com.example.traveler.repository.PostRepository;
 import com.example.traveler.repository.TravelRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     @Autowired
@@ -34,83 +38,131 @@ public class PostService {
     @Autowired
     private ScrapService scrapService;
 
-    public String createPost(String title, List<String> hashtags, String oneLineReview, String location, int what, int hard, int with, double whatrating, double hardrating, double totalrating, String goodPoints, String badPoints, int likes, int tId, int state) {
+    public Post createPost(String accessToken, PostRequest request) throws BaseException {
 
-        Travel travel = travelRepository.findBytIdAndState(tId, state);
+        User user = userService.getUserByToken(accessToken);
+        log.info("iser={}",user.getId());
 
-        int code = travel.getCode();
 
-        if (code == 0) {
-            Post post = Post.builder()
-                    .title(title)
-                    .hashtags(hashtags)
-                    .oneLineReview(oneLineReview)
-                    .location(location)
-                    .what(what)
-                    .hard(hard)
-                    .with(with)
-                    .whatrating(whatrating)
-                    .hardrating(hardrating)
-                    .totalrating(totalrating)
-                    .goodPoints(goodPoints)
-                    .badPoints(badPoints)
-                    .likes(likes)
-                    .build();
+        try {
+            log.info("tId1 = {}", request.getTId());
+            Travel travel = travelRepository.findBytIdAndState(request.getTId(), 1);
+            log.info("tId2 = {}", request.getTId());
 
-            postRepository.save(post);
 
+            int code = travel.getCode();
+            log.info("code = {}", code);
+
+
+            if (code == 0) {
+                Post post = Post.builder()
+                        .user(user)
+                        .title(request.getTitle())
+                        .hashtags(request.getHashtags())
+                        .location(request.getLocation())
+                        .oneLineReview(request.getOneLineReview())
+                        .what(request.getWhat())
+                        .hard(request.getHard())
+                        .withwho(request.getWithwho())
+                        .whatrating(request.getWhatrating())
+                        .hardrating(request.getHardrating())
+                        .totalrating(request.getTotalrating())
+                        .goodPoints(request.getGoodPoints())
+                        .badPoints(request.getBadPoints())
+                        .build();
+                log.info("post = {}", post);
+
+
+                return postRepository.save(post);
+
+            }
+
+            else {
+
+                int withwho = travel.getWithWho();
+                log.info("withwho = {}", withwho);
+
+                Post post = Post.builder()
+                        .user(user)
+                        .title(request.getTitle())
+                        .hashtags(request.getHashtags())
+                        .oneLineReview(request.getOneLineReview())
+                        .what((code/100)%10)
+                        .hard((code/10)%10)
+                        .withwho(withwho)
+                        .whatrating(request.getWhatrating())
+                        .hardrating(request.getHardrating())
+                        .totalrating(request.getTotalrating())
+                        .goodPoints(request.getGoodPoints())
+                        .badPoints(request.getBadPoints())
+                        .build();
+                log.info("info = {}", post);
+
+                return postRepository.save(post);
+            }
+        } catch (Exception e) {
+            throw new BaseException(INVALID_AUTHORIZATION_CODE);
+        }
+
+
+    }
+
+    public Post getPost(Long pId) throws BaseException{
+        try {
+            Post foundpost = postRepository.findBypId(pId);
+            return foundpost;
+        } catch(Exception e) {
+            throw new BaseException(INVALID_JWT);
+        }
+    }
+
+    public Post update(String accessToken, PostUpdateRequest request, Long pId) throws BaseException {
+
+        User user = userService.getUserByToken(accessToken);
+        Post foundPost = postRepository.findBypId(pId);
+
+        if (user.getId() == foundPost.getUser().getId()){
+            try{
+                foundPost.setTitle(request.getTitle());
+                foundPost.setHashtags(request.getHashtags());
+                foundPost.setOneLineReview(request.getOneLineReview());
+                foundPost.setLocation(request.getLocation());
+                foundPost.setWhatrating(request.getWhatrating());
+                foundPost.setHardrating(request.getHardrating());
+                foundPost.setTotalrating(request.getTotalrating());
+                foundPost.setGoodPoints(request.getGoodPoints());
+                foundPost.setBadPoints(request.getBadPoints());
+                return postRepository.save(foundPost);
+            } catch (Exception e) {
+                throw new BaseException(INVALID_JWT);
+            }
         }
 
         else {
-            Post post = Post.builder()
-                    .title(title)
-                    .hashtags(hashtags)
-                    .oneLineReview(oneLineReview)
-                    .location(location)
-                    .what((code/100)%10)
-                    .hard((code/10)%10)
-                    .with(with)
-                    .whatrating(whatrating)
-                    .hardrating(hardrating)
-                    .totalrating(totalrating)
-                    .goodPoints(goodPoints)
-                    .badPoints(badPoints)
-                    .likes(likes)
-                    .build();
+            throw new BaseException(INVALID_JWT);
+        }
+    }
 
-            postRepository.save(post);
+    public Post delete(String accessToken, Long pId) throws BaseException {
+
+        User user = userService.getUserByToken(accessToken);
+        Post deletepost = postRepository.findBypId(pId);
+
+        if (user.getId() == deletepost.getUser().getId()){
+            try{
+                postRepository.delete(deletepost);
+                return deletepost;
+            } catch (Exception e) {
+                throw new BaseException(INVALID_JWT);
+            }
         }
 
-        return title;
+        else{
+            throw new BaseException(INVALID_JWT);
+        }
 
     }
 
-    public Post getPost(Long pId) {
-        return postRepository.findBypId(pId);
-    }
-
-    public String update(Long pId, String title, List<String> hashtags, String oneLineReview, String location, int what, int hard, int with, double whatrating, double hardrating, double totalrating, String goodPoints, String badPoints) {
-
-        Post foundPost = postRepository.findBypId(pId);
-        foundPost.setTitle(title);
-        foundPost.setHashtags(hashtags);
-        foundPost.setOneLineReview(oneLineReview);
-        foundPost.setLocation(location);
-        foundPost.setWhatrating(whatrating);
-        foundPost.setHardrating(hardrating);
-        foundPost.setTotalrating(totalrating);
-        foundPost.setGoodPoints(goodPoints);
-        foundPost.setBadPoints(badPoints);
-        postRepository.save(foundPost);
-        return foundPost.getTitle();
-    }
-
-    public Post delete(Long pId) {
-
-        Post deletepost = postRepository.findBypId(pId);
-        postRepository.delete(deletepost);
-        return deletepost;
-    }
 
     public List<Post> searchByTitle(String keyword) throws BaseException{
         List<Post> posts;

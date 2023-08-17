@@ -1,6 +1,5 @@
 package com.example.traveler.service;
 
-import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.RecommendTravelRequest;
 import com.example.traveler.model.entity.DayCourse;
 import com.example.traveler.model.entity.RecommendTravel;
@@ -37,7 +36,7 @@ public class RecommendTravelService {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
         int code1 = request.getCountryId() * 1000 + request.getWhat() * 100 + request.getHard() * 10 ;
         int choose = request.getHard();
-        int with = request.getWith();
+        int withwho = request.getWithwho();
 
         List<RecommendTravel> finalTravels = new ArrayList<>();
 
@@ -121,7 +120,7 @@ public class RecommendTravelService {
         Travel travel = new Travel();
         travel.setCourses(daycourses);
         travel.setCode(code1);
-        travel.setWithWho(with);
+        travel.setWithWho(withwho);
         travelRepository.save(travel);
 
         return finalTravels;
