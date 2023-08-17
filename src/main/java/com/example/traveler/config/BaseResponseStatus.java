@@ -73,6 +73,8 @@ public enum BaseResponseStatus {
     POST_SCRAP_FAIL(false, 5009, "게시물 찜에 실패했습니다."),
     POST_SCRAP_CANCEL_FAIL(false, 5010, "게시물 찜에 실패했습니다."),
     POST_SCRAP_GET_FAIL(false, 5011, "게시물 찜에 실패했습니다."),
+    POST_LIKE_COUNT_FAIL(false, 5012, "게시물 좋아요 개수 조회에 실패했습니다."),
+    POST_SCRAP_COUNT_FAIL(false, 5013, "게시물 찜 개수 조회에 실패했습니다."),
     SAVE_COMMENT_FAIL(false, 5500, "댓글 생성에 실패했습니다."),
 
     /**

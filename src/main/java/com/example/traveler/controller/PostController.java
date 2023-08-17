@@ -5,6 +5,8 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.*;
 import com.example.traveler.model.entity.Comment;
+import com.example.traveler.model.dto.CommentRequest;
+import com.example.traveler.model.dto.CommentResponse;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.service.CommentService;
 import com.example.traveler.service.PostService;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/post")
-public class CommentController {
+public class PostController {
     @Autowired
     private PostService postService;
     @Autowired

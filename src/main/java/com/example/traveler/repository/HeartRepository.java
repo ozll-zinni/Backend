@@ -15,5 +15,5 @@ public interface HeartRepository extends CrudRepository<Heart, Long> {
 
     public List<Heart> findAllByUser(User user);
     //public List<Travel> findAllByUser()
-
+    public long countByPost(Post post);
 }
