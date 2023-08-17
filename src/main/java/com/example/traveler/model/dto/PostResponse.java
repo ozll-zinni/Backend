@@ -27,7 +27,7 @@ public class PostResponse {
 
     private int hard;
 
-    private int with;
+    private int withwho;
 
     private double whatrating;
 
