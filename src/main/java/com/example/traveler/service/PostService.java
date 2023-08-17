@@ -52,6 +52,7 @@ public class PostService {
 
             int code = travel.getCode();
             log.info("code = {}", code);
+            //
 
 
             if (code == 0) {
