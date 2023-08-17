@@ -39,11 +39,6 @@ public class TravelController {
             System.out.println(travelRequest.getWriteStatus());
             TravelResponse travelResponse = travelService.saveTravel(accessToken, travelRequest);
 
-            // 체크리스트 생성 로직
-            ChecklistRequest checklistRequest = new ChecklistRequest();
-            checklistRequest.setTitle("새로운 체크리스트"); // 체크리스트 제목 설정
-            checklistService.saveChecklist(accessToken, travelResponse.getTId(), checklistRequest); // 체크리스트 생성
-
             return new BaseResponse<>(travelResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

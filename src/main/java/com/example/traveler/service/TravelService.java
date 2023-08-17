@@ -39,9 +39,6 @@ public class TravelService {
             Travel newTravel = new Travel(travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), 0, travel.getWriteStatus(), 0, 1, user);
             saveTravel = travelRepository.save(newTravel);
 
-            ChecklistRequest checklistRequest = new ChecklistRequest();
-            checklistRequest.setTitle("새로운 체크리스트"); // 체크리스트 제목 설정
-            ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, saveTravel.getTId(), checklistRequest);
         } catch (Exception e) {
             System.out.println("444444444444");
             throw new BaseException(SAVE_TRAVEL_FAIL);
