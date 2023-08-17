@@ -25,4 +25,5 @@ public class TravelResponse {
     int writeStatus;
     int noteStatus;
     List<DayCourse> courses;
+    long uId;
 }
