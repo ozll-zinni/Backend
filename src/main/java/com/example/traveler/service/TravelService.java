@@ -1,6 +1,8 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.ChecklistRequest;
+import com.example.traveler.model.dto.ChecklistResponse;
 import com.example.traveler.model.dto.TravelRequest;
 import com.example.traveler.model.dto.TravelResponse;
 import com.example.traveler.model.entity.Travel;
@@ -20,6 +22,8 @@ public class TravelService {
     private TravelRepository travelRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ChecklistService checklistService;
 
     public TravelResponse saveTravel(String accessToken, TravelRequest travel) throws BaseException {
         User user = userService.getUserByToken(accessToken);
@@ -34,6 +38,10 @@ public class TravelService {
             SimpleDateFormat inputFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
             Travel newTravel = new Travel(travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), 0, travel.getWriteStatus(), 0, 1, user);
             saveTravel = travelRepository.save(newTravel);
+
+            ChecklistRequest checklistRequest = new ChecklistRequest();
+            checklistRequest.setTitle("새로운 체크리스트"); // 체크리스트 제목 설정
+            ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, saveTravel.getTId(), checklistRequest);
         } catch (Exception e) {
             System.out.println("444444444444");
             throw new BaseException(SAVE_TRAVEL_FAIL);

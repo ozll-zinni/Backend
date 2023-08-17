@@ -3,6 +3,7 @@ package com.example.traveler.controller;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.*;
+import com.example.traveler.service.ChecklistService;
 import com.example.traveler.service.DayCourseService;
 import com.example.traveler.service.SpotService;
 import com.example.traveler.service.TravelService;
@@ -25,6 +26,9 @@ public class TravelController {
     private DayCourseService dayCourseService;
     @Autowired
     private SpotService spotService;
+    @Autowired
+    private ChecklistService checklistService;
+
     @PostMapping("")
     public BaseResponse<TravelResponse> saveTravel(@RequestHeader("Authorization") String accessToken, @RequestBody TravelRequest travelRequest) {
         try {
@@ -34,6 +38,12 @@ public class TravelController {
             System.out.println(travelRequest.getEnd_date());
             System.out.println(travelRequest.getWriteStatus());
             TravelResponse travelResponse = travelService.saveTravel(accessToken, travelRequest);
+
+            // 체크리스트 생성 로직
+            ChecklistRequest checklistRequest = new ChecklistRequest();
+            checklistRequest.setTitle("새로운 체크리스트"); // 체크리스트 제목 설정
+            checklistService.saveChecklist(accessToken, travelResponse.getTId(), checklistRequest); // 체크리스트 생성
+
             return new BaseResponse<>(travelResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
