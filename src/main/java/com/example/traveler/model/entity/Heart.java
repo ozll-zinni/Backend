@@ -22,11 +22,11 @@ public class Heart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pId")
     private Post post;
 
