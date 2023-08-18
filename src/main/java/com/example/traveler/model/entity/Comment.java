@@ -1,5 +1,6 @@
 package com.example.traveler.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long coId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="pId")
     private Post post;

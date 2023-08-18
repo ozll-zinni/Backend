@@ -23,7 +23,9 @@ public class RecommendTravel {
 
     private double longitude;
 
-    private int withWho;
+
+    private int withwho;
+
 
     /***
 

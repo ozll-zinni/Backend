@@ -30,7 +30,7 @@ public class Travel {
     @CreationTimestamp
     Timestamp created_at;
 
-    //시작 날짜 기준으로 지난건지 예정된건지
+    //시작 날짜 기준으로 지난건지(1) 예정된건지(0)
     int timeStatus;
 
     //추천받은건지 직접쓴건지

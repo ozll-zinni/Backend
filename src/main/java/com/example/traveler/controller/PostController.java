@@ -47,8 +47,11 @@ public class PostController {
     @GetMapping("")
     public BaseResponse<List<Post>> getAllPost(@RequestParam(value = "keyword", required = false) String keyword) {
         List<Post> postResponse;
+        System.out.println("11111111");
+        System.out.println(keyword);
         if (keyword == null) {
             try {
+                System.out.println("22222222");
                 postResponse = postService.getAllPost();
             } catch (BaseException exception) {
                 return new BaseResponse<>(exception.getStatus());
@@ -56,12 +59,14 @@ public class PostController {
         } else {
             if (keyword.startsWith("#")) {
                 try {
+                    System.out.println("333333333");
                     postResponse = postService.searchByHashtag(keyword);
                 } catch (BaseException exception) {
                     return new BaseResponse<>(exception.getStatus());
                 }
             } else {
                 try {
+                    System.out.println("4444444444");
                     postResponse = postService.searchByTitle(keyword);
                 } catch (BaseException exception) {
                     return new BaseResponse<>(exception.getStatus());

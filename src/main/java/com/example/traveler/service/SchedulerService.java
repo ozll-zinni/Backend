@@ -16,11 +16,12 @@ public class SchedulerService {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduleTaskingForPastTravel() {
-        List<Travel> allTravels = travelRepository.findAllByState(1);
+        List<Travel> allTravels = travelRepository.findAllByStateAndTimeStatus(1, 0);
         Date date = new Date();
         for (Travel travel : allTravels) {
             if (travel.getStart_date().before(date)) {
-                travel.setState(0);
+                travel.setTimeStatus(1);
+                System.out.println(travel.getTId() + ": 지난 여행 처리!");
                 travelRepository.save(travel);
             }
         }

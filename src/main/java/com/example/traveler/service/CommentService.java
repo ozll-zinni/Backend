@@ -79,15 +79,18 @@ public class CommentService {
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
-
-        List<Comment> allMyComment = commentRepository.findAllByUserOrderByCoId(user);
-        ArrayList<CommentResponse> allMyCommentResponse = new ArrayList<>();
-        for (Comment comment : allMyComment) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser().getId(), formatter.format(comment.getCreated_at()));
-            allMyCommentResponse.add(commentResponse);
+        try {
+            List<Comment> allMyComment = commentRepository.findAllByUserOrderByCoId(user);
+            ArrayList<CommentResponse> allMyCommentResponse = new ArrayList<>();
+            for (Comment comment : allMyComment) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser().getId(), formatter.format(comment.getCreated_at()));
+                allMyCommentResponse.add(commentResponse);
+            }
+            return allMyCommentResponse;
+        } catch (Exception e) {
+            throw new BaseException(MY_COMMENT_GET_FAIL);
         }
-        return allMyCommentResponse;
     }
 
 
