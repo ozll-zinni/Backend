@@ -11,7 +11,7 @@ import java.util.List;
 public class AccountBookResponse {
     private String accountName;
     private Long accountId;
-    private Long tId; // 여행 ID
+    private Long tId; // 여행 I
     private double budget;
     private List<TransactionResponse> transactions;
 

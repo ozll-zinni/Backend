@@ -4,6 +4,7 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.AccountBookResponse;
 import com.example.traveler.model.dto.DailyExpensesResponse;
 import com.example.traveler.model.dto.MonthlyExpensesResponse;
+import com.example.traveler.model.dto.SummaryResponse;
 import com.example.traveler.model.entity.AccountBook;
 import com.example.traveler.model.entity.DateEntity;
 import com.example.traveler.model.entity.Transaction;
@@ -217,6 +218,40 @@ public class AccountBookService {
         }
 
         return formattedExpenses;
+    }
+
+    // 요약
+    public SummaryResponse getAccountBookSummary(Long accountId) throws BaseException {
+        AccountBook accountBook = accountBookRepository.findById(accountId)
+                .orElseThrow(() -> new BaseException(ACCOUNTBOOK_NOT_FOUND));
+
+        double totalExpense = accountBook.getTotalExpense();
+        double foodExpense = accountBook.getFoodExpense();
+        double transportationExpense = accountBook.getTransportationExpense();
+        double sightseeingExpense = accountBook.getSightseeingExpense();
+        double shoppingExpense = accountBook.getShoppingExpense();
+        double otherExpense = accountBook.getOtherExpense();
+
+        double foodExpensePercentage = (foodExpense / totalExpense) * 100;
+        double transportationExpensePercentage = (transportationExpense / totalExpense) * 100;
+        double sightseeingExpensePercentage = (sightseeingExpense / totalExpense) * 100;
+        double shoppingExpensePercentage = (shoppingExpense / totalExpense) * 100;
+        double otherExpensePercentage = (otherExpense / totalExpense) * 100;
+
+        SummaryResponse summaryResponse = new SummaryResponse();
+        summaryResponse.setTotalExpense(totalExpense);
+        summaryResponse.setFoodExpense(foodExpense);
+        summaryResponse.setTransportationExpense(transportationExpense);
+        summaryResponse.setSightseeingExpense(sightseeingExpense);
+        summaryResponse.setShoppingExpense(shoppingExpense);
+        summaryResponse.setOtherExpense(otherExpense);
+        summaryResponse.setFoodExpensePercentage(foodExpensePercentage);
+        summaryResponse.setTransportationExpensePercentage(transportationExpensePercentage);
+        summaryResponse.setSightseeingExpensePercentage(sightseeingExpensePercentage);
+        summaryResponse.setShoppingExpensePercentage(shoppingExpensePercentage);
+        summaryResponse.setOtherExpensePercentage(otherExpensePercentage);
+
+        return summaryResponse;
     }
 
 }

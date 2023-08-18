@@ -174,6 +174,17 @@ public class AccountBookController {
          } catch (BaseException exception) {
              return new BaseResponse<>(exception.getStatus());
          }
- }
+    }
+
+    // 가계부 요약 관련 기능
+    @GetMapping("/{accountId}/summary")
+    public BaseResponse<SummaryResponse> getAccountBookSummary(@PathVariable("accountId") Long accountId) {
+        try {
+            SummaryResponse summaryResponse = accountBookService.getAccountBookSummary(accountId);
+            return new BaseResponse<>(summaryResponse);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }
