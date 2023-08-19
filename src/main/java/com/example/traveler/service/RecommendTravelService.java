@@ -135,6 +135,7 @@ public class RecommendTravelService {
             System.out.println("");
         }
 
+        travel.setTitle("추천여행");
         travel.setUser(user);
         travel.setWriteStatus(0);
         travel.setDestination(t.getCity());
