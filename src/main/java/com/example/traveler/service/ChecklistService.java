@@ -1,11 +1,14 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.ChecklistRequest;
 import com.example.traveler.model.dto.ChecklistResponse;
 import com.example.traveler.model.entity.ChecklistEntity;
 import com.example.traveler.model.entity.Travel;
+import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.ChecklistRepository;
 import com.example.traveler.repository.TravelRepository;
+import com.example.traveler.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +28,15 @@ public class ChecklistService {
     private TravelRepository travelRepository;
     @Autowired
     private final ChecklistRepository checklistRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     // 여행정보를 담은 tId를 받아서 해당 여행에 대한 checklist를 조회하고, 없으면 생성하는 메서드
-    public ChecklistResponse saveChecklist(Integer tId) throws BaseException {
-        // 데이터베이스 연결 여부 확인
-//        if (!isDatabaseConnected()) {
-//            throw new BaseException(DATABASE_ERROR);
-//        }
+    public ChecklistResponse saveChecklist(String accessToken, Integer tId, ChecklistRequest checklistRequest) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
 
         // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회
         Travel travel = travelRepository.findById(tId)
@@ -43,10 +48,10 @@ public class ChecklistService {
         // 만약 해당 여행에 대한 체크리스트가 없으면 새로운 체크리스트를 생성하여 저장
         if (savedChecklist == null) {
             ChecklistEntity newChecklist = new ChecklistEntity();
-            newChecklist.setTitle("새로운 체크리스트");
+            newChecklist.setTitle(checklistRequest.getTitle());
             newChecklist.setTravel(travel);
 
-            // 새로운 체크리스트 데이터베이스에 저장
+            // 새로운 체크리스트 저장
             try {
                 savedChecklist = checklistRepository.save(newChecklist);
             } catch (Exception e) {
@@ -58,6 +63,7 @@ public class ChecklistService {
         ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
         return checklistResponse;
     }
+
 
     public ChecklistResponse getChecklist(int cId) throws BaseException {
         Optional<ChecklistEntity> getChecklist = checklistRepository.findByCIdAndState(cId, 1);
