@@ -16,7 +16,7 @@ import java.util.List;
 import static com.example.traveler.config.BaseResponseStatus.DELETE_CATEGORY_FAIL;
 
 @RestController
-@RequestMapping("/checklsit")
+@RequestMapping("/checklist")
 public class ChecklistController {
     @Autowired
     private ChecklistService checklistService;
@@ -79,5 +79,4 @@ public class ChecklistController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
 }
