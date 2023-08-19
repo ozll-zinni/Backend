@@ -39,6 +39,7 @@ public class ChecklistService {
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
+
         // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회
         Travel travel = travelRepository.findById(tId)
                 .orElseThrow(() -> new BaseException(TRAVEL_IS_EMPTY));
@@ -52,19 +53,7 @@ public class ChecklistService {
             newChecklist.setTitle(checklistRequest.getTitle());
             newChecklist.setTravel(travel);
 
-            // 아이템 생성 및 체크리스트에 추가
-            List<ItemEntity> newItems = new ArrayList<>();
-            for (ItemRequest itemRequest : checklistRequest.getItems()) {
-                ItemEntity newItem = new ItemEntity();
-                newItem.setName(itemRequest.getName());
-                newItem.setIschecked(itemRequest.isChecked());
-                newItem.setChecklist(newChecklist);
-                newItems.add(newItem);
-            }
-
-            newChecklist.setChecklistItems(newItems);
-
-            // 새로운 체크리스트와 아이템 저장
+            // 새로운 체크리스트 저장
             try {
                 savedChecklist = checklistRepository.save(newChecklist);
             } catch (Exception e) {
@@ -72,11 +61,11 @@ public class ChecklistService {
             }
         }
 
-
         // 저장된 체크리스트 정보를 ChecklistResponse 형태로 반환
         ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
         return checklistResponse;
     }
+
 
     public ChecklistResponse getChecklist(int cId) throws BaseException {
         Optional<ChecklistEntity> getChecklist = checklistRepository.findByCIdAndState(cId, 1);

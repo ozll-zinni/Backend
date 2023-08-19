@@ -9,6 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ChecklistRequest {
     private String title;
-    private List<ItemRequest> items;
 
 }
