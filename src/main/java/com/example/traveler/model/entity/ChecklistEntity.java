@@ -15,7 +15,7 @@ import java.util.List;
 public class ChecklistEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
     private int CId;
 
     @Column(nullable = false)

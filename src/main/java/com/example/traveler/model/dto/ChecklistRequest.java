@@ -1,12 +1,13 @@
 package com.example.traveler.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChecklistRequest {
-    String Title;
+    private String title;
+
 }
