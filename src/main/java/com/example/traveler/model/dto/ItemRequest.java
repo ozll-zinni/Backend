@@ -11,5 +11,6 @@ public class ItemRequest {
     private String name;
     private Long order;
     private boolean isChecked;
+    private int cId;
 }
 
