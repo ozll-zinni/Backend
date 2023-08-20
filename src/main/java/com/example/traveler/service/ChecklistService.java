@@ -51,7 +51,6 @@ public class ChecklistService {
         if (savedChecklist == null) {
             ChecklistEntity newChecklist = new ChecklistEntity();
             newChecklist.setTitle("새로운 체크리스트");
-            travel.setTId(tId);
             newChecklist.setTravel(travel);
 
             // 새로운 체크리스트 데이터베이스에 저장
@@ -63,6 +62,7 @@ public class ChecklistService {
         }
         // 저장된 체크리스트 정보를 ChecklistResponse 형태로 반환
         ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
+        checklistResponse.setTId(travel.getTId());
         return checklistResponse;
     }
 
