@@ -3,12 +3,14 @@ package com.example.traveler.service;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.CommentResponse;
 import com.example.traveler.model.dto.HeartResponse;
+import com.example.traveler.model.dto.PostResponse;
 import com.example.traveler.model.dto.ScrapResponse;
 import com.example.traveler.model.entity.Heart;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.model.entity.Scrap;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.HeartRepository;
+import com.example.traveler.repository.PostRepository;
 import com.example.traveler.repository.ScrapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class ScrapService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostRepository postRepository;
 
     public Scrap saveScrap(User user, Post post) throws BaseException {
 
@@ -72,8 +77,14 @@ public class ScrapService {
             List<Scrap> scraps =  scrapRepository.findAllByUser(user);
             ArrayList<ScrapResponse> responses = new ArrayList<>();
             for (Scrap scrap : scraps) {
-                ScrapResponse response = new ScrapResponse(scrap.getScId(), scrap.getPost().getPId(), scrap.getUser().getId());
-                responses.add(response);
+                Post foundPost = postRepository.findBypId(scrap.getPost().getPId());
+                PostResponse postResponse;
+                if (foundPost.getImage_url().isEmpty()) {
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null);
+                } else {
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
+                }
+                ScrapResponse response = new ScrapResponse(scrap.getScId(), postResponse, scrap.getUser().getId());
             }
             return responses;
         } catch (Exception e) {

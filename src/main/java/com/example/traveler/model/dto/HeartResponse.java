@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class HeartResponse {
     long hId;
-    Post post;
+    PostResponse postResponse;
     long uId;
 }

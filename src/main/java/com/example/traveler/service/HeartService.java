@@ -4,6 +4,7 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.CommentRequest;
 import com.example.traveler.model.dto.CommentResponse;
 import com.example.traveler.model.dto.HeartResponse;
+import com.example.traveler.model.dto.PostResponse;
 import com.example.traveler.model.entity.Comment;
 import com.example.traveler.model.entity.Heart;
 import com.example.traveler.model.entity.Post;
@@ -77,14 +78,20 @@ public class HeartService {
             ArrayList<HeartResponse> responses = new ArrayList<>();
             for (Heart heart : hearts) {
                 Post foundPost = postRepository.findBypId(heart.getPost().getPId());
-                HeartResponse response = new HeartResponse(heart.getHId(), foundPost, heart.getUser().getId());
+                PostResponse postResponse;
+                if (foundPost.getImage_url().isEmpty()) {
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null);
+                } else {
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
+                }
+                HeartResponse response = new HeartResponse(heart.getHId(), postResponse, heart.getUser().getId());
                 responses.add(response);
             }
             return responses;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(MY_LIKE_GET_FAIL);
         }
     }
-
 
 }
