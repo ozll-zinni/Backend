@@ -9,7 +9,7 @@ public class RecommendTravelRequest {
 
     private String startDate;
     private String finishDate;
-    private int countryId;
+    private int cityId;
     private int hard;
     private int what;
     private int withwho;
