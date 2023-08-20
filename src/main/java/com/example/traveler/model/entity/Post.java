@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +72,12 @@ public class Post {
 
     private int scraps = 0;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private Timestamp created_at;
+
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(referencedColumnName = "pId"))
+    private List<String> image_url;
 
     @JsonIgnore
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)

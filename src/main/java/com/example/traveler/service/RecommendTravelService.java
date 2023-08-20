@@ -33,6 +33,8 @@ public class RecommendTravelService {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private SpotService spotService;
 
     public List<RecommendTravel> getMatchingTravels(String accessToken, RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
@@ -77,7 +79,10 @@ public class RecommendTravelService {
         for (RecommendTravel travel : finalTravels) {
 
             Spot spot = new Spot(travel.getDestination(), travel.getLatitude(), travel.getLongitude());
-            spotRepository.save(spot);
+            Spot check = spotRepository.save(spot);
+            System.out.println(check.getTitle());
+            System.out.println(check.getLatitude());
+
             spots.add(spot);
 
             if (snum%num == 0) {
@@ -105,6 +110,25 @@ public class RecommendTravelService {
                         dayCourse.setSpot3(spots.get(2));
                         dayCourse.setSpot4(spots.get(3));
                         break;
+                }
+
+                if (dayCourse.getSpot1() != null && dayCourse.getSpot2() != null) {
+                    dayCourse.setFirst(spotService.distance(dayCourse.getSpot1().getLatitude(), dayCourse.getSpot1().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+                }
+                else {
+                    dayCourse.setFirst(null);
+                }
+                if (dayCourse.getSpot2() != null && dayCourse.getSpot3() != null) {
+                    dayCourse.setSecond(spotService.distance(dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude(), dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude()));
+                }
+                else {
+                    dayCourse.setSecond(null);
+                }
+                if (dayCourse.getSpot3() != null && dayCourse.getSpot4() != null) {
+                    dayCourse.setThird(spotService.distance(dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+                }
+                else {
+                    dayCourse.setThird(null);
                 }
 
                 dayCourse.setNumOfDay(numOfDay);
@@ -135,12 +159,15 @@ public class RecommendTravelService {
             System.out.println("");
         }
 
+        travel.setTitle("추천여행");
         travel.setUser(user);
-        travel.setWriteStatus(0);
+        travel.setWriteStatus(1);
         travel.setDestination(t.getCity());
         travel.setCourses(daycourses);
         travel.setCode(code1);
+        travel.setState(1);
         travel.setWithWho(withwho);
+        travel.setTimeStatus(0);
         travelRepository.save(travel);
 
         return finalTravels;

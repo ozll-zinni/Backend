@@ -15,4 +15,6 @@ public interface TravelRepository extends CrudRepository<Travel, Integer> {
 
     public List<Travel> findAllByUserAndState(User user, int state);
     public List<Travel> findAllByUserAndStateAndTimeStatus(User user, int state, int time_status);
+
+    public Travel findBytId(int id);
 }
