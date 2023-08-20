@@ -30,6 +30,7 @@ public class ChecklistController {
     public List<ChecklistResponse> getAllChecklistsByTravel(@PathVariable Integer tId) throws BaseException {
         return checklistService.getAllChecklistsByTravel(tId);
     }
+
     // 새로운 체크리스트 정보 저장
     @PostMapping("/{tId}")
     public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable Integer tId, @RequestBody ChecklistRequest checklistRequest) {
