@@ -34,7 +34,6 @@ public class ChecklistService {
     private UserService userService;
 
     // 여행정보를 담은 tId를 받아서 해당 여행에 대한 checklist를 조회하고, 없으면 생성하는 메서드
-
     public ChecklistResponse saveChecklist(String accessToken, Integer tId, ChecklistRequest checklistRequest) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -63,6 +62,7 @@ public class ChecklistService {
         }
         // 저장된 체크리스트 정보를 ChecklistResponse 형태로 반환
         ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
+        checklistResponse.setTId(travel.getTId());
         return checklistResponse;
     }
 

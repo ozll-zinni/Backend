@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,63 +40,71 @@ public class PostService {
     @Autowired
     private ScrapService scrapService;
 
-    public Post createPost(String accessToken, PostRequest request) throws BaseException {
+    @Autowired
+    private S3Uploader s3Uploader;
+
+    public Post createPost(String accessToken, PostRequest request, List<String> imageFiles) throws BaseException {
 
         User user = userService.getUserByToken(accessToken);
 
 
         try {
-            Travel travel = travelRepository.findBytIdAndState(request.getTId(), 0);
+
+            Travel travel = travelRepository.findBytId(request.getTId());
+
+            if (user.getId() == travel.getUser().getId()) {
+                int code = travel.getCode();
 
 
 
-            int code = travel.getCode();
+                if (code == 0) {
+                    Post post = Post.builder()
+                            .user(user)
+                            .travel(travel)
+                            .title(request.getTitle())
+                            .hashtags(request.getHashtags())
+                            .location(request.getLocation())
+                            .oneLineReview(request.getOneLineReview())
+                            .what(request.getWhat())
+                            .hard(request.getHard())
+                            .withwho(request.getWithwho())
+                            .whatrating(request.getWhatrating())
+                            .hardrating(request.getHardrating())
+                            .totalrating(request.getTotalrating())
+                            .goodPoints(request.getGoodPoints())
+                            .badPoints(request.getBadPoints())
+                            .image_url(imageFiles)
+                            .build();
 
 
+                    return postRepository.save(post);
 
-            if (code == 0) {
-                Post post = Post.builder()
-                        .user(user)
-                        .title(request.getTitle())
-                        .hashtags(request.getHashtags())
-                        .location(request.getLocation())
-                        .oneLineReview(request.getOneLineReview())
-                        .what(request.getWhat())
-                        .hard(request.getHard())
-                        .withwho(request.getWithwho())
-                        .whatrating(request.getWhatrating())
-                        .hardrating(request.getHardrating())
-                        .totalrating(request.getTotalrating())
-                        .goodPoints(request.getGoodPoints())
-                        .badPoints(request.getBadPoints())
-                        .build();
+                } else {
 
+                    int withwho = travel.getWithWho();
 
-                return postRepository.save(post);
+                    Post post = Post.builder()
+                            .user(user)
+                            .travel(travel)
+                            .title(request.getTitle())
+                            .hashtags(request.getHashtags())
+                            .location(request.getLocation())
+                            .oneLineReview(request.getOneLineReview())
+                            .what((code / 100) % 10)
+                            .hard((code / 10) % 10)
+                            .withwho(withwho)
+                            .whatrating(request.getWhatrating())
+                            .hardrating(request.getHardrating())
+                            .totalrating(request.getTotalrating())
+                            .goodPoints(request.getGoodPoints())
+                            .badPoints(request.getBadPoints())
+                            .image_url(imageFiles)
+                            .build();
 
-            }
-
-            else {
-
-                int withwho = travel.getWithWho();
-
-                Post post = Post.builder()
-                        .user(user)
-                        .title(request.getTitle())
-                        .hashtags(request.getHashtags())
-                        .location(request.getLocation())
-                        .oneLineReview(request.getOneLineReview())
-                        .what((code/100)%10)
-                        .hard((code/10)%10)
-                        .withwho(withwho)
-                        .whatrating(request.getWhatrating())
-                        .hardrating(request.getHardrating())
-                        .totalrating(request.getTotalrating())
-                        .goodPoints(request.getGoodPoints())
-                        .badPoints(request.getBadPoints())
-                        .build();
-
-                return postRepository.save(post);
+                    return postRepository.save(post);
+                }
+            }   else {
+                throw new BaseException(INVALID_JWT);
             }
         } catch (Exception e) {
             e.printStackTrace();
