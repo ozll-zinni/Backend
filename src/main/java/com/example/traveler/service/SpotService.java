@@ -49,18 +49,22 @@ public class SpotService {
 
         if (dayCourse.getSpot1() == null) {
             dayCourse.setSpot1(saveSpot);
+            System.out.println("111111111111111111111111111");
         } else if (dayCourse.getSpot2() == null) {
             //거리계산
             dayCourse.setSpot2(saveSpot);
             dayCourse.setFirst(distance(dayCourse.getSpot1().getLatitude(), dayCourse.getSpot1().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+            System.out.println("2222222222222222222222222222222");
         } else if (dayCourse.getSpot3() == null) {
             //거리계산
             dayCourse.setSpot3(saveSpot);
             dayCourse.setSecond(distance(dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude(), dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude()));
+            System.out.println("333333333333333333333333333333333");
         } else if (dayCourse.getSpot4() == null) {
             //거리계산
             dayCourse.setSpot4(saveSpot);
             dayCourse.setThird(distance(dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+            System.out.println("44444444444444444444444444444444444");
         } else {
             throw new BaseException(SPOT_IS_FULL);
         }
@@ -131,6 +135,8 @@ public class SpotService {
 
     //경도, 위도를 이용한 거리 계산
     private static double distance(double lat1, double lon1, double lat2, double lon2){
+        System.out.println("!! : " + lat1);
+        System.out.println("!! : " + lon1);
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1))* Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1))*Math.cos(deg2rad(lat2))*Math.cos(deg2rad(theta));
         dist = Math.acos(dist);

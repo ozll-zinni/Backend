@@ -1,10 +1,8 @@
 package com.example.traveler.repository;
 
-import com.example.traveler.model.dto.ItemRequest;
 import com.example.traveler.model.entity.ChecklistEntity;
 import com.example.traveler.model.entity.Travel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +15,5 @@ public interface ChecklistRepository extends JpaRepository<ChecklistEntity, Long
 
     public List<ChecklistEntity> findAllByTravel(Travel travel);
 
-    public Optional<ChecklistEntity> findById(Long id);
+    Optional<ChecklistEntity> findById(Long id);
 }
