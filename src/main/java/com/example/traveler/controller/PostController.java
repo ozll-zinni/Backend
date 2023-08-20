@@ -10,18 +10,23 @@ import com.example.traveler.model.dto.CommentResponse;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.service.CommentService;
 import com.example.traveler.service.PostService;
+import com.example.traveler.service.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/post")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
     @Autowired
     private PostService postService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private S3Uploader s3Uploader;
 
     @PostMapping("/{pId}/comment")
     public BaseResponse<CommentResponse> saveComment(@RequestHeader("Authorization") String accessToken, @RequestBody CommentRequest commentRequest, @PathVariable("pId") long pId) {
@@ -108,9 +113,10 @@ public class PostController {
     }
 
     @PostMapping("/create")
-    public BaseResponse<Post> createPost(@RequestHeader("Authorization") String accessToken, @RequestBody PostRequest postRequest) {
+    public BaseResponse<Post> createPost(@RequestHeader("Authorization") String accessToken, @RequestPart("content") PostRequest postRequest, @RequestPart("imageFile") List<MultipartFile> imageFiles) {
         try{
-            Post post = postService.createPost(accessToken, postRequest);
+            List<String> urls = s3Uploader.uploadImages(imageFiles);
+            Post post = postService.createPost(accessToken, postRequest, urls);
             return new BaseResponse<>(post);
         }catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());

@@ -22,6 +22,7 @@ import static com.example.traveler.config.BaseResponseStatus.DELETE_TRANSACTION_
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/accountbook")
 public class AccountBookController {
     private final AccountBookService accountBookService;
