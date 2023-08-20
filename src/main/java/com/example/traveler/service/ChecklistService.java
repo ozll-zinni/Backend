@@ -34,7 +34,6 @@ public class ChecklistService {
     private UserService userService;
 
     // 여행정보를 담은 tId를 받아서 해당 여행에 대한 checklist를 조회하고, 없으면 생성하는 메서드
-
     public ChecklistResponse saveChecklist(String accessToken, Integer tId, ChecklistRequest checklistRequest) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -52,6 +51,7 @@ public class ChecklistService {
         if (savedChecklist == null) {
             ChecklistEntity newChecklist = new ChecklistEntity();
             newChecklist.setTitle("새로운 체크리스트");
+            travel.setTId(tId);
             newChecklist.setTravel(travel);
 
             // 새로운 체크리스트 데이터베이스에 저장
