@@ -38,7 +38,7 @@ public class RecommendTravelService {
 
     public List<RecommendTravel> getMatchingTravels(String accessToken, RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
-        int code1 = request.getCountryId() * 1000 + request.getWhat() * 100 + request.getHard() * 10 ;
+        int code1 = request.getCityId() * 1000 + request.getWhat() * 100 + request.getHard() * 10 ;
         int choose = request.getHard();
         int withwho = request.getWithwho();
 
