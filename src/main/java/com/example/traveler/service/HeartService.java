@@ -4,12 +4,14 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.model.dto.CommentRequest;
 import com.example.traveler.model.dto.CommentResponse;
 import com.example.traveler.model.dto.HeartResponse;
+import com.example.traveler.model.dto.PostResponse;
 import com.example.traveler.model.entity.Comment;
 import com.example.traveler.model.entity.Heart;
 import com.example.traveler.model.entity.Post;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.CommentRepository;
 import com.example.traveler.repository.HeartRepository;
+import com.example.traveler.repository.PostRepository;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class HeartService {
     private HeartRepository heartRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PostRepository postRepository;
 
     public Heart saveHeart(User user, Post post) throws BaseException {
 
@@ -73,14 +77,21 @@ public class HeartService {
             List<Heart> hearts = heartRepository.findAllByUser(user);
             ArrayList<HeartResponse> responses = new ArrayList<>();
             for (Heart heart : hearts) {
-                HeartResponse response = new HeartResponse(heart.getHId(), heart.getPost().getPId(), heart.getUser().getId());
+                Post foundPost = postRepository.findBypId(heart.getPost().getPId());
+                PostResponse postResponse;
+                if (foundPost.getImage_url().isEmpty()) {
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null);
+                } else {
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
+                }
+                HeartResponse response = new HeartResponse(heart.getHId(), postResponse, heart.getUser().getId());
                 responses.add(response);
             }
             return responses;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(MY_LIKE_GET_FAIL);
         }
     }
-
 
 }

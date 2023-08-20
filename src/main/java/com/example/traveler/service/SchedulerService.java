@@ -14,7 +14,7 @@ public class SchedulerService {
     @Autowired
     private TravelRepository travelRepository;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void scheduleTaskingForPastTravel() {
         System.out.println("스케쥴링!");
         List<Travel> allTravels = travelRepository.findAllByStateAndTimeStatus(1, 0);

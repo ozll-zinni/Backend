@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ScrapResponse {
     long scId;
-    long pId;
+    PostResponse postResponse;
     long uId;
 }
