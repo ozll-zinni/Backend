@@ -14,6 +14,7 @@ import static com.example.traveler.config.BaseResponseStatus.DELETE_ITEM_FAIL;
 
 @RestController
 @RequestMapping("/checklist")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ItemController {
 
     @Autowired

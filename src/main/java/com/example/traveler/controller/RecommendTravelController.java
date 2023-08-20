@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recommend")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RecommendTravelController {
 
     @Autowired
