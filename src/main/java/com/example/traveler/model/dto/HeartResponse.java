@@ -1,5 +1,6 @@
 package com.example.traveler.model.dto;
 
+import com.example.traveler.model.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class HeartResponse {
     long hId;
-    long pId;
+    Post post;
     long uId;
 }

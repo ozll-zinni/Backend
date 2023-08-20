@@ -1,5 +1,6 @@
 package com.example.traveler.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class PostResponse {
 
     int pId;
@@ -16,8 +18,6 @@ public class PostResponse {
     int uId;
 
     private String title;
-
-    private List<String> hashtags;
 
     private String oneLineReview;
 

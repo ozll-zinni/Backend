@@ -10,6 +10,7 @@ import com.example.traveler.model.entity.Post;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.CommentRepository;
 import com.example.traveler.repository.HeartRepository;
+import com.example.traveler.repository.PostRepository;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class HeartService {
     private HeartRepository heartRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PostRepository postRepository;
 
     public Heart saveHeart(User user, Post post) throws BaseException {
 
@@ -73,7 +76,8 @@ public class HeartService {
             List<Heart> hearts = heartRepository.findAllByUser(user);
             ArrayList<HeartResponse> responses = new ArrayList<>();
             for (Heart heart : hearts) {
-                HeartResponse response = new HeartResponse(heart.getHId(), heart.getPost().getPId(), heart.getUser().getId());
+                Post foundPost = postRepository.findBypId(heart.getPost().getPId());
+                HeartResponse response = new HeartResponse(heart.getHId(), foundPost, heart.getUser().getId());
                 responses.add(response);
             }
             return responses;
