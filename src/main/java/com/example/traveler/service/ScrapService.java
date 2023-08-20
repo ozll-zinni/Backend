@@ -85,6 +85,7 @@ public class ScrapService {
                     postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
                 }
                 ScrapResponse response = new ScrapResponse(scrap.getScId(), postResponse, scrap.getUser().getId());
+                responses.add(response);
             }
             return responses;
         } catch (Exception e) {
