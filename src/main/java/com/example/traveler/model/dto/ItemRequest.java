@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ItemRequest {
     private String name;
-    private Long order;
+    private Long itemOrder;
     private boolean isChecked;
     private int cId;
 }

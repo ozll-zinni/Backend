@@ -10,7 +10,6 @@ import java.util.List;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 public class ChecklistEntity {
 
@@ -29,6 +28,11 @@ public class ChecklistEntity {
     private Travel travel;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "checklist")
-    private List<ItemEntity> checklistItems = new ArrayList<>();
+    private List<ItemEntity> checklistItems;
+
+    // 생성자를 통해 checklistItems 필드를 빈 리스트로 초기화
+    public ChecklistEntity() {
+        this.checklistItems = new ArrayList<>();
+    }
 
 }

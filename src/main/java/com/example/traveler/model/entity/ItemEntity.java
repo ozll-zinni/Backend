@@ -19,7 +19,7 @@ public class ItemEntity {
     private String name;
 
     @JoinColumn(nullable = false)
-    private Long order; // Changed the name to 'order' to match ItemRequest
+    private Long itemOrder; // Changed the name to 'order' to match ItemRequest
 
     @JoinColumn(nullable = false)
     private Boolean ischecked;

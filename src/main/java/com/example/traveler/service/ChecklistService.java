@@ -60,20 +60,21 @@ public class ChecklistService {
                 throw new BaseException(SAVE_CATEGORY_FAIL);
             }
         }
+
         // 저장된 체크리스트 정보를 ChecklistResponse 형태로 반환
-        ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId());
-        checklistResponse.setTId(travel.getTId());
+        ChecklistResponse checklistResponse = new ChecklistResponse(savedChecklist.getTitle(), savedChecklist.getCId(), travel.getTId());
         return checklistResponse;
     }
 
     public ChecklistResponse getChecklist(int cId) throws BaseException {
         Optional<ChecklistEntity> getChecklist = checklistRepository.findByCIdAndState(cId, 1);
-        if (getChecklist == null) {
+        if (!getChecklist.isPresent()) { // Optional을 올바르게 체크해야 함
             throw new BaseException(CHECKLIST_IS_EMPTY);
         }
-        ChecklistResponse checklistResponse = new ChecklistResponse(getChecklist.get(), getChecklist.get());
+        ChecklistResponse checklistResponse = new ChecklistResponse(getChecklist.get());
         return checklistResponse;
     }
+
 
     // 체크리스트명 변경
     public ChecklistResponse patchChecklist(String accessToken, int cId, String newTitle) throws BaseException {
@@ -109,8 +110,8 @@ public class ChecklistService {
             ItemResponse itemResponse = new ItemResponse();
             itemResponse.setIId(item.getId());
             itemResponse.setName(item.getName());
-            itemResponse.setOrder(item.getOrder()); // 추가된 부분
-            itemResponse.setChecked(item.isIschecked()); // 수정된 부분
+            itemResponse.setItemOrder(item.getItemOrder());
+            itemResponse.setChecked(item.isIschecked());
             itemResponse.setCId(checklist.getCId());
             itemResponses.add(itemResponse);
         }
@@ -157,12 +158,25 @@ public class ChecklistService {
         // 조회된 체크리스트들을 ChecklistResponse 형태로 변환하여 리스트로 반환
         List<ChecklistResponse> checklistResponses = new ArrayList<>();
         for (ChecklistEntity checklist : checklists) {
-            ChecklistResponse response = new ChecklistResponse(checklist.getTitle(), checklist.getCId());
+            ChecklistResponse response = new ChecklistResponse(checklist);
+
+            // 각 체크리스트에 속한 아이템 정보 추가
+            List<ItemResponse> itemResponses = new ArrayList<>();
+            for (ItemEntity item : checklist.getChecklistItems()) {
+                ItemResponse itemResponse = new ItemResponse();
+                itemResponse.setIId(item.getId());
+                itemResponse.setName(item.getName());
+                itemResponse.setItemOrder(item.getItemOrder()); // 필드 이름 수정
+                itemResponse.setChecked(item.isIschecked());
+                itemResponse.setCId(checklist.getCId());
+                itemResponses.add(itemResponse);
+            }
+            response.setItems(itemResponses);
+
             checklistResponses.add(response);
         }
 
         return checklistResponses;
     }
-
 
 }

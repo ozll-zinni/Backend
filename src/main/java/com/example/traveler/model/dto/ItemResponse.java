@@ -12,8 +12,8 @@ import lombok.Setter;
 public class ItemResponse {
     private Long iId;
     private String name;
-    private Long order;
-    private boolean isChecked; // 변수 이름 변경
+    private Long itemOrder;
+    private Boolean isChecked; // 변수 이름 변경
     private int cId;
 
     public ItemResponse(Long iId, String name, Boolean isChecked, int cId) {
