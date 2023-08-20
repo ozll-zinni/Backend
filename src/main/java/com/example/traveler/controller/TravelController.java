@@ -19,6 +19,7 @@ import static com.example.traveler.config.BaseResponseStatus.SAVE_TRAVEL_FAIL;
 
 @RestController
 @RequestMapping("/travel")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TravelController {
     @Autowired
     private TravelService travelService;
