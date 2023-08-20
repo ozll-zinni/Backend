@@ -35,6 +35,8 @@ public class RecommendTravelService {
     private UserService userService;
     @Autowired
     private SpotService spotService;
+    @Autowired
+    private PostRepository postRepository;
 
     public List<RecommendTravel> getMatchingTravels(String accessToken, RecommendTravelRequest request) {
         int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
@@ -191,5 +193,8 @@ public class RecommendTravelService {
         return recommendTravelRepository.findAll();
     }
 
+    public List<Post> getList() {
+        return postRepository.findTop10ByOrderByLikesDesc();
+    }
 
 }
