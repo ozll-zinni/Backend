@@ -143,7 +143,7 @@ public class RecommendTravelService {
 
         }
 
-        Destination t = destinationRepository.findBydId(request.getCountryId());
+        Destination t = destinationRepository.findBydId(request.getCityId());
 
         User user = userService.getUserByToken(accessToken);
 
