@@ -15,6 +15,7 @@ public class ChecklistResponse {
     int tId;
     List<ItemResponse> items;
 
+
     public ChecklistResponse() {
         // 기본 생성자
     }
