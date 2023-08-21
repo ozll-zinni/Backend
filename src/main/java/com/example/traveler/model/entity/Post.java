@@ -84,7 +84,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToOne
-    @JoinColumn(name = "pId")
+    @JoinColumn(name = "tId")
     private Travel travel;
 
     @ManyToOne
