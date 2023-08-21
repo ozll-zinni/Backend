@@ -13,7 +13,7 @@ import com.example.traveler.repository.ChecklistRepository;
 import com.example.traveler.repository.ItemRepository;
 import com.example.traveler.repository.TravelRepository;
 import lombok.AllArgsConstructor;
-import org.antlr.v4.runtime.misc.LogManager;
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,9 +70,8 @@ public class ChecklistService {
 
         // 아이템 정보 생성 및 추가
         List<ItemResponse> itemResponses = new ArrayList<>();
-        List<ItemRequest> itemRequests = checklistRequest.getItems();
-        if (itemRequests != null && !itemRequests.isEmpty()) {
-            for (ItemRequest itemRequest : itemRequests) {
+        if (checklistRequest.getItems() != null) {
+            for (ItemRequest itemRequest : checklistRequest.getItems()) {
                 ItemEntity itemEntity = new ItemEntity();
                 itemEntity.setName(itemRequest.getName());
                 itemEntity.setItemOrder(itemRequest.getItemOrder());
@@ -86,6 +85,9 @@ public class ChecklistService {
                 ItemResponse itemResponse = new ItemResponse(savedItem.getId(), savedItem.getName(), savedItem.getItemOrder(), savedItem.isIschecked(), savedChecklist.getCId());
                 itemResponses.add(itemResponse);
             }
+        }
+        if (itemResponses.isEmpty()) {
+            itemResponses = Collections.emptyList();
         }
         checklistResponse.setItems(itemResponses);
 

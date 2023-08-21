@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.traveler.config.BaseResponseStatus.DELETE_CATEGORY_FAIL;
@@ -44,11 +45,19 @@ public class ChecklistController {
             newChecklistResponse.setTitle(checklistResponse.getTitle());
             newChecklistResponse.setTId(checklistResponse.getTId());
 
+            // 아이템이 없는 경우 빈 리스트로 설정
+            if (checklistResponse.getItems() == null) {
+                newChecklistResponse.setItems(Collections.emptyList());
+            } else {
+                newChecklistResponse.setItems(checklistResponse.getItems());
+            }
+
             return new BaseResponse<>(newChecklistResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
     // 특정 카테고리 정보 조회
     @GetMapping("/{cId}")
     public BaseResponse<ChecklistResponse> getChecklist(@PathVariable("cId") int cId) {
