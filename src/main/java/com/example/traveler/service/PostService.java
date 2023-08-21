@@ -49,14 +49,14 @@ public class PostService {
 
 
         try {
-
+            System.out.println("a");
             Travel travel = travelRepository.findBytId(request.getTId());
-
+            System.out.print("b");
             if (user.getId() == travel.getUser().getId()) {
                 int code = travel.getCode();
 
 
-
+                System.out.println("c");
                 if (code == 0) {
                     Post post = Post.builder()
                             .user(user)
@@ -76,7 +76,7 @@ public class PostService {
                             .image_url(imageFiles)
                             .build();
 
-
+                System.out.println("e");
                     return postRepository.save(post);
 
                 } else {
