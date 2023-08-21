@@ -27,21 +27,24 @@ public class ChecklistController {
     }
 
     @GetMapping("/travel/{tId}")
-    public BaseResponse<List<ChecklistResponse>> getAllChecklistsByTravel(@PathVariable Integer tId) {
-        try {
-            List<ChecklistResponse> checklistResponses = checklistService.getAllChecklistsByTravel(tId);
-            return new BaseResponse<>(checklistResponses);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-
-        }
+    public BaseResponse<List<ChecklistResponse>> getAllChecklistsByTravel(@PathVariable Integer tId) throws BaseException {
+        List<ChecklistResponse> checklistResponses = checklistService.getAllChecklistsByTravel(tId);
+        return new BaseResponse<>(checklistResponses);
     }
+
     // 새로운 체크리스트 정보 저장
     @PostMapping("/{tId}")
     public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable Integer tId, @RequestBody ChecklistRequest checklistRequest) {
         try {
             ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, tId, checklistRequest);
-            return new BaseResponse<>(checklistResponse);
+
+            // 새로운 체크리스트에 대한 정보만 반환하도록 checklistResponse에서 필요한 정보 추출
+            ChecklistResponse newChecklistResponse = new ChecklistResponse();
+            newChecklistResponse.setCId(checklistResponse.getCId());
+            newChecklistResponse.setTitle(checklistResponse.getTitle());
+            newChecklistResponse.setTId(checklistResponse.getTId());
+
+            return new BaseResponse<>(newChecklistResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

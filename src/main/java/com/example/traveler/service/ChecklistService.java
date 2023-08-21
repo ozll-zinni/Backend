@@ -70,21 +70,24 @@ public class ChecklistService {
 
         // 아이템 정보 생성 및 추가
         List<ItemResponse> itemResponses = new ArrayList<>();
-        for (ItemRequest itemRequest : checklistRequest.getItems()) {
-            ItemEntity itemEntity = new ItemEntity();
-            itemEntity.setName(itemRequest.getName());
-            itemEntity.setItemOrder(itemRequest.getItemOrder());
-            itemEntity.setIschecked(itemRequest.isChecked());
-            itemEntity.setChecklist(savedChecklist); // 아이템과 체크리스트의 관계 설정
+        if (checklistRequest.getItems() != null) {
+            for (ItemRequest itemRequest : checklistRequest.getItems()) {
+                ItemEntity itemEntity = new ItemEntity();
+                itemEntity.setName(itemRequest.getName());
+                itemEntity.setItemOrder(itemRequest.getItemOrder());
+                itemEntity.setIschecked(itemRequest.isChecked());
+                itemEntity.setChecklist(savedChecklist); // 아이템과 체크리스트의 관계 설정
 
-            // 아이템을 저장하고 생성된 아이템 ID를 가져옴
-            ItemEntity savedItem = itemRepository.save(itemEntity);
+                // 아이템을 저장하고 생성된 아이템 ID를 가져옴
+                ItemEntity savedItem = itemRepository.save(itemEntity);
 
-            // ItemResponse 객체 생성 및 추가
-            ItemResponse itemResponse = new ItemResponse(savedItem.getId(), savedItem.getName(), savedItem.getItemOrder(), savedItem.isIschecked(), savedChecklist.getCId());
-            itemResponses.add(itemResponse);
+                // ItemResponse 객체 생성 및 추가
+                ItemResponse itemResponse = new ItemResponse(savedItem.getId(), savedItem.getName(), savedItem.getItemOrder(), savedItem.isIschecked(), savedChecklist.getCId());
+                itemResponses.add(itemResponse);
+            }
         }
         checklistResponse.setItems(itemResponses);
+
 
         return checklistResponse;
     }
