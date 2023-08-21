@@ -27,9 +27,15 @@ public class ChecklistController {
     }
 
     @GetMapping("/travel/{tId}")
-    public List<ChecklistResponse> getAllChecklistsByTravel(@PathVariable Integer tId) throws BaseException {
-        return checklistService.getAllChecklistsByTravel(tId);
+    public BaseResponse<List<ChecklistResponse>> getAllChecklistsByTravel(@PathVariable Integer tId) {
+        try {
+            List<ChecklistResponse> checklistResponses = checklistService.getAllChecklistsByTravel(tId);
+            return new BaseResponse<>(checklistResponses);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
+
 
     // 새로운 체크리스트 정보 저장
     @PostMapping("/{tId}")
