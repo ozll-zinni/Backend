@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ChecklistRepository extends JpaRepository<ChecklistEntity, Long> {
+public interface ChecklistRepository extends JpaRepository<ChecklistEntity, Integer> {
     public ChecklistEntity findByTravel(Travel travel);
-    Optional<ChecklistEntity> findByCIdAndState(int cId, int state);
+    Optional<ChecklistEntity> findBycIdAndState(int cId, int state);
 
     public List<ChecklistEntity> findAllByTravel(Travel travel);
 
-    Optional<ChecklistEntity> findById(Long id);
+    Optional<ChecklistEntity> findBycId(Integer cId);
 }
