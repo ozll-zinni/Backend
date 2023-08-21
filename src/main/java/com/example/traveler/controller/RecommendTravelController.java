@@ -1,8 +1,8 @@
 package com.example.traveler.controller;
 
 import com.example.traveler.model.dto.RecommendTravelRequest;
+import com.example.traveler.model.dto.MainrecoResponse;
 import com.example.traveler.model.entity.Destination;
-import com.example.traveler.model.entity.Post;
 import com.example.traveler.model.entity.RecommendTravel;
 import com.example.traveler.service.RecommendTravelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +38,8 @@ public class RecommendTravelController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Post>> getList() {
-        List<Post> allRT = recommendTravelService.getList();
+    public ResponseEntity<List<MainrecoResponse>> getList() {
+        List<MainrecoResponse> allRT = recommendTravelService.getList();
         return ResponseEntity.ok(allRT);
     }
 

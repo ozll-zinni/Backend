@@ -1,9 +1,10 @@
 package com.example.traveler.service;
 
+import com.example.traveler.model.dto.PostResponse;
 import com.example.traveler.model.dto.RecommendTravelRequest;
+import com.example.traveler.model.dto.MainrecoResponse;
 import com.example.traveler.model.entity.*;
 import com.example.traveler.repository.*;
-import org.hibernate.procedure.ParameterStrategyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -189,12 +190,27 @@ public class RecommendTravelService {
         return destinationRepository.findAll();
     }
 
-    public List<RecommendTravel> getAllrecommendTravel() {
-        return recommendTravelRepository.findAll();
-    }
+    public List<MainrecoResponse> getList() {
+        List<Post> recoten = postRepository.findTop10ByOrderByLikesDesc();
+        List<MainrecoResponse> a = new ArrayList<>();
 
-    public List<Post> getList() {
-        return postRepository.findTop10ByOrderByLikesDesc();
+        for(Post reco : recoten) {
+
+            long per = reco.getTravel().getStart_date().getTime() - reco.getTravel().getEnd_date().getTime();
+
+            MainrecoResponse main = new MainrecoResponse();
+
+                    main.setPId(reco.getPId());
+                    main.setTitle(reco.getTitle());
+                    main.setDuration(Long.toString(per) + "박" + Long.toString(per + 1) + "일");
+                    main.setDescription(reco.getOneLineReview());
+                    if (reco.getImage_url() != null && !reco.getImage_url().isEmpty()) {
+                        main.setUrl(reco.getImage_url().get(0));
+                    }
+            a.add(main);
+        }
+
+        return a;
     }
 
 }
