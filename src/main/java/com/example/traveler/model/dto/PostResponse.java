@@ -15,6 +15,7 @@ public class PostResponse {
 
     long uId;
 
+
     private String title;
 
     private String oneLineReview;

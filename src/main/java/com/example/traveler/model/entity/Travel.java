@@ -56,8 +56,7 @@ public class Travel {
     List<DayCourse> courses = new ArrayList<>();
 
     @JsonIgnore
-    @OneToOne
-    @JoinColumn(name="pId")
+    @OneToOne(mappedBy = "travel")
     Post post;
 
     public Travel(String title, String destination, Date startDate, Date endDate, int timeStatus, int writeStatus, int noteStatus, int state, User user) {
