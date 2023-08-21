@@ -83,7 +83,8 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToOne(mappedBy = "post")
+    @OneToOne
+    @JoinColumn(name = "pId")
     private Travel travel;
 
     @ManyToOne
