@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -196,7 +198,18 @@ public class RecommendTravelService {
 
         for(Post reco : recoten) {
 
-            long per = reco.getTravel().getStart_date().getTime() - reco.getTravel().getEnd_date().getTime();
+            Date startDate = reco.getTravel().getStart_date();
+            Date endDate = reco.getTravel().getEnd_date();
+
+            LocalDate startLocalDate = Instant.ofEpochMilli(startDate.getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            LocalDate endLocalDate = Instant.ofEpochMilli(endDate.getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            long per = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
 
             MainrecoResponse main = new MainrecoResponse();
 
