@@ -3,19 +3,18 @@ package com.example.traveler.model.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Data
 @AllArgsConstructor
 public class ChecklistEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
-    private int CId;
+    private int cId; // 변경된 필드명
 
     @Column(nullable = false)
     private String title;
@@ -34,5 +33,4 @@ public class ChecklistEntity {
     public ChecklistEntity() {
         this.checklistItems = new ArrayList<>();
     }
-
 }

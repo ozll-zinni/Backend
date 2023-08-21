@@ -38,7 +38,7 @@ public class ChecklistController {
         try {
             ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, tId, checklistRequest);
 
-            // 새로운 체크리스트에 대한 정보만 반환하도록 checklistResponse에서 필요한 정보 추출
+            // 필요한 정보만 설정하여 반환
             ChecklistResponse newChecklistResponse = new ChecklistResponse();
             newChecklistResponse.setCId(checklistResponse.getCId());
             newChecklistResponse.setTitle(checklistResponse.getTitle());

@@ -27,7 +27,7 @@ public class ItemService {
     private UserService userService;
 
         // 새로운 아이템 정보 저장
-    public ItemResponse saveItem(String accessToken, Long cId, ItemRequest itemRequest) throws BaseException {
+    public ItemResponse saveItem(String accessToken, int cId, ItemRequest itemRequest) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
@@ -64,7 +64,7 @@ public class ItemService {
     }
 
     // 특정 checklist에 포함된 모든 item 정보조회
-    public List<ItemResponse> getallItemByChecklist(Long cId) throws BaseException {
+    public List<ItemResponse> getallItemByChecklist(int cId) throws BaseException {
         ChecklistEntity checklist = checklistRepository.findById(cId)
                 .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
 
@@ -89,7 +89,7 @@ public class ItemService {
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
-        ItemEntity item = (ItemEntity) itemRepository.findByIdAndChecklist_CId(iId, cId)
+        ItemEntity item = (ItemEntity) itemRepository.findByIdAndChecklist_cId(iId, cId)
                 .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
         item.setName(itemRequest.getName());
@@ -111,7 +111,7 @@ public class ItemService {
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
-        ItemEntity item = (ItemEntity) itemRepository.findByIdAndChecklist_CId(iId, cId)
+        ItemEntity item = (ItemEntity) itemRepository.findByIdAndChecklist_cId(iId, cId)
                 .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
         try {

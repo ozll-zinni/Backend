@@ -70,8 +70,9 @@ public class ChecklistService {
 
         // 아이템 정보 생성 및 추가
         List<ItemResponse> itemResponses = new ArrayList<>();
-        if (checklistRequest.getItems() != null) {
-            for (ItemRequest itemRequest : checklistRequest.getItems()) {
+        List<ItemRequest> itemRequests = checklistRequest.getItems();
+        if (itemRequests != null && !itemRequests.isEmpty()) {
+            for (ItemRequest itemRequest : itemRequests) {
                 ItemEntity itemEntity = new ItemEntity();
                 itemEntity.setName(itemRequest.getName());
                 itemEntity.setItemOrder(itemRequest.getItemOrder());
@@ -94,7 +95,7 @@ public class ChecklistService {
 
 
     public ChecklistResponse getChecklist(int cId) throws BaseException {
-        Optional<ChecklistEntity> getChecklist = checklistRepository.findByCIdAndState(cId, 1);
+        Optional<ChecklistEntity> getChecklist = checklistRepository.findBycIdAndState(cId, 1);
         if (!getChecklist.isPresent()) { // Optional을 올바르게 체크해야 함
             throw new BaseException(CHECKLIST_IS_EMPTY);
         }
@@ -110,7 +111,7 @@ public class ChecklistService {
             throw new BaseException(INVALID_JWT);
         }
         // 기존 체크리스트를 데이터베이스에서 조회
-        ChecklistEntity checklist = checklistRepository.findById((long) cId)
+        ChecklistEntity checklist = checklistRepository.findBycId(cId)
                 .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
 
         // 체크리스트명 변경
@@ -156,7 +157,7 @@ public class ChecklistService {
         }
 
         // 체크리스트를 데이터베이스에서 조회
-        ChecklistEntity checklist = checklistRepository.findById((long) cId)
+        ChecklistEntity checklist = checklistRepository.findById(cId)
                 .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
 
 

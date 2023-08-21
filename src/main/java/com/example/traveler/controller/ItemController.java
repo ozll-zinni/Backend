@@ -23,7 +23,7 @@ public class ItemController {
 
     // 새로운 item을 특정 checklist에 저장
     @PostMapping("/{cId}/items")
-    public BaseResponse<ItemResponse> saveItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") Long cId, @RequestBody ItemRequest itemRequest) {
+    public BaseResponse<ItemResponse> saveItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") int cId, @RequestBody ItemRequest itemRequest) {
         try {
             ItemResponse itemResponse = itemService.saveItem(accessToken, cId, itemRequest);
             return new BaseResponse<>(itemResponse);
@@ -52,7 +52,7 @@ public class ItemController {
 
     // 특정 checklist에 포함된 모든 item 정보조회
     @GetMapping("/{cId}/items")
-    public BaseResponse<List<ItemResponse>> getallItemByChecklist(@PathVariable("cId") Long cId) {
+    public BaseResponse<List<ItemResponse>> getallItemByChecklist(@PathVariable("cId") int cId) {
         try {
             List<ItemResponse> itemResponses = itemService.getallItemByChecklist(cId);
             return new BaseResponse<>(itemResponses);
