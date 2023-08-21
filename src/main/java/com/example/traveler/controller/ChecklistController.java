@@ -33,10 +33,9 @@ public class ChecklistController {
             return new BaseResponse<>(checklistResponses);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+
         }
     }
-
-
     // 새로운 체크리스트 정보 저장
     @PostMapping("/{tId}")
     public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable Integer tId, @RequestBody ChecklistRequest checklistRequest) {
@@ -47,7 +46,6 @@ public class ChecklistController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
     // 특정 카테고리 정보 조회
     @GetMapping("/{cId}")
     public BaseResponse<ChecklistResponse> getChecklist(@PathVariable("cId") int cId) {
