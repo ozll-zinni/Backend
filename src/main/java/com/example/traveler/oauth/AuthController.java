@@ -4,10 +4,7 @@ import com.example.traveler.kakao.KakaoLoginParams;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -21,6 +18,12 @@ public class AuthController {
         System.out.println(params);
         log.info("{}",params);
         return ResponseEntity.ok(oAuthLoginService.login(params));
+    }
+
+    @GetMapping("/kakaoLogin")
+    public ResponseEntity<AuthTokens> loginKakao(@RequestParam String code) {
+        KakaoLoginParams kakaoLoginParams = new KakaoLoginParams(code);
+        return ResponseEntity.ok(oAuthLoginService.login(kakaoLoginParams));
     }
 
 }
