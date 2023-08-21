@@ -70,8 +70,9 @@ public class ChecklistService {
 
         // 아이템 정보 생성 및 추가
         List<ItemResponse> itemResponses = new ArrayList<>();
-        if (checklistRequest.getItems() != null) {
-            for (ItemRequest itemRequest : checklistRequest.getItems()) {
+        List<ItemRequest> itemRequests = checklistRequest.getItems();
+        if (itemRequests != null && !itemRequests.isEmpty()) {
+            for (ItemRequest itemRequest : itemRequests) {
                 ItemEntity itemEntity = new ItemEntity();
                 itemEntity.setName(itemRequest.getName());
                 itemEntity.setItemOrder(itemRequest.getItemOrder());

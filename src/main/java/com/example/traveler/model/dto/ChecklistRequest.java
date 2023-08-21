@@ -10,4 +10,6 @@ import java.util.List;
 public class ChecklistRequest {
     private String title;
     private List<ItemRequest> items;
+    private Integer tid;
+    private Integer cid;
 }
