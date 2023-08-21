@@ -22,7 +22,7 @@ public class ItemController {
 
 
     // 새로운 item을 특정 checklist에 저장
-    @PostMapping("/{cId}/item")
+    @PostMapping("/{cId}/items")
     public BaseResponse<ItemResponse> saveItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") Long cId, @RequestBody ItemRequest itemRequest) {
         try {
             ItemResponse itemResponse = itemService.saveItem(accessToken, cId, itemRequest);
@@ -51,7 +51,7 @@ public class ItemController {
     }
 
     // 특정 checklist에 포함된 모든 item 정보조회
-    @GetMapping("/{cId}/item")
+    @GetMapping("/{cId}/items")
     public BaseResponse<List<ItemResponse>> getallItemByChecklist(@PathVariable("cId") Long cId) {
         try {
             List<ItemResponse> itemResponses = itemService.getallItemByChecklist(cId);
@@ -62,7 +62,7 @@ public class ItemController {
     }
 
 
-    @PatchMapping("/{cId}/item/{iId}") // 경로 변수 iId에 PathVariable 어노테이션을 추가해주세요
+    @PatchMapping("/{cId}/items/{iId}") // 경로 변수 iId에 PathVariable 어노테이션을 추가해주세요
     public BaseResponse<ItemResponse> patchItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") int cId, @PathVariable("iId") int iId, @RequestBody ItemRequest itemRequest) {
         try {
             ItemResponse itemResponse = itemService.patchItem(accessToken, cId, iId, itemRequest); // accessToke -> accessToken으로 수정
@@ -73,7 +73,7 @@ public class ItemController {
     }
 
     // 특정 checklist에 포함된 item 삭제
-    @DeleteMapping("/{cId}/item/{iId}")
+    @DeleteMapping("/{cId}/items/{iId}")
     public BaseResponse<String> deleteitem(@RequestHeader("Authorization") String accessToken, @PathVariable("cid") int cId, @PathVariable("iId") int iId) {
         try {
             int result = itemService.deleteItem(accessToken, cId, iId);
