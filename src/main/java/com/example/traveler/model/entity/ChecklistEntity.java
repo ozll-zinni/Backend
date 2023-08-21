@@ -14,11 +14,13 @@ public class ChecklistEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
-    private int cId; // 변경된 필드명
+    @Column(name = "cid")
+    private int cId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "title")
     private String title;
 
+    @Column(name = "state")
     private int state;
 
     // TravelEntity와의 다대일 관계 설정
