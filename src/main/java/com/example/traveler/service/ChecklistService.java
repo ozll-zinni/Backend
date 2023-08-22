@@ -12,6 +12,7 @@ import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.ChecklistRepository;
 import com.example.traveler.repository.ItemRepository;
 import com.example.traveler.repository.TravelRepository;
+import com.example.traveler.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,10 @@ public class ChecklistService {
         // 만약 해당 여행에 대한 체크리스트가 없으면 새로운 체크리스트를 생성하여 저장
         if (savedChecklist == null) {
             ChecklistEntity newChecklist = new ChecklistEntity();
-            newChecklist.setTitle("새로운 체크리스트");
+            newChecklist.setTitle(checklistRequest.getTitle());
             newChecklist.setTravel(travel);
 
-            // 새로운 체크리스트 데이터베이스에 저장
+            // 새로운 체크리스트 저장
             try {
                 savedChecklist = checklistRepository.save(newChecklist);
             } catch (Exception e) {

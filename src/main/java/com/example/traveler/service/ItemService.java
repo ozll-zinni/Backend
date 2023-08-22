@@ -122,4 +122,22 @@ public class ItemService {
         return cId;
     }
 
+    // 특정 체크리스트에 포함된 아이템 조회 및 삭제
+    public ItemResponse getItemFromChecklist(int cId, int iId) throws BaseException {
+        ChecklistEntity checklist = checklistRepository.findById(cId)
+                .orElseThrow(() -> new BaseException(CHECKLIST_IS_EMPTY));
+
+        ItemEntity item = itemRepository.findByIdAndChecklist(iId, checklist)
+                .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+
+        try {
+            itemRepository.delete(item); // 아이템 삭제 시도
+        } catch (Exception e) {
+            throw new BaseException(DELETE_ITEM_FAIL);
+        }
+
+        return new ItemResponse(item.getId(), item.getName(), item.getIschecked());
+    }
+
+
 }
