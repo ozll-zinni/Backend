@@ -27,7 +27,7 @@ public class ItemService {
     private UserService userService;
 
         // 새로운 아이템 정보 저장
-    public ItemResponse saveItem(String accessToken, int cId, ItemRequest itemRequest) throws BaseException {
+    public ItemResponse saveItem(String accessToken, int cId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
@@ -38,7 +38,8 @@ public class ItemService {
 
         // Create a new ItemEntity based on the itemRequest
         ItemEntity newItem = new ItemEntity();
-        newItem.setName(itemRequest.getName());
+        newItem.setName("새로운 준비물");
+        newItem.setIschecked(false);
         newItem.setChecklist(checklist);
 
         // Save the new item in the database

@@ -38,7 +38,7 @@ public class ChecklistService {
     @Autowired
     private final ItemRepository itemRepository;
 
-    public ChecklistResponse saveChecklist(String accessToken, Integer tId, ChecklistRequest checklistRequest) throws BaseException {
+    public ChecklistResponse saveChecklist(String accessToken, Integer tId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
@@ -50,7 +50,7 @@ public class ChecklistService {
 
         // 새로운 체크리스트 생성 및 저장
         ChecklistEntity newChecklist = new ChecklistEntity();
-        newChecklist.setTitle(checklistRequest.getTitle());
+        newChecklist.setTitle("새로운 체크리스트");
         newChecklist.setTravel(travel);
         newChecklist = checklistRepository.save(newChecklist);
 
@@ -59,21 +59,7 @@ public class ChecklistService {
 
         // 아이템 정보 생성 및 추가
         List<ItemResponse> itemResponses = new ArrayList<>();
-        if (checklistRequest.getItems() != null) {
-            for (ItemRequest itemRequest : checklistRequest.getItems()) {
-                ItemEntity itemEntity = new ItemEntity();
-                itemEntity.setName(itemRequest.getName());
-                itemEntity.setItemOrder(itemRequest.getItemOrder());
-                itemEntity.setChecklist(newChecklist); // 아이템과 체크리스트의 관계
 
-                // 아이템을 저장하고 생성된 아이템 ID를 가져옴
-                ItemEntity savedItem = itemRepository.save(itemEntity);
-
-                // ItemResponse 객체 생성 및 추가
-                ItemResponse itemResponse = new ItemResponse(savedItem.getId(), savedItem.getName(), savedItem.getItemOrder(), savedItem.isIschecked(), newChecklist.getCId());
-                itemResponses.add(itemResponse);
-            }
-        }
         if (itemResponses.isEmpty()) {
             itemResponses = Collections.emptyList();
         }

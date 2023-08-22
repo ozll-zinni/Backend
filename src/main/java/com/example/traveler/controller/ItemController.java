@@ -23,9 +23,9 @@ public class ItemController {
 
     // 새로운 item을 특정 checklist에 저장
     @PostMapping("/{cId}/items")
-    public BaseResponse<ItemResponse> saveItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") int cId, @RequestBody ItemRequest itemRequest) {
+    public BaseResponse<ItemResponse> saveItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") int cId) {
         try {
-            ItemResponse itemResponse = itemService.saveItem(accessToken, cId, itemRequest);
+            ItemResponse itemResponse = itemService.saveItem(accessToken, cId);
             return new BaseResponse<>(itemResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
