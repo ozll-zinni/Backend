@@ -94,6 +94,7 @@ public enum BaseResponseStatus {
     ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다."),
 
 
+
     /**
      * 7000 : 가계부 오류
      */

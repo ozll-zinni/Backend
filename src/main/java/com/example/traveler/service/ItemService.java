@@ -89,10 +89,12 @@ public class ItemService {
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
-        ItemEntity item = (ItemEntity) itemRepository.findByIdAndChecklist_cId(iId, cId)
+        ItemEntity item = itemRepository.findByIdAndChecklist_cId(iId, cId)
                 .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
         item.setName(itemRequest.getName());
+        item.setIschecked(itemRequest.getIschecked()); // 아이템의 체크 상태 업데이트
+
         try {
             item = itemRepository.save(item);
         } catch (Exception e) {
@@ -101,6 +103,7 @@ public class ItemService {
 
         return new ItemResponse(item.getId(), item.getName(), item.getIschecked());
     }
+
 
 
     // 특정 checklist내 포함된 item 삭제
