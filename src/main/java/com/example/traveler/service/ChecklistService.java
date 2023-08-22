@@ -64,7 +64,6 @@ public class ChecklistService {
                 ItemEntity itemEntity = new ItemEntity();
                 itemEntity.setName(itemRequest.getName());
                 itemEntity.setItemOrder(itemRequest.getItemOrder());
-                itemEntity.setIschecked(itemRequest.isChecked());
                 itemEntity.setChecklist(newChecklist); // 아이템과 체크리스트의 관계
 
                 // 아이템을 저장하고 생성된 아이템 ID를 가져옴

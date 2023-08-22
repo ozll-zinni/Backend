@@ -66,7 +66,7 @@ public class ItemController {
     @PatchMapping("/{cId}/items/{iId}")
     public BaseResponse<ItemResponse> patchItem(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") int cId, @PathVariable("iId") int iId, @RequestBody ItemRequest itemRequest) {
         try {
-            ItemResponse itemResponse = itemService.patchItem(accessToken, cId, iId, itemRequest); // accessToke -> accessToken으로 수정
+            ItemResponse itemResponse = itemService.patchItem(accessToken, cId, iId, itemRequest);
             return new BaseResponse<>(itemResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
