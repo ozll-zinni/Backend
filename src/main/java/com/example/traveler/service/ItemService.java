@@ -39,7 +39,6 @@ public class ItemService {
         // Create a new ItemEntity based on the itemRequest
         ItemEntity newItem = new ItemEntity();
         newItem.setName(itemRequest.getName());
-        newItem.setIschecked(itemRequest.isChecked());
         newItem.setChecklist(checklist);
 
         // Save the new item in the database
@@ -93,8 +92,6 @@ public class ItemService {
                 .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
 
         item.setName(itemRequest.getName());
-        item.setIschecked(itemRequest.isChecked());
-
         try {
             item = itemRepository.save(item);
         } catch (Exception e) {

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class ItemRequest {
     private String name;
     private Long itemOrder;
-    private boolean isChecked;
     private int cId;
 }
 
