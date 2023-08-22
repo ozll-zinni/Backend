@@ -2,6 +2,7 @@ package com.example.traveler.controller;
 
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
+import com.example.traveler.model.dto.ItemNameRequest;
 import com.example.traveler.model.dto.ItemRequest;
 import com.example.traveler.model.dto.ItemResponse;
 import com.example.traveler.service.ItemService;
@@ -67,15 +68,30 @@ public class ItemController {
     public BaseResponse<ItemResponse> patchItem(
             @RequestHeader("Authorization") String accessToken,
             @PathVariable("cId") int cId,
-            @PathVariable("iId") int iId,
-            @RequestBody ItemRequest itemRequest) {
+            @PathVariable("iId") int iId) {
         try {
-            ItemResponse itemResponse = itemService.patchItem(accessToken, cId, iId, itemRequest);
+            ItemResponse itemResponse = itemService.patchItem(accessToken, cId, iId);
             return new BaseResponse<>(itemResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @PatchMapping("/{cId}/items/{iId}/name")
+    public BaseResponse<ItemResponse> patchItemName(
+            @RequestHeader("Authorization") String accessToken,
+            @PathVariable("cId") int cId,
+            @PathVariable("iId") int iId,
+            @RequestBody ItemNameRequest itemNameRequest) {
+        try {
+            ItemResponse itemResponse = itemService.patchItemName(accessToken, cId, iId, itemNameRequest);
+            return new BaseResponse<>(itemResponse);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
 
     // 특정 checklist에 포함된 item 삭제
     @DeleteMapping("/{cId}/items/{iId}")
