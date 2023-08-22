@@ -35,9 +35,9 @@ public class ChecklistController {
 
     // 새로운 체크리스트 정보 저장
     @PostMapping("/{tId}")
-    public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable Integer tId, @RequestBody ChecklistRequest checklistRequest) {
+    public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable Integer tId) {
         try {
-            ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, tId, checklistRequest);
+            ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, tId);
 
             // 필요한 정보만 설정하여 반환
             ChecklistResponse newChecklistResponse = new ChecklistResponse();
