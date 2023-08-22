@@ -65,7 +65,7 @@ public class ChecklistService {
                 itemEntity.setName(itemRequest.getName());
                 itemEntity.setItemOrder(itemRequest.getItemOrder());
                 itemEntity.setIschecked(itemRequest.isChecked());
-                itemEntity.setChecklist(newChecklist); // 아이템과 체크리스트의 관계 설정
+                itemEntity.setChecklist(newChecklist); // 아이템과 체크리스트의 관계
 
                 // 아이템을 저장하고 생성된 아이템 ID를 가져옴
                 ItemEntity savedItem = itemRepository.save(itemEntity);
@@ -83,8 +83,6 @@ public class ChecklistService {
         return checklistResponse;
     }
 
-
-
     public ChecklistResponse getChecklist(int cId) throws BaseException {
         Optional<ChecklistEntity> getChecklist = checklistRepository.findBycIdAndState(cId, 1);
         if (!getChecklist.isPresent()) { // Optional을 올바르게 체크해야 함
@@ -93,7 +91,6 @@ public class ChecklistService {
         ChecklistResponse checklistResponse = new ChecklistResponse(getChecklist.get());
         return checklistResponse;
     }
-
 
     // 체크리스트명 변경
     public ChecklistResponse patchChecklist(String accessToken, int cId, String newTitle) throws BaseException {
