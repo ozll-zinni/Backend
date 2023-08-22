@@ -1,26 +1,34 @@
 package com.example.traveler.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Post {
 
-    public Post(String title, List<String> hashtags, String oneLineReview, String location, int what, int hard, int with, double whatrating, double hardrating, double totalrating, String goodPoints, String badPoints, int likes) {
+    public Post(String title, List<String> hashtags, String oneLineReview, String location, int what, int hard, int withwho, double whatrating, double hardrating, double totalrating, String goodPoints, String badPoints, int likes) {
         this.title = title;
         this.hashtags = hashtags;
         this.oneLineReview = oneLineReview;
         this.location = location;
         this.what = what;
         this.hard = hard;
-        this.with = with;
+        this.withwho = withwho;
         this.whatrating = whatrating;
         this.hardrating = hardrating;
         this.totalrating = totalrating;
@@ -48,7 +56,7 @@ public class Post {
 
     private int hard;
 
-    private int with;
+    private int withwho;
 
     private double whatrating;
 
@@ -62,7 +70,25 @@ public class Post {
 
     private int likes = 0;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    private int scraps = 0;
+
+    @CreationTimestamp
+    private Timestamp created_at;
+
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(referencedColumnName = "pId"))
+    private List<String> image_url;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "tId")
+    private Travel travel;
+
+    @ManyToOne
+    @JoinColumn(name="id")
+    private User user;
 
 }

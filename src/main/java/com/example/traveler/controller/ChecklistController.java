@@ -4,18 +4,21 @@ import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.ChecklistRequest;
 import com.example.traveler.model.dto.ChecklistResponse;
+import com.example.traveler.model.dto.TitleChangeRequest;
 import com.example.traveler.service.ChecklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.traveler.config.BaseResponseStatus.DELETE_CATEGORY_FAIL;
 
 @RestController
-@RequestMapping("/checklsit")
+@RequestMapping("/checklist")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ChecklistController {
     @Autowired
     private ChecklistService checklistService;
@@ -25,22 +28,38 @@ public class ChecklistController {
     }
 
     @GetMapping("/travel/{tId}")
-    public List<ChecklistResponse> getAllChecklistsByTravel(@PathVariable Integer tId) throws BaseException {
-        return checklistService.getAllChecklistsByTravel(tId);
+    public BaseResponse<List<ChecklistResponse>> getAllChecklistsByTravel(@PathVariable Integer tId) throws BaseException {
+        List<ChecklistResponse> checklistResponses = checklistService.getAllChecklistsByTravel(tId);
+        return new BaseResponse<>(checklistResponses);
     }
+
     // 새로운 체크리스트 정보 저장
-    @PostMapping("/checklist")
-    public BaseResponse<ChecklistResponse> saveChecklist(@RequestBody Integer checklistRequest) {
+    @PostMapping("/{tId}")
+    public BaseResponse<ChecklistResponse> saveChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable Integer tId, @RequestBody ChecklistRequest checklistRequest) {
         try {
-            ChecklistResponse checklistResponse = checklistService.saveChecklist(checklistRequest);
-            return new BaseResponse<>(checklistResponse);
+            ChecklistResponse checklistResponse = checklistService.saveChecklist(accessToken, tId, checklistRequest);
+
+            // 필요한 정보만 설정하여 반환
+            ChecklistResponse newChecklistResponse = new ChecklistResponse();
+            newChecklistResponse.setCId(checklistResponse.getCId());
+            newChecklistResponse.setTitle(checklistResponse.getTitle());
+            newChecklistResponse.setTId(checklistResponse.getTId());
+
+            // 아이템이 없는 경우 빈 리스트로 설정
+            if (checklistResponse.getItems() == null) {
+                newChecklistResponse.setItems(Collections.emptyList());
+            } else {
+                newChecklistResponse.setItems(checklistResponse.getItems());
+            }
+
+            return new BaseResponse<>(newChecklistResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
     // 특정 카테고리 정보 조회
-    @GetMapping("/checklist/{cId}")
+    @GetMapping("/{cId}")
     public BaseResponse<ChecklistResponse> getChecklist(@PathVariable("cId") int cId) {
         try {
             ChecklistResponse checklistResponse = checklistService.getChecklist(cId);
@@ -51,12 +70,13 @@ public class ChecklistController {
     }
 
     // 카테고리명 수정 API
-    @PatchMapping("/{cId}")
+    @PatchMapping("/{cId}/title") // 기존의 {cId}에 "/title"을 추가하여 제목 변경 API로 구성
     public BaseResponse<ChecklistResponse> patchChecklist(
+            @RequestHeader("Authorization") String accessToken,
             @PathVariable("cId") int cId,
-            @RequestBody ChecklistRequest request) {
+            @RequestBody TitleChangeRequest request) {
         try {
-            ChecklistResponse checklistResponse = checklistService.patchChecklist(cId, request.getTitle());
+            ChecklistResponse checklistResponse = checklistService.patchChecklist(accessToken, cId, request.getNewTitle());
             return new BaseResponse<>(checklistResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -65,10 +85,9 @@ public class ChecklistController {
 
     // 카테고리 삭제 API
     @DeleteMapping("/{cId}")
-    public BaseResponse<String> deleteChecklist(
-            @PathVariable("cId") int cId) {
+    public BaseResponse<String> deleteChecklist(@RequestHeader("Authorization") String accessToken, @PathVariable("cId") int cId) {
         try {
-            int result = checklistService.deleteChecklist(cId);
+            int result = checklistService.deleteChecklist(accessToken, cId);
             if (result != 1) {
                 throw new BaseException(DELETE_CATEGORY_FAIL);
             } else {
@@ -78,12 +97,4 @@ public class ChecklistController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-//    // 모든 카테고리 조회 API
-//    @GetMapping("/checklist")
-//    public BaseResponse<List<ChecklistResponse>> getAllChecklist() {
-//        List<ChecklistResponse> checklistResponses = checklistService.getAllChecklist();
-//        return new BaseResponse<>(checklistResponses);
-//    }
-
 }

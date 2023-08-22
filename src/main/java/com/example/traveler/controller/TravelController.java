@@ -3,6 +3,7 @@ package com.example.traveler.controller;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.*;
+import com.example.traveler.service.ChecklistService;
 import com.example.traveler.service.DayCourseService;
 import com.example.traveler.service.SpotService;
 import com.example.traveler.service.TravelService;
@@ -18,6 +19,7 @@ import static com.example.traveler.config.BaseResponseStatus.SAVE_TRAVEL_FAIL;
 
 @RestController
 @RequestMapping("/travel")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TravelController {
     @Autowired
     private TravelService travelService;
@@ -25,10 +27,19 @@ public class TravelController {
     private DayCourseService dayCourseService;
     @Autowired
     private SpotService spotService;
+    @Autowired
+    private ChecklistService checklistService;
+
     @PostMapping("")
     public BaseResponse<TravelResponse> saveTravel(@RequestHeader("Authorization") String accessToken, @RequestBody TravelRequest travelRequest) {
         try {
+            System.out.println(travelRequest.getTitle());
+            System.out.println(travelRequest.getDestination());
+            System.out.println(travelRequest.getStart_date());
+            System.out.println(travelRequest.getEnd_date());
+            System.out.println(travelRequest.getWriteStatus());
             TravelResponse travelResponse = travelService.saveTravel(accessToken, travelRequest);
+
             return new BaseResponse<>(travelResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
-    public List<ItemEntity> findAllByChecklist(ChecklistEntity checklist);
+public interface ItemRepository extends JpaRepository<ItemEntity, Integer> {
+    List<ItemEntity> findAllByChecklist(ChecklistEntity checklist);
 
-    public Optional<Object> findByIdAndChecklist_CId(int iId, int cId);
+    Optional<ItemEntity> findByIdAndChecklist_cId(int id, int cId);
 
-    public Optional<Object> findById(int id);
+    Optional<ItemEntity> findByIdAndChecklist(int iId, ChecklistEntity checklist); // 수정된 부분
+
+    Optional<ItemEntity> findById(int id);
 }

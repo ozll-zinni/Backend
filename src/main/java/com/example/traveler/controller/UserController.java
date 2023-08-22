@@ -3,13 +3,12 @@ package com.example.traveler.controller;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.jwt.JwtTokenProvider;
-import com.example.traveler.model.dto.TravelResponse;
-import com.example.traveler.model.dto.UpdateNicknameDTO;
+import com.example.traveler.model.dto.*;
+import com.example.traveler.model.entity.Heart;
+import com.example.traveler.model.entity.Scrap;
 import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.UserRepository;
-import com.example.traveler.service.S3Uploader;
-import com.example.traveler.service.TravelService;
-import com.example.traveler.service.UserService;
+import com.example.traveler.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -30,6 +30,15 @@ public class UserController {
     private final S3Uploader s3Uploader;
 
     private final TravelService travelService;
+
+    @Autowired
+    private HeartService heartService;
+
+    @Autowired
+    private ScrapService scrapService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     public UserController(JwtTokenProvider jwtTokenProvider, UserService userService, UserRepository userRepository, S3Uploader s3Uploader, TravelService travelService) {
@@ -120,6 +129,33 @@ public class UserController {
         List<TravelResponse> allMyTravelResponse = travelService.allMyPastTravel(user);
         return new BaseResponse<>(allMyTravelResponse);
 
+    }
+
+    @GetMapping("/myLike")
+    public BaseResponse<List<HeartResponse>> allMyHeart(@RequestHeader("Authorization") String accessToken) {
+        try {
+            return new BaseResponse<>(heartService.allMyHeart(accessToken));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @GetMapping("/myScrap")
+    public BaseResponse<List<ScrapResponse>> allMyScrap(@RequestHeader("Authorization") String accessToken) {
+        try {
+            return new BaseResponse<>(scrapService.allMyScrap(accessToken));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @GetMapping("/myComment")
+    public BaseResponse<List<CommentResponse>> allMyComment(@RequestHeader("Authorization") String accessToken) {
+        try {
+            return new BaseResponse<>(commentService.getMyComment(accessToken));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
     }
 }
 

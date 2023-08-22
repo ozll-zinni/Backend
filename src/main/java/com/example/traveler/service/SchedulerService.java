@@ -16,11 +16,15 @@ public class SchedulerService {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduleTaskingForPastTravel() {
-        List<Travel> allTravels = travelRepository.findAllByState(1);
+        System.out.println("스케쥴링!");
+        List<Travel> allTravels = travelRepository.findAllByStateAndTimeStatus(1, 0);
         Date date = new Date();
+        System.out.println("오늘 날짜 : " + date);
         for (Travel travel : allTravels) {
             if (travel.getStart_date().before(date)) {
-                travel.setState(0);
+                System.out.println("오늘보다 전이면");
+                travel.setTimeStatus(1);
+                System.out.println(travel.getTId() + ": 지난 여행 처리!");
                 travelRepository.save(travel);
             }
         }

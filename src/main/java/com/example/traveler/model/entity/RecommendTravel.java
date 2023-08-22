@@ -23,7 +23,9 @@ public class RecommendTravel {
 
     private double longitude;
 
-    private int with;
+
+    private int withwho;
+
 
     /***
 
@@ -37,13 +39,5 @@ public class RecommendTravel {
 
     private int code1;
 
-    @JsonIgnore
-    @OneToMany
-    @JoinColumn(name = "sId")
-    private List<Spot> spots = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "recommendTravel")
-    private List<DayCourse> dayCourses = new ArrayList<>();
 
 }

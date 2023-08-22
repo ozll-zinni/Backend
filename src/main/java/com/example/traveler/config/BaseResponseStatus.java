@@ -64,11 +64,26 @@ public enum BaseResponseStatus {
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
 
+    POST_IS_EMPTY(false,5003, "게시물이 존재하지 않습니다."),
+    POST_SEARCH_FAIL(false, 5004, "게시물 검색에 실패했습니다."),
+    POST_GET_FAIL(false, 5005, "게시물 조회 실패했습니다."),
+    POST_LIKE_FAIL(false, 5006, "게시물 좋아요에 실패했습니다."),
+    POST_LIKE_CANCEL_FAIL(false, 5007, "게시물 좋아요 취소에 실패했습니다."),
+    POST_LIKE_GET_FAIL(false, 5008, "게시물 좋아요 상태 조회에 실패했습니다."),
+    POST_SCRAP_FAIL(false, 5009, "게시물 찜에 실패했습니다."),
+    POST_SCRAP_CANCEL_FAIL(false, 5010, "게시물 찜에 실패했습니다."),
+    POST_SCRAP_GET_FAIL(false, 5011, "게시물 찜에 실패했습니다."),
+    POST_LIKE_COUNT_FAIL(false, 5012, "게시물 좋아요 개수 조회에 실패했습니다."),
+    POST_SCRAP_COUNT_FAIL(false, 5013, "게시물 찜 개수 조회에 실패했습니다."),
+    MY_LIKE_GET_FAIL(false, 5014, "게시물 좋아요 조회에 실패했습니다."),
+    MY_SCRAP_GET_FAIL(false, 5015, "게시물 찜 조회에 실패했습니다."),
+    SAVE_COMMENT_FAIL(false, 5500, "댓글 생성에 실패했습니다."),
+    MY_COMMENT_GET_FAIL(false, 5501, "댓글 조회에 실패했습니다."),
 
     /**
      * 6000 : Checklist 오류
      */
-    SAVE_CATEGORY_FAIL(false, 6001, "체크리스트 생성 실패했습니다"),
+    SAVE_CATEGORY_FAIL(false, 6001, "체크리스트 생성 실패했습니다."),
     UPDATE_CATEGORYNAME_FAIL( false, 6002, "체크리스트 수정 실패하였습니다."),
     CHECKLIST_IS_EMPTY(false,6003, "체크리스트가 존재하지 않습니다."),
     DELETE_CATEGORY_FAIL(false, 6004, "체크리스트 삭제 실패하였습니다"),
@@ -76,7 +91,29 @@ public enum BaseResponseStatus {
     SAVE_ITEM_FAIL(false, 6011, "준비물 생성에 실패했습니다."),
     UPDATE_ITEM_FAIL(false, 6012, "준비물 수정에 실패했습니다."),
     DELETE_ITEM_FAIL(false, 6013, "준비물 삭제에 실패했습니다."),
-    ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다.");
+    ITEM_NOT_FOUND(false,6014, "준비물 조회 실패했습니다."),
+
+
+    /**
+     * 7000 : 가계부 오류
+     */
+    REQUEST_IS_EMPTY(false, 7001, "요청을 찾을 수 없습니다."),
+    REQUEST_IS_INVALID(false, 7002, "요청을 찾을 수 없습니다."),
+    SAVE_DATE_FAIL(false, 7003, "날짜 생성 실패했습니다."),
+    DATE_NOT_FOUND(false, 7004, "날짜를 찾을 수 없습니다."),
+    UPDATE_DATE_FAIL(false, 7005, "날자 수정 실패했습니다."),
+    DELETE_DATE_FAIL(false, 7006, "널짜 삭제 실패했습니다."),
+    SAVE_ACCOUNTBOOK_FAIL(false, 7011, "가계부 생성 실패했습니다."),
+    ACCOUNTBOOK_NOT_FOUND(false, 7012, "가계부를 찾을 수 없습니다."),
+    ACCOUNTBOOK_USER_NOT_MATCH(false, 7013,"가계부 사용자가 맞지 않습니다."),
+    UPDATE_ACCOUNTBOOK_FAIL(false, 7014, "가계부 수정에 실패했습니다."),
+    DELETE_ACCOUNTBOOK_FAIL(false, 7015, "가계부 삭제에 실패했습니다."),
+    ACCOUNTBOOK_IS_EMPTY(false, 7016, "가계부가 존재하지 않습니다."),
+    SAVE_TRANSACTION_FAIL(false, 7021, "내역 생성에 실패했습니다."),
+    TRANSACTION_NOT_FOUND(false, 7022, "내역을 찾을 수 없습니다."),
+    UPDATE_TRANSACTION_FAIL(false, 7023, "내역 수정에 실패했습니다."),
+    DELETE_TRANSACTION_FAIL(false, 7025, "내역 삭제에 실패했습니다.");
+
 
 
     private final boolean isSuccess;

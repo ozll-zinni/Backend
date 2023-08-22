@@ -1,6 +1,8 @@
 package com.example.traveler.controller;
 
 import com.example.traveler.model.dto.RecommendTravelRequest;
+import com.example.traveler.model.dto.MainrecoResponse;
+import com.example.traveler.model.entity.Destination;
 import com.example.traveler.model.entity.RecommendTravel;
 import com.example.traveler.service.RecommendTravelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +14,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recommend")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RecommendTravelController {
 
     @Autowired
     private RecommendTravelService recommendTravelService;
 
-    @GetMapping
-    public ResponseEntity<List<RecommendTravel>> recommendTravel(@RequestBody RecommendTravelRequest request) {
-        List<RecommendTravel> matchingTravels = recommendTravelService.getMatchingTravels(request);
+    @PostMapping
+    public ResponseEntity<List<RecommendTravel>> recommendTravel(@RequestHeader("Authorization") String accessToken, @RequestBody RecommendTravelRequest request) {
+        List<RecommendTravel> matchingTravels = recommendTravelService.getMatchingTravels(accessToken, request);
 
         if (matchingTravels.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -27,5 +30,18 @@ public class RecommendTravelController {
 
         return new ResponseEntity<>(matchingTravels, HttpStatus.OK);
     }
+
+    @GetMapping("/regieon")
+    public ResponseEntity<List<Destination>> getAllRegion(){
+        List<Destination> allrigeon = recommendTravelService.getAllregieon();
+        return ResponseEntity.ok(allrigeon);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<MainrecoResponse>> getList() {
+        List<MainrecoResponse> allRT = recommendTravelService.getList();
+        return ResponseEntity.ok(allRT);
+    }
+
 
 }
