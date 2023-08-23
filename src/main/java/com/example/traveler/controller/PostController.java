@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/post")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://traveler-smoky.vercel.app"})
 public class PostController {
     @Autowired
     private PostService postService;

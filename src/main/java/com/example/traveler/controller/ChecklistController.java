@@ -18,7 +18,7 @@ import static com.example.traveler.config.BaseResponseStatus.DELETE_CATEGORY_FAI
 
 @RestController
 @RequestMapping("/checklist")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://traveler-smoky.vercel.app"})
 public class ChecklistController {
     @Autowired
     private ChecklistService checklistService;
