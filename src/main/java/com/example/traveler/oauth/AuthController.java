@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = {"http://localhost:3000", "https://traveler-smoky.vercel.app"})
 public class AuthController {
     private final OAuthLoginService oAuthLoginService;
 
