@@ -19,7 +19,7 @@ import static com.example.traveler.config.BaseResponseStatus.SAVE_TRAVEL_FAIL;
 
 @RestController
 @RequestMapping("/travel")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://traveler-smoky.vercel.app"})
 public class TravelController {
     @Autowired
     private TravelService travelService;

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recommend")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://traveler-smoky.vercel.app"})
 public class RecommendTravelController {
 
     @Autowired
