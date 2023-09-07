@@ -10,12 +10,11 @@ import com.example.traveler.model.entity.DateEntity;
 import com.example.traveler.model.entity.Transaction;
 import com.example.traveler.model.entity.Travel;
 import com.example.traveler.repository.AccountBookRepository;
-import com.example.traveler.repository.ChecklistRepository;
 import com.example.traveler.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
@@ -31,7 +30,7 @@ public class AccountBookService {
     private AccountBookRepository accountBookRepository;
     private TransactionRepository transactionRepository;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public AccountBookResponse saveAccountBook(
             String accessToken, Travel travel,
             double totalBudget,
@@ -89,7 +88,7 @@ public class AccountBookService {
     }
 
 
-
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public AccountBookResponse getAccountBook(int accountId) throws BaseException {
         // 가계부 ID를 기반으로 가계부를 조회하고 반환하는 로직 구현
         Optional<AccountBook> getAccountBook = accountBookRepository.findByAccountId(accountId);
@@ -100,6 +99,7 @@ public class AccountBookService {
         return accountBookResponse;
     }
 
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public AccountBookResponse patchAccountBook(String accesstoken, Long accountId, String newName) throws BaseException {
         // 가계부 정보를 업데이트하고 업데이트된 가계부를 반환하는 로직 구현
         AccountBook accountBook = accountBookRepository.findById(accountId)
@@ -112,6 +112,7 @@ public class AccountBookService {
         return response;
     }
 
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public int deleteAccountBook(String accessToken, Long accountId) throws BaseException {
         // 가계부를 삭제하는 로직 구현
         AccountBook accountBook = accountBookRepository.findById(accountId)
@@ -124,6 +125,7 @@ public class AccountBookService {
         return 1;
     }
 
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<AccountBookResponse> getAllAccountBookByTravel(Travel travel) throws BaseException {
         // 해당 여행에 대한 모든 가계부를 데이터베이스에서 조회
         List<AccountBook> accountBooks = accountBookRepository.findAllByTravel(travel);
@@ -138,6 +140,7 @@ public class AccountBookService {
     }
 
     // 특정 가계부의 날짜 정보 조회 로직 구현
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<Date> getDatesForAccountBook(Long accountId) throws BaseException {
         // accountBookRepository를 이용하여 accountId에 해당하는 가계부 정보 조회
         AccountBook accountBook = accountBookRepository.findById(accountId)
@@ -153,6 +156,7 @@ public class AccountBookService {
     }
 
     // 월별 지출 계산 메서드
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public MonthlyExpensesResponse getMonthlyExpenses(Long accountId) throws BaseException {
         try {
             AccountBook accountBook = accountBookRepository.findById(accountId)
@@ -174,6 +178,7 @@ public class AccountBookService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     private Map<String, Double> convertYearMonthToString(Map<YearMonth, Double> monthlyExpenses) {
         Map<String, Double> formattedExpenses = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
@@ -187,6 +192,7 @@ public class AccountBookService {
     }
 
     // 날짜별 지출 계산 메서드
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public DailyExpensesResponse getDailyExpenses(Long accountId) throws BaseException {
         try {
             AccountBook accountBook = accountBookRepository.findById(accountId)
@@ -221,6 +227,7 @@ public class AccountBookService {
     }
 
     // 요약
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public SummaryResponse getAccountBookSummary(Long accountId) throws BaseException {
         AccountBook accountBook = accountBookRepository.findById(accountId)
                 .orElseThrow(() -> new BaseException(ACCOUNTBOOK_NOT_FOUND));
