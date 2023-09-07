@@ -1,6 +1,7 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.ItemNameRequest;
 import com.example.traveler.model.dto.ItemResponse;
 import com.example.traveler.model.entity.ChecklistEntity;
 import com.example.traveler.model.entity.User;
@@ -90,17 +91,20 @@ public class ItemService {
 
 
     // 특정 checklist에 포함된 item 수정
+
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public ItemResponse patchItem(String accessToken, int cId, int iId, ItemRequest itemRequest) throws BaseException {
+    public ItemResponse patchItem(String accessToken, int cId, int iId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
         ItemEntity item = itemRepository.findByIdAndChecklist_cId(iId, cId)
                 .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
-
-        item.setName(itemRequest.getName());
-        item.setIschecked(itemRequest.getIschecked()); // 아이템의 체크 상태 업데이트
+        if (item.getIschecked()) {
+            item.setIschecked(false);
+        }else {
+            item.setIschecked(true);
+        }
 
         try {
             item = itemRepository.save(item);
@@ -111,7 +115,23 @@ public class ItemService {
         return new ItemResponse(item.getId(), item.getName(), item.getIschecked());
     }
 
+    public ItemResponse patchItemName(String accessToken, int cId, int iId, ItemNameRequest itemNameRequest) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
+        ItemEntity item = itemRepository.findByIdAndChecklist_cId(iId, cId)
+                .orElseThrow(() -> new BaseException(ITEM_NOT_FOUND));
+        item.setName(itemNameRequest.getName());
 
+        try {
+            item = itemRepository.save(item);
+        } catch (Exception e) {
+            throw new BaseException(SAVE_ITEM_FAIL);
+        }
+
+        return new ItemResponse(item.getId(), item.getName(), item.getIschecked());
+    }
 
     // 특정 checklist내 포함된 item 삭제
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
