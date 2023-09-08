@@ -90,5 +90,8 @@ public class AccountBook {
             dateEntities.add(dateEntity);
         }
     }
+
+    public void setTransactions(List<Transaction> mockTransactions) {
+    }
 }
 

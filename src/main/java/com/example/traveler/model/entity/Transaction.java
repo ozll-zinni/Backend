@@ -33,5 +33,7 @@ public class Transaction {
     @Getter
     private String transactionType; // "지출" 또는 "수입"
 
+    public Transaction(Date date, double v) {
+    }
 }
 
