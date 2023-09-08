@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
@@ -201,6 +202,7 @@ public class PostService {
         return posts;
     }
 
+    @Transactional
     public int likePost(String accessToken, long pId) throws BaseException {
         int result = -1;
         Post post;
@@ -228,6 +230,7 @@ public class PostService {
         return result;
     }
 
+    @Transactional
     public int scrapPost(String accessToken, long pId) throws BaseException {
         int result = -1;
         Post post;

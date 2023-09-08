@@ -14,6 +14,7 @@ import com.example.traveler.repository.PostRepository;
 import com.example.traveler.repository.ScrapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class ScrapService {
     @Autowired
     private PostRepository postRepository;
 
+    @Transactional
     public Scrap saveScrap(User user, Post post) throws BaseException {
 
         Scrap saveScrap = null;
@@ -51,6 +53,7 @@ public class ScrapService {
         }
     }
 
+    @Transactional
     public int deleteScrap(Scrap scrap) throws BaseException {
         try {
             scrapRepository.delete(scrap);

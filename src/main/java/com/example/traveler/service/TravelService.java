@@ -10,6 +10,7 @@ import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class TravelService {
     @Autowired
     private ChecklistService checklistService;
 
+    @Transactional
     public TravelResponse saveTravel(String accessToken, TravelRequest travel) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -70,6 +72,8 @@ public class TravelService {
         return allTravelResponse;
     }
 
+
+    @Transactional
     public TravelResponse patchTravel(String accessToken, int tId, TravelRequest travelRequest) throws BaseException{
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -97,6 +101,8 @@ public class TravelService {
         }
     }
 
+
+    @Transactional
     public int deleteTravel(String accessToken, int tId) throws BaseException{
         User user = userService.getUserByToken(accessToken);
         if (user == null) {

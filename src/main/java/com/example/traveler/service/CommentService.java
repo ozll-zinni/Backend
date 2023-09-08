@@ -13,6 +13,7 @@ import com.example.traveler.repository.CommentRepository;
 import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class CommentService {
     private UserService userService;
     @Autowired
     private PostService postService;
+
+    @Transactional
     public CommentResponse saveComment(String accessToken, long pId, CommentRequest comment) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         Post post;
