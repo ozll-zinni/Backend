@@ -13,6 +13,7 @@ import com.example.traveler.repository.CommentRepository;
 import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class CommentService {
     private UserService userService;
     @Autowired
     private PostService postService;
+
+    @Transactional
     public CommentResponse saveComment(String accessToken, long pId, CommentRequest comment) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         Post post;
@@ -47,7 +50,7 @@ public class CommentService {
             throw new BaseException(SAVE_TRAVEL_FAIL);
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        CommentResponse commentResponse = new CommentResponse(saveComment.getCoId(), saveComment.getContent(), saveComment.getPost().getPId(), saveComment.getUser().getId(), formatter.format(saveComment.getCreated_at()));
+        CommentResponse commentResponse = new CommentResponse(saveComment.getCoId(), saveComment.getContent(), saveComment.getPost().getPId(), saveComment.getUser(), formatter.format(saveComment.getCreated_at()));
         return commentResponse;
     }
 
@@ -64,7 +67,7 @@ public class CommentService {
         ArrayList<CommentResponse> allCommentResponse = new ArrayList<>();
         for (Comment comment : allComment) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser().getId(), formatter.format(comment.getCreated_at()));
+            CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser(), formatter.format(comment.getCreated_at()));
             allCommentResponse.add(commentResponse);
         }
         return allCommentResponse;
@@ -84,7 +87,7 @@ public class CommentService {
             ArrayList<CommentResponse> allMyCommentResponse = new ArrayList<>();
             for (Comment comment : allMyComment) {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser().getId(), formatter.format(comment.getCreated_at()));
+                CommentResponse commentResponse = new CommentResponse(comment.getCoId(), comment.getContent(), comment.getPost().getPId(), comment.getUser(), formatter.format(comment.getCreated_at()));
                 allMyCommentResponse.add(commentResponse);
             }
             return allMyCommentResponse;

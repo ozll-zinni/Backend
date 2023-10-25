@@ -10,6 +10,8 @@ import com.example.traveler.repository.DayCourseRepository;
 import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.example.traveler.config.BaseResponseStatus.*;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class DayCourseService {
     private TravelRepository travelRepository;
     @Autowired
     private UserService userService;
+
+    @Transactional
     public DayCourseResponse saveCourse(String accessToken, DayCourseRequest course, int tId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {

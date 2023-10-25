@@ -13,6 +13,8 @@ import com.example.traveler.repository.SpotRepository;
 import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.example.traveler.config.BaseResponseStatus.*;
 
 import java.util.ArrayList;
@@ -25,11 +27,11 @@ public class SpotService {
     @Autowired
     private DayCourseRepository dayCourseRepository;
     @Autowired
-    private TravelRepository travelRepository;
-    @Autowired
     private SpotRepository spotRepository;
     @Autowired
     private UserService userService;
+
+    @Transactional
     public DayCourseResponse saveSpot(String accessToken, SpotRequest spotRequest, int dcId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -78,6 +80,7 @@ public class SpotService {
         return dayCourseResponse;
     }
 
+    @Transactional
     public DayCourseResponse deleteSpot(String accessToken, int dcId, int num) throws BaseException{
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
