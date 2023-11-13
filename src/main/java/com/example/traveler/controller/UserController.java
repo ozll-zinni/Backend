@@ -141,7 +141,7 @@ public class UserController {
     }
 
     @GetMapping("/myScrap")
-    public BaseResponse<List<ScrapResponse>> allMyScrap(@RequestHeader("Authorization") String accessToken) {
+    public BaseResponse<List<MyScrapResponse>> allMyScrap(@RequestHeader("Authorization") String accessToken) {
         try {
             return new BaseResponse<>(scrapService.allMyScrap(accessToken));
         } catch (BaseException e) {
