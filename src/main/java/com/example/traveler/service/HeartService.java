@@ -15,6 +15,7 @@ import com.example.traveler.repository.PostRepository;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class HeartService {
     @Autowired
     private PostRepository postRepository;
 
+    @Transactional
     public Heart saveHeart(User user, Post post) throws BaseException {
 
         Heart saveHeart = null;
@@ -51,6 +53,7 @@ public class HeartService {
         }
     }
 
+    @Transactional
     public int deleteHeart(Heart heart) throws BaseException {
         try {
             heartRepository.delete(heart);
