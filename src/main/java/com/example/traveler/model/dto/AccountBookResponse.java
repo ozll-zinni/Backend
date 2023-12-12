@@ -9,21 +9,26 @@ import java.util.List;
 @Getter
 @Setter
 public class AccountBookResponse {
-    private String accountName;
+    private String transactionDetail;
+    private double expense;
     private Long accountId;
-    private Long tId; // 여행 I
+    private Long tId;
     private double budget;
     private List<TransactionResponse> transactions;
 
     public AccountBookResponse() {
-        this.accountName = getAccountName();
         this.accountId = getAccountId();
         this.tId = getTId();
         this.budget = getBudget();
     }
 
-    public AccountBookResponse(String accountName, Long accountId) {
+    public AccountBookResponse(AccountBook accountBook) {
+        this.expense = accountBook.getTotalExpense();
+        this.accountId = accountBook.getAccountId();
+        this.tId = (long) accountBook.getTravel().getTId();
+        this.budget = accountBook.getTotalBudget();
     }
+
 
     public AccountBookResponse(AccountBook accountBook, AccountBook accountBook1) {
     }

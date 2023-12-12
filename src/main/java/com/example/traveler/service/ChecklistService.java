@@ -17,6 +17,8 @@ import lombok.AllArgsConstructor;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -38,6 +40,7 @@ public class ChecklistService {
     @Autowired
     private final ItemRepository itemRepository;
 
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public ChecklistResponse saveChecklist(String accessToken, Integer tId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -78,6 +81,7 @@ public class ChecklistService {
     }
 
     // 체크리스트명 변경
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public ChecklistResponse patchChecklist(String accessToken, int cId, String newTitle) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -123,6 +127,7 @@ public class ChecklistService {
 
 
     // 체크리스트 삭제
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public int deleteChecklist(String accessToken, int cId) throws BaseException {
         User user = userService.getUserByToken(accessToken);
         if (user == null) {
@@ -147,6 +152,7 @@ public class ChecklistService {
     }
 
     // 특정 여행에 대한 모든 체크리스트를 조회하는 메서드
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<ChecklistResponse> getAllChecklistsByTravel(int tId) throws BaseException {
 
         // 주어진 tId에 해당하는 여행 정보를 데이터베이스에서 조회

@@ -8,18 +8,25 @@ import lombok.Setter;
 @Setter
 public class TransactionResponse {
     private Long transactionId;
-//    private Long dateId;
     private String expenseCategory; // 지출 항목
-    private String description; //내용
+    private String expenseDetail; //내용
     private double amount;
-    private String transactionType;
 
     public TransactionResponse(Transaction transaction) {
         this.transactionId = transaction.getTransactionId();
-//        this.dateId = transaction.getDateId();
-        this.expenseCategory = transaction.getExpenseItem();
-        this.description = transaction.getDescription();
+        this.expenseCategory = transaction.getExpenseCategory();
+        this.expenseDetail = transaction.getExpenseDetail() ;
         this.amount = transaction.getAmount();
-        this.transactionType = transaction.getTransactionType();
+    }
+
+    public  TransactionResponse(Long transactionId, String expenseCategory, String expenseDetail, double amount) {
+        this.transactionId = transactionId;
+        this.expenseCategory = expenseCategory;
+        this.expenseDetail = expenseDetail;
+        this.amount = amount;
+    }
+
+    public TransactionResponse() {
+
     }
 }

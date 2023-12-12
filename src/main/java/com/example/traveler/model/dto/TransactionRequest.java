@@ -6,9 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransactionRequest {
-//    private Long dateId;
-    private String expenseItem;
-    private String description;
-    private double amount;
-    private String transactionType; // "expense" 또는 "income"
+    private String expenseCategory; // 비용 카테고리 (식비, 교통비, 숙박비, 관광비, 쇼핑비, 기타)
+    private String expenseDetail; // 비용 세부사항
+    private Double amount; // 비용 금액
 }

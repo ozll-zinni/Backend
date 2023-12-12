@@ -34,5 +34,6 @@ public class ItemResponse {
         this.isChecked = isChecked;
     }
 
+
     // getter 메서드는 롬복의 @Data 어노테이션으로 자동 생성됨
 }
