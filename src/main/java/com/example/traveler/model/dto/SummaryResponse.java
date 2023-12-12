@@ -6,15 +6,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SummaryResponse {
-    private double totalExpense;
+    private double total_budget;
+    private double total_Expense;
     private double foodExpense;
     private double transportationExpense;
+    private double lodgingExpense;
     private double sightseeingExpense;
     private double shoppingExpense;
     private double otherExpense;
 
+    private double budgetUsagePercentage;
     private double foodExpensePercentage;
     private double transportationExpensePercentage;
+    private double lodgingExpensePercentage;
     private double sightseeingExpensePercentage;
     private double shoppingExpensePercentage;
     private double otherExpensePercentage;

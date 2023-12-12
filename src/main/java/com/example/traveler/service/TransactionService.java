@@ -1,15 +1,21 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
+import com.example.traveler.model.dto.ItemResponse;
 import com.example.traveler.model.dto.TransactionRequest;
 import com.example.traveler.model.dto.TransactionResponse;
 import com.example.traveler.model.entity.AccountBook;
+import com.example.traveler.model.entity.ItemEntity;
 import com.example.traveler.model.entity.Transaction;
+import com.example.traveler.model.entity.User;
 import com.example.traveler.repository.AccountBookRepository;
 import com.example.traveler.repository.TransactionRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +25,8 @@ import static com.example.traveler.config.BaseResponseStatus.*;
 public class TransactionService {
     private final AccountBookRepository accountBookRepository;
     private final TransactionRepository transactionRepository;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public TransactionService(AccountBookRepository accountBookRepository, TransactionRepository transactionRepository) {
@@ -27,17 +35,20 @@ public class TransactionService {
     }
 
     // 내역 추가 기능
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public TransactionResponse saveTransaction(String accessToken, int accountId, TransactionRequest transactionRequest) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
         AccountBook accountBook = accountBookRepository.findById((long) accountId)
                 .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
 
         Transaction transaction = new Transaction();
         transaction.setAccountBook(accountBook);
-//        transaction.setDateId(transactionRequest.getDateId());
-        transaction.setExpenseItem(transactionRequest.getExpenseItem());
-        transaction.setDescription(transactionRequest.getDescription());
+        transaction.setExpenseCategory(transactionRequest.getExpenseCategory());
+        transaction.setExpenseDetail("");
         transaction.setAmount(transactionRequest.getAmount());
-        transaction.setTransactionType(transactionRequest.getTransactionType());
 
         try {
             Transaction savedTransaction = transactionRepository.save(transaction);
@@ -47,24 +58,31 @@ public class TransactionService {
         }
     }
 
+
     // 해당 가계부의 모든 내역 조회 기능
-    public List<TransactionResponse> getAllTransactionByAccountBook(int accountId) throws BaseException {
+    public List<TransactionResponse> getAllTransactionByAccountbook(int accountId) throws BaseException {
         AccountBook accountBook = accountBookRepository.findById((long) accountId)
                 .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
 
         List<Transaction> transactions = transactionRepository.findAllByAccountBook(accountBook);
 
-        return transactions.stream()
-                .map(TransactionResponse::new)
-                .collect(Collectors.toList());
+        return mapTransactionListToTransactionList(transactions);
     }
-
+    private List<TransactionResponse> mapTransactionListToTransactionList(List<Transaction> transactions) {
+        List<TransactionResponse> transactionResponses = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            TransactionResponse transactionResponse = new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
+            transactionResponses.add(transactionResponse);
+        }
+        return transactionResponses;
+    }
     // 특정 내역 조회 기능
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public TransactionResponse getTransaction(int transactionId) throws BaseException {
         Transaction transaction = transactionRepository.findById((long) transactionId)
                 .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
 
-        return new TransactionResponse(transaction);
+        return new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
     }
 
     // 내역 수정 기능
@@ -72,12 +90,9 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById((long) transactionId)
                 .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
 
-        // transactionRequest에 따라 내역 정보 업데이트
-//        transaction.setDateId(transactionRequest.getDateId());
-        transaction.setExpenseItem(transactionRequest.getExpenseItem());
-        transaction.setDescription(transactionRequest.getDescription());
+        transaction.setExpenseCategory(transactionRequest.getExpenseCategory());
+        transaction.setExpenseDetail(transactionRequest.getExpenseDetail());
         transaction.setAmount(transactionRequest.getAmount());
-        transaction.setTransactionType(transactionRequest.getTransactionType());
 
         try {
             Transaction updatedTransaction = transactionRepository.save(transaction);
@@ -87,18 +102,64 @@ public class TransactionService {
         }
     }
 
+
+//    public TransactionResponse patchTransactionDetail(String accessToken, int accountId, int transactionId, TransactionRequest transactionDetailRequest) throws BaseException {
+//        User user = userService.getUserByToken(accessToken);
+//        if (user == null) {
+//            throw new BaseException(INVALID_JWT);
+//        }
+//        Transaction transaction = transactionRepository.findByTransactionIdAndAccountbook_accountId((long) transactionId, (long) accountId)
+//                .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
+//        transaction.setExpenseDetail(transactionDetailRequest.getExpenseDetail());
+//
+//        try {
+//            transaction = transactionRepository.save(transaction);
+//        } catch (Exception e) {
+//            throw new BaseException(SAVE_ITEM_FAIL);
+//        }
+//
+//        return new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
+//    }
+
+
     // 내역 삭제 기능
-    public int deleteTransaction(String accessToken, int transactionId, int num) throws BaseException {
-        Transaction transaction = transactionRepository.findById((long) transactionId)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+
+    public int deleteTransaction(String accessToken, int accountId, int transacrionId) throws BaseException {
+        User user = userService.getUserByToken(accessToken);
+        if (user == null) {
+            throw new BaseException(INVALID_JWT);
+        }
+        Transaction transaction = (Transaction) transactionRepository.findByTransactionIdAndAccountBook_accountId((long) transacrionId, (long) accountId)
                 .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
 
-        // num 매개변수에 따라 삭제 로직 수행
-
         try {
-            transactionRepository.delete(transaction);
-            return 1;
+            transactionRepository.delete(transaction); // 수정된 부분
         } catch (Exception e) {
             throw new BaseException(DELETE_TRANSACTION_FAIL);
         }
+        return accountId;
     }
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public List<TransactionResponse> getAllTransaction() {
+        List<Transaction> transactions = transactionRepository.findAll();
+        return mapTransactionListToTransactionList(transactions);
+    }
+
+    // 특정 가계부에 포함된 내역 조회 및 삭제
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public TransactionResponse getTransactionFromAccountbook(int accountId, int transactionId) throws BaseException {
+        AccountBook accountBook = accountBookRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
+        Transaction transaction = transactionRepository.findByTransactionIdAndAccountBook((long) transactionId, accountBook)
+                .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
+        try {
+            transactionRepository.delete(transaction);
+        } catch (Exception e) {
+            throw new BaseException(DELETE_TRANSACTION_FAIL);
+        }
+        return new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
+    }
+
+
 }
