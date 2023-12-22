@@ -30,7 +30,4 @@ public class MyScrapResponse {
 
     private String t_title;
 
-
-    public MyScrapResponse(Long pId, List<String> imageUrl, int likes, String title, String location, int countComment, Date startDate, Date endDate, String title1) {
-    }
 }

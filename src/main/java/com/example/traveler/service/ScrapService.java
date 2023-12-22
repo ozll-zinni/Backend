@@ -71,6 +71,7 @@ public class ScrapService {
 
     public List<MyScrapResponse> allMyScrap(String accessToken) throws BaseException {
         User user = userService.getUserByToken(accessToken);
+        System.out.println(user.getId());
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
@@ -78,21 +79,19 @@ public class ScrapService {
             List<Scrap> scraps =  scrapRepository.findAllByUser(user);
             ArrayList<MyScrapResponse> responses = new ArrayList<>();
             for (Scrap scrap : scraps) {
+                System.out.println("scrapService - scrap - post : " + scrap.getPost().getPId());
+                System.out.println("scrapService - scrap - post - travel : " + scrap.getPost().getTravel().getTId());
                 Post foundPost = postRepository.findBypId(scrap.getPost().getPId());
-                PostResponse postResponse;
-                if (foundPost.getImage_url().isEmpty()) {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null, foundPost.getNoteStatus());
-                } else {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0), foundPost.getNoteStatus());
-                }
 
                 Travel foundTravel = travelRepository.findBytId(foundPost.getTravel().getTId());
-
+                System.out.println("scrapService - foundPost : " + foundPost.getPId());
+                System.out.println("scrapService - foundTravel : " + foundTravel.getTId());
                 int count_comment = foundPost.getComments().size();
 
-                MyScrapResponse response = new MyScrapResponse(foundPost.getPId(), foundPost.getImage_url(), foundPost.getLikes(), foundPost.getTitle(), foundPost.getLocation(), count_comment, foundTravel.getStart_date(), foundTravel.getEnd_date(), foundTravel.getTitle());
+                MyScrapResponse response = new MyScrapResponse(foundPost.getPId(), foundTravel.getTId(), foundPost.getImage_url().get(0), foundPost.getLikes(), foundPost.getTitle(), foundPost.getLocation(), count_comment, foundTravel.getStart_date(), foundTravel.getEnd_date(), foundTravel.getTitle());
                 responses.add(response);
             }
+            System.out.println(responses);
             return responses;
         } catch (Exception e) {
             throw new BaseException(MY_SCRAP_GET_FAIL);
