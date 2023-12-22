@@ -16,10 +16,12 @@ public class PostResponse {
     long uId;
 
 
-    private String title;
+    String title;
 
-    private String oneLineReview;
+    String oneLineReview;
 
-    private String url;
+    String url;
+
+    int noteStatus;
 
 }

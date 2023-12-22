@@ -82,6 +82,7 @@ public class ScrapService {
                 System.out.println("scrapService - scrap - post : " + scrap.getPost().getPId());
                 System.out.println("scrapService - scrap - post - travel : " + scrap.getPost().getTravel().getTId());
                 Post foundPost = postRepository.findBypId(scrap.getPost().getPId());
+
                 Travel foundTravel = travelRepository.findBytId(foundPost.getTravel().getTId());
                 System.out.println("scrapService - foundPost : " + foundPost.getPId());
                 System.out.println("scrapService - foundTravel : " + foundTravel.getTId());
