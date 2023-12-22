@@ -83,9 +83,9 @@ public class HeartService {
                 Post foundPost = postRepository.findBypId(heart.getPost().getPId());
                 PostResponse postResponse;
                 if (foundPost.getImage_url().isEmpty()) {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null);
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null, foundPost.getNoteStatus());
                 } else {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0), foundPost.getNoteStatus());
                 }
                 HeartResponse response = new HeartResponse(heart.getHId(), postResponse, heart.getUser().getId());
                 responses.add(response);

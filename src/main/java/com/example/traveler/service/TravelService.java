@@ -47,7 +47,7 @@ public class TravelService {
         }
         System.out.println("3333333333");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStart_date()) , formatter.format(saveTravel.getEnd_date()), formatter.format(saveTravel.getCreated_at()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId());
+        TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStart_date()) , formatter.format(saveTravel.getEnd_date()), formatter.format(saveTravel.getCreated_at()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId(), saveTravel.getCode());
         return travelResponse;
     }
 
@@ -57,7 +57,7 @@ public class TravelService {
             throw new BaseException(TRAVEL_IS_EMPTY);
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        TravelResponse travelResponse = new TravelResponse(getTravel.getTId(), getTravel.getTitle(), getTravel.getDestination(), formatter.format(getTravel.getStart_date()), formatter.format(getTravel.getEnd_date()), formatter.format(getTravel.getCreated_at()), getTravel.getTimeStatus(), getTravel.getWriteStatus(), getTravel.getNoteStatus(), getTravel.getCourses(), getTravel.getUser().getId());
+        TravelResponse travelResponse = new TravelResponse(getTravel.getTId(), getTravel.getTitle(), getTravel.getDestination(), formatter.format(getTravel.getStart_date()), formatter.format(getTravel.getEnd_date()), formatter.format(getTravel.getCreated_at()), getTravel.getTimeStatus(), getTravel.getWriteStatus(), getTravel.getNoteStatus(), getTravel.getCourses(), getTravel.getUser().getId(), getTravel.getCode());
         return travelResponse;
     }
 
@@ -66,7 +66,7 @@ public class TravelService {
         ArrayList<TravelResponse> allTravelResponse = new ArrayList<>();
         for (Travel travel : allTravel) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), formatter.format(travel.getStart_date()), formatter.format(travel.getEnd_date()), formatter.format(travel.getCreated_at()), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses(), travel.getUser().getId());
+            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), formatter.format(travel.getStart_date()), formatter.format(travel.getEnd_date()), formatter.format(travel.getCreated_at()), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses(), travel.getUser().getId(), travel.getCode());
             allTravelResponse.add(travelResponse);
         }
         return allTravelResponse;
@@ -90,7 +90,7 @@ public class TravelService {
                 getTravel.setEnd_date(travelRequest.getEnd_date());
                 Travel saveTravel = travelRepository.save(getTravel);
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStart_date()), formatter.format(saveTravel.getEnd_date()), formatter.format(saveTravel.getCreated_at()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId());
+                TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStart_date()), formatter.format(saveTravel.getEnd_date()), formatter.format(saveTravel.getCreated_at()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId(), saveTravel.getCode());
                 return travelResponse;
             } catch (Exception e) {
                 throw new BaseException(PATCH_TRAVEL_FAIL);
@@ -126,7 +126,7 @@ public class TravelService {
         ArrayList<TravelResponse> allMyTravelResponse = new ArrayList<>();
         for (Travel travel : allMyTravel) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), formatter.format(travel.getStart_date()), formatter.format(travel.getEnd_date()), formatter.format(travel.getCreated_at()), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses(), travel.getUser().getId());
+            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), formatter.format(travel.getStart_date()), formatter.format(travel.getEnd_date()), formatter.format(travel.getCreated_at()), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses(), travel.getUser().getId(), travel.getCode());
             allMyTravelResponse.add(travelResponse);
         }
         return allMyTravelResponse;
@@ -137,7 +137,7 @@ public class TravelService {
         ArrayList<TravelResponse> allMyPastTravelResponse = new ArrayList<>();
         for (Travel travel : allMyPastTravel) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), formatter.format(travel.getStart_date()), formatter.format(travel.getEnd_date()), formatter.format(travel.getCreated_at()), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses(), travel.getUser().getId());
+            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), formatter.format(travel.getStart_date()), formatter.format(travel.getEnd_date()), formatter.format(travel.getCreated_at()), travel.getTimeStatus(), travel.getWriteStatus(), travel.getNoteStatus(), travel.getCourses(), travel.getUser().getId(), travel.getCode());
             allMyPastTravelResponse.add(travelResponse);
         }
         return allMyPastTravelResponse;

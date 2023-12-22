@@ -81,9 +81,9 @@ public class ScrapService {
                 Post foundPost = postRepository.findBypId(scrap.getPost().getPId());
                 PostResponse postResponse;
                 if (foundPost.getImage_url().isEmpty()) {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null);
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null, foundPost.getNoteStatus());
                 } else {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
+                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0), foundPost.getNoteStatus());
                 }
 
                 Travel foundTravel = travelRepository.findBytId(foundPost.getTravel().getTId());

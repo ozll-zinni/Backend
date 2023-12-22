@@ -35,4 +35,6 @@ public class PostRequest {
 
     String badPoints;
 
+    int noteStatus;
+
 }
