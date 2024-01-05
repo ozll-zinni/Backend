@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,69 +27,34 @@ public class AccountBook {
     @OneToMany(mappedBy = "accountBook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DateEntity> dateEntities = new ArrayList<>();
 
-
-    @Column(nullable = false)
-    private String accountName;
+    @OneToMany(mappedBy = "accountBook")
+    private List<Transaction> accountbookTransaction;
 
     private double totalBudget;
     private double totalExpense;
+    private double budgetUsagePercentage; // 예산 중 총지출의 비율을 나타내는 필드를 추가
     private double foodExpense;
     private double transportationExpense;
+    private double lodgingExpense;
     private double sightseeingExpense;
     private double shoppingExpense;
     private double otherExpense;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
-    @Getter
-    @Transient // 데이터베이스에 저장되지 않는 임시 변수로 설정
-    private Double foodExpensePercentage;
-
-    @Getter
-    @Transient
-    private Double transportExpensePercentage;
-
-    @Getter
-    @Transient
-    private Double sightseeingExpensePercentage;
-
-    @Getter
-    @Transient
-    private Double shoppingExpensePercentage;
-
-    @Getter
-    @Transient
-    private Double otherExpensePercentage;
-
-    public void setFoodExpensePercentage(Double foodExpensePercentage) {
-        this.foodExpensePercentage = foodExpensePercentage;
+    public void setTotalExpense(double totalExpense) {
+        this.totalExpense = totalExpense;
+        this.budgetUsagePercentage = (totalExpense / totalBudget) * 100;
     }
 
-    public void setTransportExpensePercentage(Double transportExpensePercentage) {
-        this.transportExpensePercentage = transportExpensePercentage;
+
+    public void setUser(User userByToken) {
     }
 
-    public void setSightseeingExpensePercentage(Double sightseeingExpensePercentage) {
-        this.sightseeingExpensePercentage = sightseeingExpensePercentage;
+    public void setDate(Date date) {
+
+        this.date = date;
     }
 
-    public void setShoppingExpensePercentage(Double shoppingExpensePercentage) {
-        this.shoppingExpensePercentage = shoppingExpensePercentage;
-    }
-
-    public void setOtherExpensePercentage(Double otherExpensePercentage) {
-        this.otherExpensePercentage = otherExpensePercentage;
-    }
-
-    // Travel의 시작과 끝 날짜, 몇일차인지 계산하여 DateEntity 추가
-    public void addDateEntities() {
-        Date startDate = travel.getStart_date();
-        Date endDate = travel.getEnd_date();
-        int dayCount = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-
-        for (int day = 1; day <= dayCount; day++) {
-            Date currentDate = new Date(startDate.getTime() + (day - 1) * (1000 * 60 * 60 * 24));
-            DateEntity dateEntity = new DateEntity(currentDate, travel, null); // dayCourse는 null로 설정
-            dateEntities.add(dateEntity);
-        }
-    }
 }
 

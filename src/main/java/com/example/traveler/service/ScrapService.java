@@ -1,17 +1,12 @@
 package com.example.traveler.service;
 
 import com.example.traveler.config.BaseException;
-import com.example.traveler.model.dto.CommentResponse;
-import com.example.traveler.model.dto.HeartResponse;
-import com.example.traveler.model.dto.PostResponse;
-import com.example.traveler.model.dto.ScrapResponse;
-import com.example.traveler.model.entity.Heart;
-import com.example.traveler.model.entity.Post;
-import com.example.traveler.model.entity.Scrap;
-import com.example.traveler.model.entity.User;
+import com.example.traveler.model.dto.*;
+import com.example.traveler.model.entity.*;
 import com.example.traveler.repository.HeartRepository;
 import com.example.traveler.repository.PostRepository;
 import com.example.traveler.repository.ScrapRepository;
+import com.example.traveler.repository.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +26,9 @@ public class ScrapService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private TravelRepository travelRepository;
 
     @Transactional
     public Scrap saveScrap(User user, Post post) throws BaseException {
@@ -71,25 +69,29 @@ public class ScrapService {
         }
     }
 
-    public List<ScrapResponse> allMyScrap(String accessToken) throws BaseException {
+    public List<MyScrapResponse> allMyScrap(String accessToken) throws BaseException {
         User user = userService.getUserByToken(accessToken);
+        System.out.println(user.getId());
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
         try {
             List<Scrap> scraps =  scrapRepository.findAllByUser(user);
-            ArrayList<ScrapResponse> responses = new ArrayList<>();
+            ArrayList<MyScrapResponse> responses = new ArrayList<>();
             for (Scrap scrap : scraps) {
+                System.out.println("scrapService - scrap - post : " + scrap.getPost().getPId());
+                System.out.println("scrapService - scrap - post - travel : " + scrap.getPost().getTravel().getTId());
                 Post foundPost = postRepository.findBypId(scrap.getPost().getPId());
-                PostResponse postResponse;
-                if (foundPost.getImage_url().isEmpty()) {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), null);
-                } else {
-                    postResponse = new PostResponse(foundPost.getPId(), foundPost.getUser().getId(), foundPost.getTitle(), foundPost.getOneLineReview(), foundPost.getImage_url().get(0));
-                }
-                ScrapResponse response = new ScrapResponse(scrap.getScId(), postResponse, scrap.getUser().getId());
+
+                Travel foundTravel = travelRepository.findBytId(foundPost.getTravel().getTId());
+                System.out.println("scrapService - foundPost : " + foundPost.getPId());
+                System.out.println("scrapService - foundTravel : " + foundTravel.getTId());
+                int count_comment = foundPost.getComments().size();
+
+                MyScrapResponse response = new MyScrapResponse(foundPost.getPId(), foundTravel.getTId(), foundPost.getImage_url().get(0), foundPost.getLikes(), foundPost.getTitle(), foundPost.getLocation(), count_comment, foundTravel.getStart_date(), foundTravel.getEnd_date(), foundTravel.getTitle());
                 responses.add(response);
             }
+            System.out.println(responses);
             return responses;
         } catch (Exception e) {
             throw new BaseException(MY_SCRAP_GET_FAIL);

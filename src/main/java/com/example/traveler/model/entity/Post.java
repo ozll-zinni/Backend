@@ -72,6 +72,8 @@ public class Post {
 
     private int scraps = 0;
 
+    private int noteStatus;
+
     @CreationTimestamp
     private Timestamp created_at;
 

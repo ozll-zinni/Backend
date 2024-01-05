@@ -17,6 +17,15 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
+    @JoinColumn(nullable = false)
+    private String expenseDetail;
+
+    @JoinColumn(nullable = false)
+    private String expenseCategory; // 카테고리
+
+    @JoinColumn(nullable = false)
+    private double amount; // 금액
+
     @ManyToOne
     @JoinColumn(name = "accountId")
     private AccountBook accountBook;
@@ -24,14 +33,12 @@ public class Transaction {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    @Getter
-    private String expenseItem;
-    @Getter
-    private String description;
-    @Getter
-    private double amount;
-    @Getter
-    private String transactionType; // "지출" 또는 "수입"
 
+    public void setAccountBook(AccountBook newAccountBook) {
+    }
+
+    public void setAccountbook(AccountBook accountbook) {
+        this.accountBook = accountbook;
+    }
 }
 

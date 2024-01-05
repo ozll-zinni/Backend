@@ -3,10 +3,7 @@ package com.example.traveler.controller;
 import com.example.traveler.config.BaseException;
 import com.example.traveler.config.BaseResponse;
 import com.example.traveler.model.dto.*;
-import com.example.traveler.service.ChecklistService;
-import com.example.traveler.service.DayCourseService;
-import com.example.traveler.service.SpotService;
-import com.example.traveler.service.TravelService;
+import com.example.traveler.service.*;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +26,8 @@ public class TravelController {
     private SpotService spotService;
     @Autowired
     private ChecklistService checklistService;
+    @Autowired
+    private AccountBookService accountBookService;
 
     @PostMapping("")
     public BaseResponse<TravelResponse> saveTravel(@RequestHeader("Authorization") String accessToken, @RequestBody TravelRequest travelRequest) {
