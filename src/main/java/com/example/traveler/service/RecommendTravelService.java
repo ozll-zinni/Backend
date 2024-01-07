@@ -63,6 +63,8 @@ public class RecommendTravelService {
                 break;
         }
 
+        // 여행강도 받아서 하루에 몇 개 갈지 설정
+
         for (int i = 1; i <= period; i++) {
             int code = code1 + i;
 
@@ -75,6 +77,8 @@ public class RecommendTravelService {
             finalTravels.addAll(randomResult);
 
         }
+
+        //code1을 통해서 n일차까지 목적지 여행강도만큼 랜덤으로 만들기
 
         List<Spot> spots = new ArrayList<>();
         List<DayCourse> daycourses = new ArrayList<>();
@@ -148,6 +152,8 @@ public class RecommendTravelService {
 
         }
 
+        //spot설정
+
         Destination t = destinationRepository.findBydId(request.getCityId());
 
         User user = userService.getUserByToken(accessToken);
@@ -176,6 +182,8 @@ public class RecommendTravelService {
         travelRepository.save(travel);
 
         return finalTravels;
+        
+        //이건 이거 밑에 괄호 따라가보면 getMatchTravel 닫는 괄호여서 추천 여행을 누르고 나면 추천 여행지를 띄우기 위해 리턴을 finalTravels라는 리스트를 준 것
     }
 
 
