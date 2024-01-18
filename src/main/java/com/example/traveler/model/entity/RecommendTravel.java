@@ -31,7 +31,7 @@ public class RecommendTravel {
 
      code1 - countryId, what, hard, with, period 순으로 조합
 
-     what - 1. 경치관람, 2. 먹방, 3. 액티비티, 4. 체험, 5. 카페
+     what - 1. 힐링, 2. 관광, 3. 액티비티, 4. 체험, 5. 먹방, 6. 카페
      hard - 1. 빡빡하게, 2. 보통, 3. 느긋하게
      period - 1박 2일이면 2 저장
 
