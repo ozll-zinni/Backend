@@ -1,13 +1,17 @@
 package com.example.traveler.service;
 
-import com.example.traveler.model.dto.PostResponse;
-import com.example.traveler.model.dto.RecommendTravelRequest;
-import com.example.traveler.model.dto.MainrecoResponse;
+import com.example.traveler.model.dto.*;
 import com.example.traveler.model.entity.*;
 import com.example.traveler.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -184,6 +188,131 @@ public class RecommendTravelService {
         return finalTravels;
         
         //이건 이거 밑에 괄호 따라가보면 getMatchTravel 닫는 괄호여서 추천 여행을 누르고 나면 추천 여행지를 띄우기 위해 리턴을 finalTravels라는 리스트를 준 것
+    }
+
+    public TravelResponse getMatchingTravels2(String accessToken, RecommendTravelRequest request) {
+        int period = calculatePeriod(request.getStartDate(), request.getFinishDate());
+        int code1 = request.getCityId() * 1000 + request.getWhat() * 100 + request.getHard() * 10 ;
+        int choose = request.getHard();
+        int withwho = request.getWithwho();
+
+        int total_target_num = choose * period;
+        Destination t = destinationRepository.findBydId(request.getCityId());
+        String keyword = t.getCountry() + " " + t.getCity();
+
+        switch (request.getWhat()) {
+            case 1:
+                keyword += "힐링여행";
+                break;
+            case 2:
+                keyword += "관광";
+                break;
+            case 3:
+                keyword += "액티비티";
+                break;
+            case 4:
+                keyword += "체험";
+                break;
+            case 5:
+                keyword += "먹방";
+                break;
+            case 6:
+                keyword += "카페";
+                break;
+        }
+
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://15.164.232.95:8000")
+                .queryParam("keyword", keyword)
+                .encode()
+                .build()
+                .toUri();
+
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<RecommendSpotResponse>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<RecommendSpotResponse>>() {}
+        );
+        List<RecommendSpotResponse> spots = responseEntity.getBody();
+        List<Spot> spotEntities = new ArrayList<>();
+
+        for (int i = 0; i < total_target_num && i < spots.size(); i++) {
+            RecommendSpotResponse spot = spots.get(i);
+            Spot newSpot = new Spot(spot.getName(), spot.getLocation().get(0), spot.getLocation().get(1));
+            Spot saveSpot = spotRepository.save(newSpot);
+            spotEntities.add(saveSpot);
+        }
+        List<DayCourse> dayCourseEntities = new ArrayList<>();
+        for (int i = 0; i < period; i++) {
+            DayCourse dayCourse = new DayCourse();
+            if (choose == 2) {
+                dayCourse.setSpot1(spotEntities.get(i * 2));
+                dayCourse.setSpot2(spotEntities.get(i * 2 + 1));
+            } else if (choose == 3) {
+                dayCourse.setSpot1(spotEntities.get(i * 3));
+                dayCourse.setSpot2(spotEntities.get(i * 3 + 1));
+                dayCourse.setSpot3(spotEntities.get(i * 3 + 2));
+            } else if (choose == 4) {
+                dayCourse.setSpot1(spotEntities.get(i * 4));
+                dayCourse.setSpot2(spotEntities.get(i * 4 + 1));
+                dayCourse.setSpot3(spotEntities.get(i * 4 + 2));
+                dayCourse.setSpot4(spotEntities.get(i * 4 + 3));
+            }
+            if (dayCourse.getSpot1() != null && dayCourse.getSpot2() != null) {
+                dayCourse.setFirst(spotService.distance(dayCourse.getSpot1().getLatitude(), dayCourse.getSpot1().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+            }
+            else {
+                dayCourse.setFirst(null);
+            }
+            if (dayCourse.getSpot2() != null && dayCourse.getSpot3() != null) {
+                dayCourse.setSecond(spotService.distance(dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude(), dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude()));
+            }
+            else {
+                dayCourse.setSecond(null);
+            }
+            if (dayCourse.getSpot3() != null && dayCourse.getSpot4() != null) {
+                dayCourse.setThird(spotService.distance(dayCourse.getSpot3().getLatitude(), dayCourse.getSpot3().getLongitude(), dayCourse.getSpot2().getLatitude(), dayCourse.getSpot2().getLongitude()));
+            }
+            else {
+                dayCourse.setThird(null);
+            }
+
+            dayCourse.setNumOfDay(period);
+            DayCourse dc = dayCourseRepository.save(dayCourse);
+            dayCourseEntities.add(dc);
+        }
+
+
+        User user = userService.getUserByToken(accessToken);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Travel travel = new Travel();
+
+        try {
+            Date s = dateFormat.parse(request.getStartDate());
+            travel.setStart_date(s);
+            Date f = dateFormat.parse(request.getFinishDate());
+            travel.setEnd_date(f);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        travel.setTitle("추천여행");
+        travel.setUser(user);
+        travel.setWriteStatus(1);
+        travel.setDestination(t.getCity());
+        travel.setCourses(dayCourseEntities);
+        travel.setCode(code1);
+        travel.setState(1);
+        travel.setWithWho(withwho);
+        travel.setTimeStatus(0);
+        Travel saveTravel = travelRepository.save(travel);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStart_date()) , formatter.format(saveTravel.getEnd_date()), formatter.format(saveTravel.getCreated_at()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId(), saveTravel.getCode());
+        return travelResponse;
     }
 
 
