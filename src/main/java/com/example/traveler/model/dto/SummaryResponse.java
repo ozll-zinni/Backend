@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SummaryResponse {
-    private double total_budget;
-    private double total_Expense;
+    private double totalBudget;
+    private double totalExpense;
     private double foodExpense;
     private double transportationExpense;
     private double lodgingExpense;

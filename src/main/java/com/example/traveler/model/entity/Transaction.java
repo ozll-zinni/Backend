@@ -16,6 +16,12 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
+    
+    private String description;
+    
+    private String expenseItem;
+    
+    private String transactionType;
 
     @JoinColumn(nullable = false)
     private String expenseDetail;
@@ -33,12 +39,5 @@ public class Transaction {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-
-    public void setAccountBook(AccountBook newAccountBook) {
-    }
-
-    public void setAccountbook(AccountBook accountbook) {
-        this.accountBook = accountbook;
-    }
 }
 

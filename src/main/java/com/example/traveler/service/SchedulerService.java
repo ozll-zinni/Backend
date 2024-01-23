@@ -21,7 +21,7 @@ public class SchedulerService {
         Date date = new Date();
         System.out.println("오늘 날짜 : " + date);
         for (Travel travel : allTravels) {
-            if (travel.getStart_date().before(date)) {
+            if (travel.getStartDate().before(date)) {
                 System.out.println("오늘보다 전이면");
                 travel.setTimeStatus(1);
                 System.out.println(travel.getTId() + ": 지난 여행 처리!");

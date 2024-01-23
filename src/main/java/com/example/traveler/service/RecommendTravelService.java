@@ -167,9 +167,9 @@ public class RecommendTravelService {
 
         try {
             Date s = dateFormat.parse(request.getStartDate());
-            travel.setStart_date(s);
+            travel.setStartDate(s);
             Date f = dateFormat.parse(request.getFinishDate());
-            travel.setEnd_date(f);
+            travel.setEndDate(f);
         } catch (ParseException e) {
             System.out.println("");
         }
@@ -293,9 +293,9 @@ public class RecommendTravelService {
 
         try {
             Date s = dateFormat.parse(request.getStartDate());
-            travel.setStart_date(s);
+            travel.setStartDate(s);
             Date f = dateFormat.parse(request.getFinishDate());
-            travel.setEnd_date(f);
+            travel.setEndDate(f);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -311,7 +311,7 @@ public class RecommendTravelService {
         travel.setTimeStatus(0);
         Travel saveTravel = travelRepository.save(travel);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStart_date()) , formatter.format(saveTravel.getEnd_date()), formatter.format(saveTravel.getCreated_at()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId(), saveTravel.getCode());
+        TravelResponse travelResponse = new TravelResponse(saveTravel.getTId(), saveTravel.getTitle(), saveTravel.getDestination(), formatter.format(saveTravel.getStartDate()) , formatter.format(saveTravel.getEndDate()), formatter.format(saveTravel.getCreatedAt()), saveTravel.getTimeStatus(), saveTravel.getWriteStatus(), saveTravel.getNoteStatus(), saveTravel.getCourses(), saveTravel.getUser().getId(), saveTravel.getCode());
         return travelResponse;
     }
 
@@ -335,8 +335,8 @@ public class RecommendTravelService {
 
         for(Post reco : recoten) {
 
-            Date startDate = reco.getTravel().getStart_date();
-            Date endDate = reco.getTravel().getEnd_date();
+            Date startDate = reco.getTravel().getStartDate();
+            Date endDate = reco.getTravel().getEndDate();
 
             LocalDate startLocalDate = Instant.ofEpochMilli(startDate.getTime())
                     .atZone(ZoneId.systemDefault())
