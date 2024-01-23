@@ -80,7 +80,7 @@ public class DayCourseService {
 //        List<Travel> allMyTravel = travelRepository.findAllByUser(user);
 //        ArrayList<TravelResponse> allMyTravelResponse = new ArrayList<>();
 //        for (Travel travel : allMyTravel) {
-//            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), travel.getStart_date(), travel.getEnd_date(), travel.getCreated_at(), travel.getTime_status(), travel.getWrite_status(), travel.getNote_status());
+//            TravelResponse travelResponse = new TravelResponse(travel.getTId(), travel.getTitle(), travel.getDestination(), travel.getstartDate(), travel.getEnd_date(), travel.getCreated_at(), travel.getTime_status(), travel.getWrite_status(), travel.getNote_status());
 //            allMyTravelResponse.add(travelResponse);
 //        }
 //        return allMyTravelResponse;

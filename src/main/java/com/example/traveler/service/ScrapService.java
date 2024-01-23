@@ -88,7 +88,7 @@ public class ScrapService {
                 System.out.println("scrapService - foundTravel : " + foundTravel.getTId());
                 int count_comment = foundPost.getComments().size();
 
-                MyScrapResponse response = new MyScrapResponse(foundPost.getPId(), foundTravel.getTId(), foundPost.getImage_url().get(0), foundPost.getLikes(), foundPost.getTitle(), foundPost.getLocation(), count_comment, foundTravel.getStart_date(), foundTravel.getEnd_date(), foundTravel.getTitle());
+                MyScrapResponse response = new MyScrapResponse(foundPost.getPId(), foundTravel.getTId(), foundPost.getImage_url().get(0), foundPost.getLikes(), foundPost.getTitle(), foundPost.getLocation(), count_comment, foundTravel.getStartDate(), foundTravel.getEndDate(), foundTravel.getTitle());
                 responses.add(response);
             }
             System.out.println(responses);

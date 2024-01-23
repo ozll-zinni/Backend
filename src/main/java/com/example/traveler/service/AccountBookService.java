@@ -30,6 +30,8 @@ public class AccountBookService {
     @Autowired
     private UserService userService;
 
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<DailyAccountBookResponse> saveAccountBook(String accessToken, Integer tId,
                                                           AccountBookRequest accountBookRequest) throws BaseException {
@@ -123,29 +125,42 @@ public class AccountBookService {
         AccountBookResponse accountBookResponse = new AccountBookResponse(getAccountBook.get(), getAccountBook.get());
         return accountBookResponse;
     }
+    
+    
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<AccountBookResponse> getAllAccountBookByTravel(int tId) throws BaseException {
         Travel travel = travelRepository.findById(tId)
                 .orElseThrow(() -> new BaseException(TRAVEL_IS_EMPTY));
-
-        List<AccountBook> accountBooks = accountBookRepository.findAllByTravel(travel);
-
+        
+        List<Date> dates = getDatesBetweenTwoDates(travel.getStartDate(), travel.getEndDate()); 
         List<AccountBookResponse> accountBookResponses = new ArrayList<>();
-        for (AccountBook accountBook : accountBooks) {
-            AccountBookResponse response = new AccountBookResponse(accountBook);
-
-            List<TransactionResponse> transactionResponses = new ArrayList<>();
-            for (Transaction transaction : accountBook.getAccountbookTransaction()) {
-                TransactionResponse transactionResponse = new TransactionResponse();
-                transactionResponse.setTransactionId(transaction.getTransactionId());
-                transactionResponse.setExpenseCategory(transaction.getExpenseCategory());
-                transactionResponse.setExpenseDetail(transaction.getExpenseDetail());
-                transactionResponse.setAmount(transaction.getAmount());
-                transactionResponses.add(transactionResponse); // 수정된 부분
-            }
-            response.setTransactions(transactionResponses);
-
-            accountBookResponses.add(response);
+        
+        for(Date date : dates) {
+        	AccountBookResponse response = new AccountBookResponse();
+        	response.setDate(date);
+        	
+        	accountBookResponses.add(response);
+        }
+        
+        List<AccountBook> accountBooks = accountBookRepository.findAllByTravelOrderByDateAsc(travel);
+        
+        for (AccountBookResponse accountBookResponse : accountBookResponses) {
+	        for (AccountBook accountBook : accountBooks) {
+	        	if(accountBookResponse.getDateStr().equals(sdf.format(accountBook.getDate()))){
+	        		accountBookResponse.setAccountBook(accountBook);
+		            List<TransactionResponse> transactionResponses = new ArrayList<>();
+		            for (Transaction transaction : accountBook.getAccountbookTransaction()) {
+		                TransactionResponse transactionResponse = new TransactionResponse();
+		                
+		                transactionResponse.setTransactionId(transaction.getTransactionId());
+		                transactionResponse.setExpenseCategory(transaction.getExpenseCategory());
+		                transactionResponse.setExpenseDetail(transaction.getExpenseDetail());
+		                transactionResponse.setAmount(transaction.getAmount());
+		                transactionResponses.add(transactionResponse); // 수정된 부분
+		            }
+		            accountBookResponse.setTransactions(transactionResponses);
+	        	}
+	        }
         }
         return accountBookResponses;
     }
@@ -241,8 +256,8 @@ public class AccountBookService {
         double otherExpensePercentage = (otherExpense / totalExpense) * 100;
 
         SummaryResponse summaryResponse = new SummaryResponse();
-        summaryResponse.setTotal_budget(budget);
-        summaryResponse.setTotal_Expense(totalExpense);
+        summaryResponse.setTotalBudget(budget);
+        summaryResponse.setTotalExpense(totalExpense);
         summaryResponse.setBudgetUsagePercentage(budgetUsagePercentage);
         summaryResponse.setFoodExpense(foodExpense);
         summaryResponse.setTransportationExpense(transportationExpense);
@@ -250,6 +265,75 @@ public class AccountBookService {
         summaryResponse.setShoppingExpense(shoppingExpense);
         summaryResponse.setOtherExpense(otherExpense);
         summaryResponse.setFoodExpensePercentage(foodExpensePercentage);
+        summaryResponse.setLodgingExpensePercentage(lodgingExpensePercentage);
+        summaryResponse.setTransportationExpensePercentage(transportationExpensePercentage);
+        summaryResponse.setSightseeingExpensePercentage(sightseeingExpensePercentage);
+        summaryResponse.setShoppingExpensePercentage(shoppingExpensePercentage);
+        summaryResponse.setOtherExpensePercentage(otherExpensePercentage);
+
+        return summaryResponse;
+    }
+    
+    
+    // 	요약(추가)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public SummaryResponse getAccountBookSummary(int tId) throws BaseException {
+    	Travel travel = travelRepository.findById(tId)
+                .orElseThrow(() -> new BaseException(TRAVEL_IS_EMPTY));
+    	
+        List<AccountBook> accountBooks = accountBookRepository.findAllByTravel(travel);
+        
+        double budget = 0;
+        double totalExpense = 0;
+        double budgetUsagePercentage = 0;
+
+        double foodExpense = 0;
+        double transportationExpense = 0;
+        double lodgingExpense = 0;
+        double sightseeingExpense = 0;
+        double shoppingExpense = 0;
+        double otherExpense = 0;
+
+        double foodExpensePercentage = 0;
+        double transportationExpensePercentage = 0;
+        double lodgingExpensePercentage = 0;
+        double sightseeingExpensePercentage = 0;
+        double shoppingExpensePercentage = 0;
+        double otherExpensePercentage = 0;
+        
+        for(AccountBook accountBook : accountBooks) {
+
+	        budget 						= Double.sum(budget, accountBook.getTotalBudget()); 						// 예산 정보 총합
+	        totalExpense 				= Double.sum(totalExpense, accountBook.getTotalExpense()); 					// 총 지출 총합
+	
+	        foodExpense 				= Double.sum(foodExpense, accountBook.getFoodExpense());					//식비 총합
+	        transportationExpense 		= Double.sum(transportationExpense, accountBook.getTransportationExpense());//교통비 총합
+	        lodgingExpense 				= Double.sum(lodgingExpense, accountBook.getLodgingExpense());				//숙박비 총합
+	        sightseeingExpense 			= Double.sum(sightseeingExpense, accountBook.getSightseeingExpense());		//관광 총합
+	        shoppingExpense 			= Double.sum(shoppingExpense, accountBook.getShoppingExpense());			//쇼핑 총합
+	        otherExpense 				= Double.sum(otherExpense, accountBook.getOtherExpense());					//기타총합
+	        
+        }
+
+        budgetUsagePercentage 			= (totalExpense / budget) * 100; // 예산 대비 지출 비율을 계산합니다.
+        foodExpensePercentage 			= (foodExpense / totalExpense) * 100;
+        transportationExpensePercentage = (transportationExpense / totalExpense) * 100;
+        lodgingExpensePercentage 		= (lodgingExpense / totalExpense) * 100;
+        sightseeingExpensePercentage 	= (sightseeingExpense / totalExpense) * 100;
+        shoppingExpensePercentage 		= (shoppingExpense / totalExpense) * 100;
+        otherExpensePercentage 			= (otherExpense / totalExpense) * 100;
+        
+        SummaryResponse summaryResponse = new SummaryResponse();
+        summaryResponse.setTotalBudget(budget);
+        summaryResponse.setTotalExpense(totalExpense);
+        summaryResponse.setBudgetUsagePercentage(budgetUsagePercentage);
+        summaryResponse.setFoodExpense(foodExpense);
+        summaryResponse.setTransportationExpense(transportationExpense);
+        summaryResponse.setSightseeingExpense(sightseeingExpense);
+        summaryResponse.setShoppingExpense(shoppingExpense);
+        summaryResponse.setOtherExpense(otherExpense);
+        summaryResponse.setFoodExpensePercentage(foodExpensePercentage);
+        summaryResponse.setLodgingExpensePercentage(lodgingExpensePercentage);
         summaryResponse.setTransportationExpensePercentage(transportationExpensePercentage);
         summaryResponse.setSightseeingExpensePercentage(sightseeingExpensePercentage);
         summaryResponse.setShoppingExpensePercentage(shoppingExpensePercentage);
@@ -258,5 +342,32 @@ public class AccountBookService {
         return summaryResponse;
     }
 
+    
+    /**
+     * 시작 날짜와 종료 날짜 사이의 날들을 List로 저장
+     * @param startDate
+     * @param endDate
+     * @return List<Date>
+     */
+    public static List<Date> getDatesBetweenTwoDates(Date startDate, Date endDate) {
+    	List<Date> dates = new ArrayList<>();
+    	
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
 
+		/* Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경 */
+		cal1.setTime( startDate );
+		cal2.setTime( endDate );
+		
+		
+		while( cal1.compareTo( cal2 ) !=1 ){
+
+			dates.add(cal1.getTime());
+
+		 /* 시작날짜 + 1 일 */
+			cal1.add(Calendar.DATE, 1);
+		 }
+		
+		return dates;
+    }
 }
