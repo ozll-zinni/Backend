@@ -23,12 +23,12 @@ public class Travel {
 
     String destination;
 
-    Date start_date;
+    Date startDate;
 
-    Date end_date;
+    Date endDate;
 
     @CreationTimestamp
-    Timestamp created_at;
+    Timestamp createdAt;
 
     //시작 날짜 기준으로 지난건지(1) 예정된건지(0)
     int timeStatus;
@@ -62,8 +62,8 @@ public class Travel {
     public Travel(String title, String destination, Date startDate, Date endDate, int timeStatus, int writeStatus, int noteStatus, int state, User user) {
         this.title = title;
         this.destination = destination;
-        this.start_date = startDate;
-        this.end_date = endDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.timeStatus = timeStatus;
         this.writeStatus = writeStatus;
         this.noteStatus = noteStatus;

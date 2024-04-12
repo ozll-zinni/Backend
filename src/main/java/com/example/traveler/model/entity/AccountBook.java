@@ -30,6 +30,7 @@ public class AccountBook {
     @OneToMany(mappedBy = "accountBook")
     private List<Transaction> accountbookTransaction;
 
+    private String accountName;
     private double totalBudget;
     private double totalExpense;
     private double budgetUsagePercentage; // 예산 중 총지출의 비율을 나타내는 필드를 추가

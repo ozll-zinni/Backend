@@ -53,6 +53,8 @@ public class AccountBookController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+    
+    
 
     @PatchMapping("/{tId}")
     public BaseResponse<List<DailyAccountBookResponse>> createAccountBookEntries(
@@ -154,12 +156,57 @@ public class AccountBookController {
 
         }
     }
-    // 가계부 요약 관련 기능
+    
+    /**
+     *  가계부 요약 관련 기능
+     * @param accountId
+     * @return BaseResponse<SummaryResponse>
+     */
     @GetMapping("/{accountId}/summary")
-    public BaseResponse<SummaryResponse> getAccountBookSummary(@PathVariable("tId") Long tId) {
+    public BaseResponse<SummaryResponse> getAccountBookSummary(@PathVariable("accountId") Long accountId) {
+        try {
+            SummaryResponse summaryResponse = accountBookService.getAccountBookSummary(accountId);
+            return new BaseResponse<>(summaryResponse);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+    
+    
+    /**
+     *  가계부 요약 관련 기능(추가)
+     * @param tId
+     * @return BaseResponse<SummaryResponse>
+     */
+    @GetMapping("/{tId}/summaryTravel")
+    public BaseResponse<SummaryResponse> getAccountBookSummary(@PathVariable("tId") int tId) {
         try {
             SummaryResponse summaryResponse = accountBookService.getAccountBookSummary(tId);
             return new BaseResponse<>(summaryResponse);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+    
+    
+    
+    /**
+     * 가계부 새로운 추가 항목 생성 시
+     * @param tId
+     * @param transactionRequest
+     * @return BaseResponse<TransactionResponse>
+     */
+    @PostMapping("/transactionAdd/{tId}")
+    public BaseResponse<TransactionResponse> saveTransactionNew(
+            @RequestHeader("Authorization") String accessToken, //TODO 인증키 값 관련 프론트엔드단 로그인 이슈로 테스트 시 주석 처리 후 테스트
+            @PathVariable("tId") Integer tId,
+            @RequestBody TransactionRequest transactionRequest) {
+        try {
+        	TransactionResponse transactionResponse = transactionService.saveTransactionNew(
+                    /*//TODO 위와 마찬가지로 주석 처리 후 테스트 
+                     * accessToken
+                     * */ "", tId, transactionRequest);
+            return new BaseResponse<>(transactionResponse);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
