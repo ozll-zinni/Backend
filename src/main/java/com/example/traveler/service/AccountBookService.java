@@ -82,16 +82,16 @@ public class AccountBookService {
                     case "식비":
                         newAccountBook.setFoodExpense(newAccountBook.getFoodExpense() + transactionRequest.getAmount());
                         break;
-                    case "교통비":
+                    case "교통":
                         newAccountBook.setTransportationExpense(newAccountBook.getTransportationExpense() + transactionRequest.getAmount());
                         break;
-                    case "숙박비":
+                    case "숙박":
                         newAccountBook.setLodgingExpense(newAccountBook.getLodgingExpense() + transactionRequest.getAmount());
                         break;
-                    case "관광비":
+                    case "관광":
                         newAccountBook.setSightseeingExpense(newAccountBook.getSightseeingExpense() + transactionRequest.getAmount());
                         break;
-                    case "쇼핑비":
+                    case "쇼핑":
                         newAccountBook.setShoppingExpense(newAccountBook.getShoppingExpense() + transactionRequest.getAmount());
                         break;
                     case "기타":
@@ -166,58 +166,45 @@ public class AccountBookService {
     }
 
 
-    // 특정 가계부의 날짜 정보 조회 로직 구현
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public List<Date> getDatesForAccountBook(Long accountId) throws BaseException {
-        // accountBookRepository를 이용하여 accountId에 해당하는 가계부 정보 조회
-        AccountBook accountBook = accountBookRepository.findById(accountId)
-                .orElseThrow(() -> new BaseException(ACCOUNTBOOK_NOT_FOUND));
-
-        // 해당 가계부의 DateEntity들을 조회하여 날짜 정보 추출
-        List<Date> dates = new ArrayList<>();
-        for (DateEntity dateEntity : accountBook.getDateEntities()) {
-            dates.add(dateEntity.getDate());
-        }
-
-        return dates;
-    }
-
-
+//    // 특정 가계부의 날짜 정보 조회 로직 구현
 //    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-//    private Map<String, Double> convertYearMonthToString(Map<YearMonth, Double> monthlyExpenses) {
-//        Map<String, Double> formattedExpenses = new HashMap<>();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+//    public List<Date> getDatesForAccountBook(Long accountId) throws BaseException {
+//        // accountBookRepository를 이용하여 accountId에 해당하는 가계부 정보 조회
+//        AccountBook accountBook = accountBookRepository.findById(accountId)
+//                .orElseThrow(() -> new BaseException(ACCOUNTBOOK_NOT_FOUND));
 //
-//        for (Map.Entry<YearMonth, Double> entry : monthlyExpenses.entrySet()) {
-//            String formattedDate = entry.getKey().format(formatter);
-//            formattedExpenses.put(formattedDate, entry.getValue());
+//        // 해당 가계부의 DateEntity들을 조회하여 날짜 정보 추출
+//        List<Date> dates = new ArrayList<>();
+//        for (DateEntity dateEntity : accountBook.getDateEntities()) {
+//            dates.add(dateEntity.getDate());
 //        }
 //
-//        return formattedExpenses;
+//        return dates;
 //    }
 
-    // 날짜별 지출 계산 메서드
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public DailyExpensesResponse getDailyExpenses(Long accountId) throws BaseException {
-        try {
-            AccountBook accountBook = accountBookRepository.findById(accountId)
-                    .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
 
-            List<Transaction> transactions = transactionRepository.findAllByAccountBook(accountBook);
-
-            Map<Date, Double> dailyExpenses = new HashMap<>();
-            for (Transaction transaction : transactions) {
-                Date date = transaction.getDate();
-                dailyExpenses.put(date, dailyExpenses.getOrDefault(date, 0.0) + transaction.getAmount());
-            }
-
-            // DailyExpensesResponse를 생성하여 반환
-            Map<String, Double> formattedDailyExpenses = convertDateToString(dailyExpenses);
-            return new DailyExpensesResponse(formattedDailyExpenses);
-        } catch (BaseException e) {
-            throw new BaseException(ACCOUNTBOOK_NOT_FOUND);
-        }
-    }
+//    // 날짜별 지출 계산 메서드
+//    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+//    public DailyExpensesResponse getDailyExpenses(Long accountId) throws BaseException {
+//        try {
+//            AccountBook accountBook = accountBookRepository.findById(accountId)
+//                    .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
+//
+//            List<Transaction> transactions = transactionRepository.findAllByAccountBook(accountBook);
+//
+//            Map<Date, Double> dailyExpenses = new HashMap<>();
+//            for (Transaction transaction : transactions) {
+//                Date date = transaction.getDate();
+//                dailyExpenses.put(date, dailyExpenses.getOrDefault(date, 0.0) + transaction.getAmount());
+//            }
+//
+//            // DailyExpensesResponse를 생성하여 반환
+//            Map<String, Double> formattedDailyExpenses = convertDateToString(dailyExpenses);
+//            return new DailyExpensesResponse(formattedDailyExpenses);
+//        } catch (BaseException e) {
+//            throw new BaseException(ACCOUNTBOOK_NOT_FOUND);
+//        }
+//    }
 
     private Map<String, Double> convertDateToString(Map<Date, Double> dailyExpenses) {
         Map<String, Double> formattedExpenses = new HashMap<>();
@@ -335,6 +322,7 @@ public class AccountBookService {
         summaryResponse.setFoodExpensePercentage(foodExpensePercentage);
         summaryResponse.setLodgingExpensePercentage(lodgingExpensePercentage);
         summaryResponse.setTransportationExpensePercentage(transportationExpensePercentage);
+        summaryResponse.setLodgingExpensePercentage(lodgingExpensePercentage);
         summaryResponse.setSightseeingExpensePercentage(sightseeingExpensePercentage);
         summaryResponse.setShoppingExpensePercentage(shoppingExpensePercentage);
         summaryResponse.setOtherExpensePercentage(otherExpensePercentage);

@@ -83,16 +83,6 @@ public class AccountBookController {
         }
     }
 
-    // 가계부 수정 (필요 없을듯)
-//    @PatchMapping("/{accountId}")
-//    public BaseResponse<AccountBookResponse> patchAccountBook(@RequestHeader("Authorization") String accessToken, @PathVariable("accountId") Long accountId, @RequestBody AccountBookRequest accountBookRequest) {
-//        try {
-//            AccountBookResponse accountBookResponse = accountBookService.patchAccountBook(accessToken, accountId, accountBookRequest);
-//            return new BaseResponse<>(accountBookResponse);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
 
     // 새로운 내역을 특정 accountbook에 저장
     @PostMapping("/{accountId}/transactions")
@@ -149,21 +139,6 @@ public class AccountBookController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-//    @PatchMapping("/{accountId}/transactions/{transactionId}/detail")
-//    public BaseResponse<TransactionResponse> patchTransactionDetail(
-//            @RequestHeader("Authorization") String accessToken,
-//            @PathVariable("accountId") int accountId,
-//            @PathVariable("transactionId") int transactionId,
-//            @RequestBody TransactionDetailRequest transactionDetailRequest) {
-//        try {
-//            TransactionResponse transactionResponse = transactionService.patchTransactionDetail(accessToken, accountId, transactionId, transactionDetailRequest);
-//            return new BaseResponse<>(transactionResponse);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
-
 
     // 특정 accountbook에 포함된 transaction 삭제
     @DeleteMapping("/{accountId}/transactions/{transactionId}")

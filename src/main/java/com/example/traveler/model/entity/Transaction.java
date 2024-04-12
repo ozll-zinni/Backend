@@ -39,5 +39,7 @@ public class Transaction {
     @Temporal(TemporalType.DATE)
     private Date date;
 
+    public void setAccountBook(AccountBook newAccountBook) {
+    }
 }
 

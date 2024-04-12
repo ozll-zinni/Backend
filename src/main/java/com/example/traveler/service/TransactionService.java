@@ -113,25 +113,6 @@ public class TransactionService {
     }
 
 
-//    public TransactionResponse patchTransactionDetail(String accessToken, int accountId, int transactionId, TransactionRequest transactionDetailRequest) throws BaseException {
-//        User user = userService.getUserByToken(accessToken);
-//        if (user == null) {
-//            throw new BaseException(INVALID_JWT);
-//        }
-//        Transaction transaction = transactionRepository.findByTransactionIdAndAccountbook_accountId((long) transactionId, (long) accountId)
-//                .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
-//        transaction.setExpenseDetail(transactionDetailRequest.getExpenseDetail());
-//
-//        try {
-//            transaction = transactionRepository.save(transaction);
-//        } catch (Exception e) {
-//            throw new BaseException(SAVE_ITEM_FAIL);
-//        }
-//
-//        return new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
-//    }
-
-
     // 내역 삭제 기능
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
 
