@@ -37,8 +37,5 @@ public class Transaction {
     public void setAccountBook(AccountBook newAccountBook) {
     }
 
-    public void setAccountbook(AccountBook accountbook) {
-        this.accountBook = accountbook;
-    }
 }
 

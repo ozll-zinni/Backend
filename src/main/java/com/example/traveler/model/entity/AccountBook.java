@@ -42,9 +42,13 @@ public class AccountBook {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    public void setTotalExpense(double totalExpense) {
-        this.totalExpense = totalExpense;
-        this.budgetUsagePercentage = (totalExpense / totalBudget) * 100;
+    // 기본 생성자, getter 및 setter 추가
+    public double getTotalBudget() {
+        return totalBudget;
+    }
+
+    public void setTotalBudget(double totalBudget) {
+        this.totalBudget = totalBudget;
     }
 
 
