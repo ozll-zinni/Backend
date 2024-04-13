@@ -113,44 +113,86 @@ public class TransactionService {
     }
 
 
-    // 내역 삭제 기능
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+        // 내역 삭제 기능
+        @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+        public int deleteTransaction(String accessToken, int accountId, int transactionId) throws BaseException {
+            User user = userService.getUserByToken(accessToken);
+            if (user == null) {
+                throw new BaseException(INVALID_JWT);
+            }
+            Transaction transaction = transactionRepository.findByTransactionIdAndAccountBook_accountId((long) transactionId, (long) accountId)
+                    .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
 
-    public int deleteTransaction(String accessToken, int accountId, int transacrionId) throws BaseException {
-        User user = userService.getUserByToken(accessToken);
-        if (user == null) {
-            throw new BaseException(INVALID_JWT);
-        }
-        Transaction transaction = (Transaction) transactionRepository.findByTransactionIdAndAccountBook_accountId((long) transacrionId, (long) accountId)
-                .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
+            AccountBook accountBook = transaction.getAccountBook();
 
-        try {
-            transactionRepository.delete(transaction); // 수정된 부분
-        } catch (Exception e) {
-            throw new BaseException(DELETE_TRANSACTION_FAIL);
-        }
-        return accountId;
-    }
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public List<TransactionResponse> getAllTransaction() {
-        List<Transaction> transactions = transactionRepository.findAll();
-        return mapTransactionListToTransactionList(transactions);
-    }
+            // 내역 삭제 전, 가계부 요약 정보 업데이트
+            double amount = transaction.getAmount();
+            switch (transaction.getExpenseCategory()) {
+                case "식비":
+                    accountBook.setFoodExpense(accountBook.getFoodExpense() - amount);
+                    break;
+                case "교통":
+                    accountBook.setTransportationExpense(accountBook.getTransportationExpense() - amount);
+                    break;
+                case "숙박":
+                    accountBook.setLodgingExpense(accountBook.getLodgingExpense() - amount);
+                    break;
+                case "관광":
+                    accountBook.setSightseeingExpense(accountBook.getSightseeingExpense() - amount);
+                    break;
+                case "쇼핑":
+                    accountBook.setShoppingExpense(accountBook.getShoppingExpense() - amount);
+                    break;
+                case "기타":
+                    accountBook.setOtherExpense(accountBook.getOtherExpense() - amount);
+                    break;
+            }
 
-    // 특정 가계부에 포함된 내역 조회 및 삭제
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
-    public TransactionResponse getTransactionFromAccountbook(int accountId, int transactionId) throws BaseException {
-        AccountBook accountBook = accountBookRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
-        Transaction transaction = transactionRepository.findByTransactionIdAndAccountBook((long) transactionId, accountBook)
-                .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
-        try {
-            transactionRepository.delete(transaction);
-        } catch (Exception e) {
-            throw new BaseException(DELETE_TRANSACTION_FAIL);
+            // 총 지출액과 예산 사용률 업데이트
+            double totalExpense = accountBook.getTotalExpense() - amount;
+            accountBook.setTotalExpense(totalExpense);
+            if (accountBook.getTotalBudget() != null && accountBook.getTotalBudget() > 0) {
+                accountBook.setBudgetUsagePercentage((totalExpense / accountBook.getTotalBudget()) * 100);
+            } else {
+                accountBook.setBudgetUsagePercentage(0.0);
+            }
+
+            // 가계부 정보 저장
+            try {
+                accountBook = accountBookRepository.save(accountBook);
+            } catch (Exception e) {
+                throw new BaseException(SAVE_ACCOUNTBOOK_FAIL);
+            }
+
+            // 내역 삭제
+            try {
+                transactionRepository.delete(transaction);
+            } catch (Exception e) {
+                throw new BaseException(DELETE_TRANSACTION_FAIL);
+            }
+            return accountId;
         }
-        return new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
-    }
+
+        @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+        public List<TransactionResponse> getAllTransaction() {
+            List<Transaction> transactions = transactionRepository.findAll();
+            return mapTransactionListToTransactionList(transactions);
+        }
+
+        // 특정 가계부에 포함된 내역 조회 및 삭제
+        @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+        public TransactionResponse getTransactionFromAccountbook(int accountId, int transactionId) throws BaseException {
+            AccountBook accountBook = accountBookRepository.findByAccountId(accountId)
+                    .orElseThrow(() -> new BaseException(ACCOUNTBOOK_IS_EMPTY));
+            Transaction transaction = transactionRepository.findByTransactionIdAndAccountBook((long) transactionId, accountBook)
+                    .orElseThrow(() -> new BaseException(TRANSACTION_NOT_FOUND));
+            try {
+                transactionRepository.delete(transaction);
+            } catch (Exception e) {
+                throw new BaseException(DELETE_TRANSACTION_FAIL);
+            }
+            return new TransactionResponse(transaction.getTransactionId(), transaction.getExpenseCategory(), transaction.getExpenseDetail(), transaction.getAmount());
+        }
 
     
     

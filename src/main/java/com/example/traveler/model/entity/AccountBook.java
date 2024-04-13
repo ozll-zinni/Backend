@@ -44,13 +44,14 @@ public class AccountBook {
     private Date date;
 
     // 기본 생성자, getter 및 setter 추가
-    public double getTotalBudget() {
+    public Double getTotalBudget() {
         return totalBudget;
     }
 
-    public void setTotalBudget(double totalBudget) {
+    public void setTotalBudget(Double totalBudget) {
         this.totalBudget = totalBudget;
     }
+
 
 
     public void setUser(User userByToken) {
