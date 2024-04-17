@@ -16,4 +16,5 @@ public class PostUpdateRequest {
     double totalrating;
     String goodPoints;
     String badPoints;
+    int noteStatus;
 }
