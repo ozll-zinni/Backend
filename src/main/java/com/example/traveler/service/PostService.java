@@ -75,6 +75,7 @@ public class PostService {
                             .goodPoints(request.getGoodPoints())
                             .badPoints(request.getBadPoints())
                             .image_url(imageFiles)
+                            .noteStatus(request.getNoteStatus())
                             .build();
 
                 System.out.println("e");
@@ -100,6 +101,7 @@ public class PostService {
                             .goodPoints(request.getGoodPoints())
                             .badPoints(request.getBadPoints())
                             .image_url(imageFiles)
+                            .noteStatus(request.getNoteStatus())
                             .build();
 
                     return postRepository.save(post);
@@ -140,6 +142,7 @@ public class PostService {
                 foundPost.setTotalrating(request.getTotalrating());
                 foundPost.setGoodPoints(request.getGoodPoints());
                 foundPost.setBadPoints(request.getBadPoints());
+                foundPost.setNoteStatus(request.getNoteStatus());
                 return postRepository.save(foundPost);
             } catch (Exception e) {
                 throw new BaseException(INVALID_JWT);
