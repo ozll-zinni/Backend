@@ -231,16 +231,16 @@ public class TransactionService {
             case "식비":
             	accountBook.setFoodExpense(accountBook.getFoodExpense() + transactionRequest.getAmount());
                 break;
-            case "교통비":
+            case "교통":
             	accountBook.setTransportationExpense(accountBook.getTransportationExpense() + transactionRequest.getAmount());
                 break;
-            case "숙박비":
+            case "숙박":
             	accountBook.setLodgingExpense(accountBook.getLodgingExpense() + transactionRequest.getAmount());
                 break;
-            case "관광비":
+            case "관광":
             	accountBook.setSightseeingExpense(accountBook.getSightseeingExpense() + transactionRequest.getAmount());
                 break;
-            case "쇼핑비":
+            case "쇼핑":
             	accountBook.setShoppingExpense(accountBook.getShoppingExpense() + transactionRequest.getAmount());
                 break;
             case "기타":
