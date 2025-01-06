@@ -35,6 +35,6 @@
 - 여행별 준비물 확인을 위한 체크리스트
 - 효율적인 예산 관리를 위한 가계부
 ![체크리스트](README.assets/체크리스트.png)
-![가계부](README.assets/가계부.jpg)
+![가계부](README.assets/가계부.png)
 ![가계부요약](README.assets/가계부요약.png)
 
