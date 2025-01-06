@@ -23,18 +23,18 @@
 ### 1. 여행지 추천
 - 사용자의 여행 강도, 목적 선택을 통해 맞춤 여행지 내 맞춤 장소 추천
 - 사용자가 직접 여행 경로 추가
-![여행지추천](README.assets/여행지추천.jpg)
-![여행생성](README.assets/여행생성.jpg)
+![여행지추천](README.assets/여행지추천.png)
+![여행생성](README.assets/여행생성.png)
 
 ### 2. 공유 커뮤니티
 - 다녀온 여행 후기 공유
 - 다른 사람의 여행 후기에 대한 댓글 및 조아요
-![공유커뮤니티](README.assets/여행지추천.jpg)
+![공유커뮤니티](README.assets/여행지추천.png)
 
 ### 3. 체크리스트 및 가게부
 - 여행별 준비물 확인을 위한 체크리스트
 - 효율적인 예산 관리를 위한 가계부
-![체크리스트](README.assets/체크리스트.jpg)
+![체크리스트](README.assets/체크리스트.png)
 ![가계부](README.assets/가계부.jpg)
-![가계부요약](README.assets/가계부요약.jpg)
+![가계부요약](README.assets/가계부요약.png)
 
